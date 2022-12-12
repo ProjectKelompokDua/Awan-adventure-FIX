@@ -5,25 +5,24 @@
  */
 package subMenu;
 
-import javax.swing.plaf.basic.BasicInternalFrameUI;
-import java.awt.Frame;
+import Logic.DashboardL;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.swing.JOptionPane;
 import javax.swing.Timer;
-import Logic.DashboardL;
+import javax.swing.plaf.basic.BasicInternalFrameUI;
+
 /**
  *
  * @author perlengkapan
  */
 public class DashboardFrame extends javax.swing.JInternalFrame {
-
-    /**
-     * Creates new form DashboardFrame
-     */
+    
     public String filter = "Hari";
+    /**
+     * Creates new form Dashboard
+     */
     public DashboardFrame() {
         initComponents();
         
@@ -36,7 +35,7 @@ public class DashboardFrame extends javax.swing.JInternalFrame {
         showTime();
     }
     
-    public void load_data(){
+        public void load_data(){
         hari();
         if(filter.equals("hari")){
             hari();
@@ -91,6 +90,7 @@ public class DashboardFrame extends javax.swing.JInternalFrame {
             }
         }).start();
     }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -116,8 +116,6 @@ public class DashboardFrame extends javax.swing.JInternalFrame {
         jLabel9 = new javax.swing.JLabel();
         bg = new javax.swing.JLabel();
 
-        setBorder(null);
-        setVisible(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel5.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N

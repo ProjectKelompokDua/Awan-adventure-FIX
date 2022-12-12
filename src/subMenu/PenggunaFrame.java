@@ -165,11 +165,6 @@ public class PenggunaFrame extends javax.swing.JInternalFrame {
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(32, 300, 930, 240));
 
         txt_cariPengguna.setFont(new java.awt.Font("Outfit", 0, 18)); // NOI18N
-        txt_cariPengguna.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_cariPenggunaActionPerformed(evt);
-            }
-        });
         txt_cariPengguna.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txt_cariPenggunaKeyReleased(evt);
@@ -538,10 +533,6 @@ public class PenggunaFrame extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         clear();
     }//GEN-LAST:event_btn_clearActionPerformed
-
-    private void txt_cariPenggunaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_cariPenggunaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txt_cariPenggunaActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

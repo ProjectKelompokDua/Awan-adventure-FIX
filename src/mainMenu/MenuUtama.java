@@ -32,7 +32,7 @@ public class MenuUtama extends javax.swing.JFrame {
         DashboardFrame df = new DashboardFrame();
         jDesktopPane1.add(df);
         df.setVisible(true);
-        akses.setText("Dashboard");
+        infoMenu.setText("Beranda");
         infoSubmenu.setText("Home / Dashboard");
     }
     
@@ -80,7 +80,7 @@ public class MenuUtama extends javax.swing.JFrame {
         jPanel20 = new javax.swing.JPanel();
         exit = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        akses = new javax.swing.JLabel();
+        infoMenu = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         infoSubmenu = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
@@ -422,19 +422,19 @@ public class MenuUtama extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        akses.setFont(new java.awt.Font("Outfit", 1, 36)); // NOI18N
-        akses.setForeground(new java.awt.Color(0, 0, 0));
-        akses.setText("Menu");
+        infoMenu.setFont(new java.awt.Font("Outfit", 1, 36)); // NOI18N
+        infoMenu.setForeground(new java.awt.Color(0, 0, 0));
+        infoMenu.setText("Menu");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(akses, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
+            .addComponent(infoMenu, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(akses, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(infoMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 10, 550, 60));
@@ -512,7 +512,7 @@ public class MenuUtama extends javax.swing.JFrame {
         new BarangFrame().setVisible(false);
         new PenggunaFrame().setVisible(false);
                 
-        akses.setText("Form Kasir");
+        infoMenu.setText("Form Kasir");
         infoSubmenu.setText("Home / Kasir");
         
         btn_beranda.setBackground(exitHover);
@@ -543,7 +543,7 @@ public class MenuUtama extends javax.swing.JFrame {
         new BarangFrame().setVisible(false);
         new PenggunaFrame().setVisible(false);
         
-        akses.setText("Form Kasir");
+        infoMenu.setText("Form Kasir");
         infoSubmenu.setText("Home / Kasir");
         
         btn_beranda.setBackground(exitHover);
@@ -574,7 +574,7 @@ public class MenuUtama extends javax.swing.JFrame {
         new BarangFrame().setVisible(false);
         new PenggunaFrame().setVisible(false);
         
-        akses.setText("Data Sewaan");
+        infoMenu.setText("Data Sewaan");
         infoSubmenu.setText("Home / Sewaan");
         
         btn_beranda.setBackground(exitHover);
@@ -605,7 +605,7 @@ public class MenuUtama extends javax.swing.JFrame {
         new BarangFrame().setVisible(false);
         new PenggunaFrame().setVisible(false);
         
-        akses.setText("Data Sewaan");
+        infoMenu.setText("Data Sewaan");
         infoSubmenu.setText("Home / Sewaan");
         
         btn_beranda.setBackground(exitHover);
@@ -636,7 +636,7 @@ public class MenuUtama extends javax.swing.JFrame {
         new PengembalianFrame().setVisible(false);
         new PenggunaFrame().setVisible(false);
         
-        akses.setText("Data Barang");
+        infoMenu.setText("Data Barang");
         infoSubmenu.setText("Home / Barang");
         
         btn_beranda.setBackground(exitHover);
@@ -667,7 +667,7 @@ public class MenuUtama extends javax.swing.JFrame {
         new PengembalianFrame().setVisible(false);
         new PenggunaFrame().setVisible(false);
         
-        akses.setText("Data Barang");
+        infoMenu.setText("Data Barang");
         infoSubmenu.setText("Home / Barang");
         
         btn_beranda.setBackground(exitHover);
@@ -698,7 +698,7 @@ public class MenuUtama extends javax.swing.JFrame {
         new BarangFrame().setVisible(false);
         new PenggunaFrame().setVisible(false);
         
-        akses.setText("Form Pengembalian");
+        infoMenu.setText("Form Pengembalian");
         infoSubmenu.setText("Home / Pengembalian");
         
         btn_beranda.setBackground(exitHover);
@@ -729,7 +729,7 @@ public class MenuUtama extends javax.swing.JFrame {
         new BarangFrame().setVisible(false);
         new PenggunaFrame().setVisible(false);
         
-        akses.setText("Form Pengembalian");
+        infoMenu.setText("Form Pengembalian");
         infoSubmenu.setText("Home / Pengembalian");
         
         btn_beranda.setBackground(exitHover);
@@ -750,7 +750,7 @@ public class MenuUtama extends javax.swing.JFrame {
 
     private void PenggunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PenggunaMouseClicked
         // TODO add your handling code here:
-        if(akses.getText().equals("Admin")){
+        if(txt_akses.getText().equals("Admin")){
             PenggunaFrame pf = new PenggunaFrame();
             jDesktopPane1.add(pf);
             pf.setVisible(true);
@@ -761,7 +761,7 @@ public class MenuUtama extends javax.swing.JFrame {
             new PengembalianFrame().setVisible(false);
             new BarangFrame().setVisible(false);
 
-            akses.setText("Pengguna");
+            infoMenu.setText("Pengguna");
             infoSubmenu.setText("Home / Pengguna");
 
             btn_beranda.setBackground(exitHover);
@@ -785,7 +785,7 @@ public class MenuUtama extends javax.swing.JFrame {
 
     private void btn_penggunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_penggunaMouseClicked
         // TODO add your handling code here:
-        if(akses.getText().equals("Admin")){
+        if(txt_akses.getText().equals("Admin")){
             PenggunaFrame pf = new PenggunaFrame();
             jDesktopPane1.add(pf);
             pf.setVisible(true);
@@ -796,7 +796,7 @@ public class MenuUtama extends javax.swing.JFrame {
             new PengembalianFrame().setVisible(false);
             new BarangFrame().setVisible(false);
 
-            akses.setText("Pengguna");
+            infoMenu.setText("Pengguna");
             infoSubmenu.setText("Home / Pengguna");
 
             btn_beranda.setBackground(exitHover);
@@ -821,11 +821,11 @@ public class MenuUtama extends javax.swing.JFrame {
 
     private void LaporanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_LaporanMouseClicked
         // TODO add your handling code here:
-        if (akses.getText().equals("Admin")) {
+        if (txt_akses.getText().equals("Admin")) {
 //            LaporanFrame lf = new LaporanFrame();
 //            jDesktopPane1.add(lf);
 //            lf.setVisible(true);
-            akses.setText("Laporan");
+            infoMenu.setText("Laporan");
             infoSubmenu.setText("Home / Laporan");
 
             btn_beranda.setBackground(exitHover);
@@ -849,11 +849,11 @@ public class MenuUtama extends javax.swing.JFrame {
 
     private void btn_laporanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_laporanMouseClicked
         // TODO add your handling code here:
-        if (akses.getText().equals("Admin")) {
+        if (txt_akses.getText().equals("Admin")) {
 //            LaporanFrame lf = new LaporanFrame();
 //            jDesktopPane1.add(lf);
 //            lf.setVisible(true);
-            akses.setText("Laporan");
+            infoMenu.setText("Laporan");
             infoSubmenu.setText("Home / Laporan");
 
             btn_beranda.setBackground(exitHover);
@@ -875,54 +875,20 @@ public class MenuUtama extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btn_laporanMouseClicked
 
-    private void BerandaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BerandaMouseClicked
-        // TODO add your handling code here:
-        DashboardFrame df = new DashboardFrame();
-        jDesktopPane1.add(df);
-        df.setVisible(true);
-        
-        new KasirFrame().setVisible(false);
-        new SewaanFrame().setVisible(false);
-        new PengembalianFrame().setVisible(false);
-        new BarangFrame().setVisible(false);
-        new PenggunaFrame().setVisible(false);
-        
-        akses.setText("Dashboard");
-        infoSubmenu.setText("Home / Dashboard");
-        
-        btn_beranda.removeMouseListener((MouseListener) this);
-        btn_beranda.setBackground(colorHover);
-        Beranda.setBackground(colorHover);
-        btn_kasir.setBackground(exitHover);
-        Kasir.setBackground(exitHover);
-        btn_sewaan.setBackground(exitHover);
-        Sewaan.setBackground(exitHover);
-        btn_barang.setBackground(exitHover);
-        Barang.setBackground(exitHover);
-        btn_pengembalian.setBackground(exitHover);
-        Pengembalian.setBackground(exitHover);
-        btn_pengguna.setBackground(exitHover);
-        Pengguna.setBackground(exitHover);
-        btn_laporan.setBackground(exitHover);
-        Laporan.setBackground(exitHover);
-
-    }//GEN-LAST:event_BerandaMouseClicked
-
     private void btn_berandaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_berandaMouseClicked
         // TODO add your handling code here:
         DashboardFrame df = new DashboardFrame();
         jDesktopPane1.add(df);
         df.setVisible(true);
-        
+        infoMenu.setText("Beranda");
+        infoSubmenu.setText("Home / Dashboard");
+
+        new PenggunaFrame().setVisible(false);
         new KasirFrame().setVisible(false);
         new SewaanFrame().setVisible(false);
         new PengembalianFrame().setVisible(false);
         new BarangFrame().setVisible(false);
-        new PenggunaFrame().setVisible(false);
-        
-        akses.setText("Dashboard");
-        infoSubmenu.setText("Home / Dashboard");
-        
+
         btn_beranda.setBackground(colorHover);
         Beranda.setBackground(colorHover);
         btn_kasir.setBackground(exitHover);
@@ -938,6 +904,36 @@ public class MenuUtama extends javax.swing.JFrame {
         btn_laporan.setBackground(exitHover);
         Laporan.setBackground(exitHover);
     }//GEN-LAST:event_btn_berandaMouseClicked
+
+    private void BerandaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BerandaMouseClicked
+        // TODO add your handling code here:
+        DashboardFrame df = new DashboardFrame();
+        jDesktopPane1.add(df);
+        df.setVisible(true);
+        infoMenu.setText("Beranda");
+        infoSubmenu.setText("Home / Dashboard");
+
+        new PenggunaFrame().setVisible(false);
+        new KasirFrame().setVisible(false);
+        new SewaanFrame().setVisible(false);
+        new PengembalianFrame().setVisible(false);
+        new BarangFrame().setVisible(false);
+
+        btn_beranda.setBackground(colorHover);
+        Beranda.setBackground(colorHover);
+        btn_kasir.setBackground(exitHover);
+        Kasir.setBackground(exitHover);
+        btn_sewaan.setBackground(exitHover);
+        Sewaan.setBackground(exitHover);
+        btn_barang.setBackground(exitHover);
+        Barang.setBackground(exitHover);
+        btn_pengembalian.setBackground(exitHover);
+        Pengembalian.setBackground(exitHover);
+        btn_pengguna.setBackground(exitHover);
+        Pengguna.setBackground(exitHover);
+        btn_laporan.setBackground(exitHover);
+        Laporan.setBackground(exitHover);
+    }//GEN-LAST:event_BerandaMouseClicked
 
     /**
      * @param args the command line arguments
@@ -982,7 +978,6 @@ public class MenuUtama extends javax.swing.JFrame {
     private javax.swing.JPanel Pengembalian;
     private javax.swing.JPanel Pengguna;
     private javax.swing.JPanel Sewaan;
-    private javax.swing.JLabel akses;
     private javax.swing.JLabel bg;
     private javax.swing.JButton btn_barang;
     private javax.swing.JButton btn_beranda;
@@ -1000,6 +995,7 @@ public class MenuUtama extends javax.swing.JFrame {
     private javax.swing.JLabel iconPengembalian;
     private javax.swing.JLabel iconPengguna;
     private javax.swing.JLabel iconSewaan;
+    private javax.swing.JLabel infoMenu;
     private javax.swing.JLabel infoSubmenu;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JLabel jLabel1;

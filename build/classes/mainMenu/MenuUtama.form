@@ -677,17 +677,17 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="akses" alignment="0" pref="550" max="32767" attributes="0"/>
+              <Component id="infoMenu" alignment="0" pref="550" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="akses" alignment="0" max="32767" attributes="0"/>
+              <Component id="infoMenu" alignment="0" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="akses">
+        <Component class="javax.swing.JLabel" name="infoMenu">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Outfit" size="36" style="1"/>
