@@ -82,7 +82,15 @@ public class BarangFrame extends javax.swing.JInternalFrame {
 
    
     private void load_table(){
-        DefaultTableModel model = new DefaultTableModel();
+        DefaultTableModel model = new DefaultTableModel(){
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        };
         model.addColumn("No");
         model.addColumn("ID Barang");
         model.addColumn("Nama Barang");
@@ -102,7 +110,7 @@ public class BarangFrame extends javax.swing.JInternalFrame {
                 ,res.getString("harga_hari"),res.getString("harga_2hari"),res.getString("keterangan")});
             }
             table_barang.setModel(model);
-              
+            
         }catch(Exception e) {
             JOptionPane.showMessageDialog(rootPane, "Error");
             System.out.println(e.getMessage());
@@ -206,7 +214,15 @@ public class BarangFrame extends javax.swing.JInternalFrame {
             new String [] {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         table_barang.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 table_barangMouseClicked(evt);
@@ -289,7 +305,16 @@ public class BarangFrame extends javax.swing.JInternalFrame {
             }
 
             ResultSet res = stm.executeQuery(msql);
-            DefaultTableModel dtm = new DefaultTableModel();
+            DefaultTableModel dtm = new DefaultTableModel(){
+                boolean[] canEdit = new boolean [] {
+                    false, false, false, false, false, false, false
+                };
+
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return canEdit [columnIndex];
+                }
+            };
+            dtm.addColumn("No.");
             dtm.addColumn("ID Barang");
             dtm.addColumn("Nama Barang");
             dtm.addColumn("Stok");
@@ -319,7 +344,16 @@ public class BarangFrame extends javax.swing.JInternalFrame {
 
     private void txt_cariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cariKeyReleased
 
-        DefaultTableModel dtm = new DefaultTableModel();
+        DefaultTableModel dtm = new DefaultTableModel(){
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        };
+        dtm.addColumn("No.");
         dtm.addColumn("ID Barang");
         dtm.addColumn("Nama Barang");
         dtm.addColumn("Stok");

@@ -97,11 +97,6 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
         getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 40, -1, 30));
 
         jPanel6.setBackground(new java.awt.Color(252, 191, 73));
-        jPanel6.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jPanel6MouseClicked(evt);
-            }
-        });
 
         jLabel6.setFont(new java.awt.Font("Outfit", 1, 14)); // NOI18N
         jLabel6.setText("Cetak");
@@ -160,7 +155,15 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
         private void loadTable() {
-        DefaultTableModel tableModel = new DefaultTableModel();
+        DefaultTableModel tableModel = new DefaultTableModel(){
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        };
         tableModel.addColumn("No");
         tableModel.addColumn("Id Sewaan");
         tableModel.addColumn("Nama Penyewa");
@@ -196,7 +199,15 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         String cari = txt_carisewaan.getText();
 
-        DefaultTableModel dtm = new DefaultTableModel();
+        DefaultTableModel dtm = new DefaultTableModel(){
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        };
         dtm.addColumn("No");
         dtm.addColumn("Nama Penyewa");
         dtm.addColumn("Identitas");
@@ -242,12 +253,6 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
         int i = table_sewaan.getSelectedRow();
         TableModel tbl = table_sewaan.getModel();
     }//GEN-LAST:event_table_sewaanMouseClicked
-
-    private void jPanel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel6MouseClicked
-        // TODO add your handling code here:
-        this.setVisible(true);
-        new Cetak().setVisible(true);
-    }//GEN-LAST:event_jPanel6MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

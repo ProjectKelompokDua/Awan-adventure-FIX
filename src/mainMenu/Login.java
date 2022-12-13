@@ -71,6 +71,11 @@ public class Login extends javax.swing.JFrame {
 
         txt_password.setFont(new java.awt.Font("Outfit", 0, 20)); // NOI18N
         txt_password.setBorder(null);
+        txt_password.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_passwordKeyPressed(evt);
+            }
+        });
         getContentPane().add(txt_password, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 410, 310, 20));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -377,6 +382,11 @@ public class Login extends javax.swing.JFrame {
           JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }//GEN-LAST:event_loginMouseClicked
+
+    private void txt_passwordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_passwordKeyPressed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_txt_passwordKeyPressed
 
     /**
      * @param args the command line arguments

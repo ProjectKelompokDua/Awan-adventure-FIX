@@ -134,16 +134,28 @@ public class KasirFrame extends javax.swing.JInternalFrame {
         combo_jumlah.setEnabled(false);
         btn_editBarang.setEnabled(false);
         btn_hapusBarang.setEnabled(false);
-        DefaultTableModel dtm = new DefaultTableModel();
+        loadTable();
+        tbl_barang.setDefaultEditor(Object.class, null);
+        btn_clearSelection.setEnabled(false);
+        total_harga.setText("");
+    }
+    
+    private void loadTable(){
+        DefaultTableModel dtm = new DefaultTableModel(){
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        };
         dtm.addColumn("No");
         dtm.addColumn("Nama Barang");
         dtm.addColumn("Jumlah");
         dtm.addColumn("Harga/Hari");
         dtm.addColumn("Harga > 2 Hari");
         tbl_barang.setModel(dtm);
-        tbl_barang.setDefaultEditor(Object.class, null);
-        btn_clearSelection.setEnabled(false);
-        total_harga.setText("");
     }
     
     private void tanggalHariIni(){
