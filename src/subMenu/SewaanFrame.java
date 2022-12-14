@@ -169,7 +169,15 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
         private void loadTable() {
-        DefaultTableModel tableModel = new DefaultTableModel();
+        DefaultTableModel tableModel = new DefaultTableModel(){
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        };
         tableModel.addColumn("No");
         tableModel.addColumn("Id Sewaan");
         tableModel.addColumn("Nama Penyewa");
@@ -205,17 +213,23 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         String cari = txt_carisewaan.getText();
 
-        DefaultTableModel dtm = new DefaultTableModel();
+        DefaultTableModel dtm = new DefaultTableModel(){
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        };
         dtm.addColumn("No");
+        dtm.addColumn("Id Sewaan");
         dtm.addColumn("Nama Penyewa");
-        dtm.addColumn("Identitas");
-        dtm.addColumn("DP");
-        dtm.addColumn("Nama Barang");
+        dtm.addColumn("Jumlah Barang");
         dtm.addColumn("Tanggal Pinjam");
         dtm.addColumn("Tanggal Kembali");
-        dtm.addColumn("Jumlah");
         dtm.addColumn("Total");
-        dtm.addColumn("Aksi");
+        dtm.addColumn("Status");
         table_sewaan.setModel(dtm);
 
         try {
