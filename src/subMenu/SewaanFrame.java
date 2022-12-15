@@ -5,6 +5,7 @@
  */
 package subMenu;
 
+import subMenu.popUp.DetailTransaksi;
 import com.mysql.cj.jdbc.Driver;
 import java.sql.*;
 import javax.swing.JButton;
@@ -95,14 +96,9 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
 
         jLabel5.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
         jLabel5.setText("Cari");
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 40, -1, 30));
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 40, -1, 30));
 
         jPanel6.setBackground(new java.awt.Color(252, 191, 73));
-        jPanel6.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jPanel6MouseClicked(evt);
-            }
-        });
 
         jLabel6.setFont(new java.awt.Font("Outfit", 1, 14)); // NOI18N
         jLabel6.setText("Cetak");
@@ -273,7 +269,7 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
 
     private void jPanel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel7MouseClicked
         // TODO add your handling code here:
-        new Detail_Transaksi().setVisible(true);
+        new DetailTransaksi().setVisible(true);
     }//GEN-LAST:event_jPanel7MouseClicked
 
 

@@ -2,18 +2,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package subMenu;
+package subMenu.popUp;
 
 /**
  *
  * @author DELL
  */
-public class Detail_Transaksi extends javax.swing.JFrame {
+public class DetailTransaksi extends javax.swing.JFrame {
 
     /**
      * Creates new form Detail_Transaksi
      */
-    public Detail_Transaksi() {
+    public DetailTransaksi() {
         initComponents();
     }
 
@@ -51,7 +51,7 @@ public class Detail_Transaksi extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(252, 191, 73));
 
-        lbl_exit.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lbl_exit.setFont(new java.awt.Font("Outfit Medium", 0, 18)); // NOI18N
         lbl_exit.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_exit.setText("X");
         lbl_exit.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -60,7 +60,7 @@ public class Detail_Transaksi extends javax.swing.JFrame {
             }
         });
 
-        lbl_exit1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lbl_exit1.setFont(new java.awt.Font("Outfit Medium", 0, 18)); // NOI18N
         lbl_exit1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_exit1.setText("Detail Transaksi");
         lbl_exit1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -78,7 +78,7 @@ public class Detail_Transaksi extends javax.swing.JFrame {
                 .addComponent(lbl_exit1, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lbl_exit, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -87,7 +87,7 @@ public class Detail_Transaksi extends javax.swing.JFrame {
                 .addComponent(lbl_exit1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        lbl_exit2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbl_exit2.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
         lbl_exit2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_exit2.setText("Kode Sewaan :");
         lbl_exit2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -96,7 +96,7 @@ public class Detail_Transaksi extends javax.swing.JFrame {
             }
         });
 
-        lbl_exit3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbl_exit3.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
         lbl_exit3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_exit3.setText("Nama Penyewa :");
         lbl_exit3.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -105,7 +105,7 @@ public class Detail_Transaksi extends javax.swing.JFrame {
             }
         });
 
-        lbl_exit4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbl_exit4.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
         lbl_exit4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_exit4.setText("Nama Penyewa :");
         lbl_exit4.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -114,7 +114,7 @@ public class Detail_Transaksi extends javax.swing.JFrame {
             }
         });
 
-        lbl_exit5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbl_exit5.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
         lbl_exit5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_exit5.setText("Tanggal Penyewaan :");
         lbl_exit5.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -123,6 +123,7 @@ public class Detail_Transaksi extends javax.swing.JFrame {
             }
         });
 
+        jTable1.setFont(new java.awt.Font("Outfit", 0, 12)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -136,7 +137,7 @@ public class Detail_Transaksi extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        lbl_exit6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbl_exit6.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
         lbl_exit6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_exit6.setText("Total :");
         lbl_exit6.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -145,7 +146,7 @@ public class Detail_Transaksi extends javax.swing.JFrame {
             }
         });
 
-        lbl_exit7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbl_exit7.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
         lbl_exit7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_exit7.setText("10 - 03 - 2022");
         lbl_exit7.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -154,7 +155,7 @@ public class Detail_Transaksi extends javax.swing.JFrame {
             }
         });
 
-        lbl_exit8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbl_exit8.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
         lbl_exit8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_exit8.setText("-");
         lbl_exit8.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -163,7 +164,7 @@ public class Detail_Transaksi extends javax.swing.JFrame {
             }
         });
 
-        lbl_exit9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbl_exit9.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
         lbl_exit9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_exit9.setText("-");
         lbl_exit9.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -172,7 +173,7 @@ public class Detail_Transaksi extends javax.swing.JFrame {
             }
         });
 
-        lbl_exit10.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbl_exit10.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
         lbl_exit10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_exit10.setText("-");
         lbl_exit10.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -181,7 +182,7 @@ public class Detail_Transaksi extends javax.swing.JFrame {
             }
         });
 
-        lbl_exit11.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbl_exit11.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
         lbl_exit11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_exit11.setText("-");
         lbl_exit11.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -190,7 +191,7 @@ public class Detail_Transaksi extends javax.swing.JFrame {
             }
         });
 
-        lbl_exit12.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbl_exit12.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
         lbl_exit12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_exit12.setText("-");
         lbl_exit12.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -352,20 +353,21 @@ public class Detail_Transaksi extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Detail_Transaksi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DetailTransaksi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Detail_Transaksi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DetailTransaksi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Detail_Transaksi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DetailTransaksi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Detail_Transaksi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DetailTransaksi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Detail_Transaksi().setVisible(true);
+                new DetailTransaksi().setVisible(true);
             }
         });
     }
