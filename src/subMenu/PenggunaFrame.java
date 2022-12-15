@@ -72,7 +72,15 @@ public class PenggunaFrame extends javax.swing.JInternalFrame {
     }
     
     private void loadTable(){
-        DefaultTableModel tableModel = new DefaultTableModel();
+        DefaultTableModel tableModel = new DefaultTableModel(){
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        };
         tableModel.addColumn("No");
         tableModel.addColumn("id");
         tableModel.addColumn("Nama");
@@ -389,7 +397,15 @@ public class PenggunaFrame extends javax.swing.JInternalFrame {
         String cari = txt_cariPengguna.getText();
         int no = 1;
 
-        DefaultTableModel dtm = new DefaultTableModel();
+        DefaultTableModel dtm = new DefaultTableModel(){
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        };
         dtm.addColumn("No");
         dtm.addColumn("id");
         dtm.addColumn("Nama");

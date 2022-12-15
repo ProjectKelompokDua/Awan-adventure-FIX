@@ -12,11 +12,14 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 import java.sql.*;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Calendar;
 import java.util.Locale;
+import javax.swing.JFormattedTextField;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -29,7 +32,10 @@ import koneksi.Connect;
  * @author perlengkapan
  */
 public class KasirFrame extends javax.swing.JInternalFrame {
-
+    
+    
+    private DecimalFormatSymbols dfs;
+    private DecimalFormat dFormat;
     /**
      * Creates new form KasirFrame
      */
@@ -69,7 +75,7 @@ public class KasirFrame extends javax.swing.JInternalFrame {
             String value = textfield.getText();
             if (ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9' ) {
                textfield.setEditable(false);
-            }else if(ke.getKeyCode() == 8){
+            }else if(ke.getKeyCode() == 8 || ke.getKeyCode() == 49){
                textfield.setEditable(true);
             }else {
                textfield.setEditable(true);
@@ -134,16 +140,28 @@ public class KasirFrame extends javax.swing.JInternalFrame {
         combo_jumlah.setEnabled(false);
         btn_editBarang.setEnabled(false);
         btn_hapusBarang.setEnabled(false);
-        DefaultTableModel dtm = new DefaultTableModel();
+        loadTable();
+        tbl_barang.setDefaultEditor(Object.class, null);
+        btn_clearSelection.setEnabled(false);
+        total_harga.setText("");
+    }
+    
+    private void loadTable(){
+        DefaultTableModel dtm = new DefaultTableModel(){
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        };
         dtm.addColumn("No");
         dtm.addColumn("Nama Barang");
         dtm.addColumn("Jumlah");
         dtm.addColumn("Harga/Hari");
         dtm.addColumn("Harga > 2 Hari");
         tbl_barang.setModel(dtm);
-        tbl_barang.setDefaultEditor(Object.class, null);
-        btn_clearSelection.setEnabled(false);
-        total_harga.setText("");
     }
     
     private void tanggalHariIni(){
@@ -459,7 +477,7 @@ public class KasirFrame extends javax.swing.JInternalFrame {
         try{
             //check identitas ada atau tidak
             if(txt_nama.getText().equals("")){
-                JOptionPane.showMessageDialog(rootPane,  "Data Nama harus diisi");
+                JOptionPane.showMessageDialog(null,  "Data Nama harus diisi");
                 txt_nama.requestFocus();
             }else if(text_areaAlamat.getText().equals("")){
                 JOptionPane.showMessageDialog(rootPane, "Data Alamat harus diisi");
@@ -489,12 +507,17 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                 + "'"+ sdf.format(tgl_pinjam.getDate()) +"', '"+ sdf.format(tgl_kembali.getDate()) +"', now())";
                 PreparedStatement prepare = conn.prepareStatement(sqlDataSewaan);
                 prepare.execute();
-
+                              
                 //ambil id_sewaan
                 String sqlAmbilId = "select id_sewaan from data_sewaan where nama_penyewa='"+ txt_nama.getText() +"'";
                 PreparedStatement stm = conn.prepareStatement(sqlAmbilId);
                 ResultSet hasilId = stm.executeQuery();
                 hasilId.next();
+                
+                //input laporan
+                String sqlLaporan = "insert into laporan values (null, '"+ hasilId.getString("id_sewaan") +"', now(), '"+ total_harga.getText() +"')";
+                PreparedStatement statemen = conn.prepareStatement(sqlLaporan);
+                statemen.execute();
 
                 String identitas = null;
                 if(combo_identitas.getSelectedIndex() == 0){
@@ -517,8 +540,9 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                         + "'"+ txt_identitas.getText() +"', '"+ txt_dp.getText() +"', '"+ res.getString("id_barang") +"', "
                         + "'"+ sdf.format(tgl_pinjam.getDate()) +"', '"+ sdf.format(tgl_kembali.getDate()) +"',"
                         + "'"+ stokBarang +"', '"+ total_harga.getText() +"')";
-                        PreparedStatement statemen = conn.prepareStatement(sqlDetailSewaan);
-                        statemen.execute();
+                        
+                        PreparedStatement statement = conn.prepareStatement(sqlDetailSewaan);
+                        statement.execute();
                     }
                 }
                 JOptionPane.showMessageDialog(rootPane, "Transaksi Behasil");

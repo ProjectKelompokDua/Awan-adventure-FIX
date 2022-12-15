@@ -5,7 +5,7 @@
  */
 package subMenu;
 
-import Logic.DashboardL;
+import logic.DashboardL;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
