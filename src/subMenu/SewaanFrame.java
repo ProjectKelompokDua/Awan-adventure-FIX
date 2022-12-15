@@ -7,11 +7,17 @@ package subMenu;
 
 import com.mysql.cj.jdbc.Driver;
 import java.sql.*;
+import java.util.HashMap;
 import javax.swing.JButton;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import koneksi.Connect;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -51,6 +57,8 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
         jLabel1 = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
+        txt_carisewaan1 = new javax.swing.JTextField();
+        txt_idsewaan = new javax.swing.JTextField();
         bg = new javax.swing.JLabel();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -132,7 +140,7 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
                 .addContainerGap())
         );
 
-        getContentPane().add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 110, 40));
+        getContentPane().add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 320, 110, 40));
 
         jPanel7.setBackground(new java.awt.Color(252, 191, 73));
         jPanel7.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -149,18 +157,28 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 120, Short.MAX_VALUE)
-            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))
+            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 50, Short.MAX_VALUE)
-            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
+            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
         );
 
-        getContentPane().add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 330, 120, 50));
+        getContentPane().add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 320, 120, 40));
+
+        txt_carisewaan1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_carisewaan1KeyReleased(evt);
+            }
+        });
+        getContentPane().add(txt_carisewaan1, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 40, 190, 30));
+
+        txt_idsewaan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_idsewaanActionPerformed(evt);
+            }
+        });
+        getContentPane().add(txt_idsewaan, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 370, 240, 30));
 
         bg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/images/background.png"))); // NOI18N
         getContentPane().add(bg, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
@@ -220,12 +238,15 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
 
         try {
             Statement statement = (Statement) Connect.GetConnection().createStatement();
-            ResultSet res = statement.executeQuery("SELECT data_sewaan.id_sewaan, data_sewaan.nama_penyewa, data_sewaan.jenis_identitas,\n"
-                + "data_sewaan.dp, data_barang.nama_barang, data_sewaan.tanggal_pinjam, data_sewaan.tanggal_kembali,\n"
-                + "data_sewaan.jumlah, data_sewaan.total\n"
-                + "FROM data_sewaan join data_barang\n"
-                + "on data_sewaan.id_barang = data_barang.id_barang \n"
-                + "where nama_penyewa like '%"+cari+"%' or jenis_identitas like '%"+cari+"%'");
+            ResultSet res = statement.executeQuery("SELECT data_sewaan.id_sewaan, data_sewaan.nama_penyewa, detail_data_sewaan.jenis_identitas,\n"
+                + "detail_data_sewaan.dp, data_barang.nama_barang, data_sewaan.tgl_pinjam, data_sewaan.tgl_kembali,\n"
+                + "detail_data_sewaan.jumlah, detail_data_sewaan.total\n"
+                + "FROM data_sewaan\n"
+                + "JOIN detail_data_sewaan\n"
+                + "ON detail_data_sewaan.id_sewaan = data_sewaan.id_sewaan\n"
+                + "JOIN data_barang\n"
+                + "ON detail_data_sewaan.id_barang = data_barang.id_barang\n"
+                + "where data_sewaan.nama_penyewa like '%"+cari+"%' or detail_data_sewaan.jenis_identitas like '%"+cari+"%'");
 
             while (res.next()) {
                 dtm.addRow(new Object[]{
@@ -234,8 +255,8 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
                     res.getString("jenis_identitas"),
                     res.getString("dp"),
                     res.getString("nama_barang"),
-                    res.getString("tanggal_pinjam"),
-                    res.getString("tanggal_kembali"),
+                    res.getString("tgl_pinjam"),
+                    res.getString("tgl_kembali"),
                     res.getString("jumlah"),
                     res.getString("total")
                 });
@@ -250,10 +271,39 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         int i = table_sewaan.getSelectedRow();
         TableModel tbl = table_sewaan.getModel();
+        
+        String field1 = tbl.getValueAt(i, 1).toString(); 
+        
+        txt_idsewaan.setText(field1); 
     }//GEN-LAST:event_table_sewaanMouseClicked
 
     private void jPanel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel6MouseClicked
         // TODO add your handling code here:
+        java.sql.Connection con = null;
+            try{
+                String jdbcDriver = "com.mysql.cj.jdbc.Driver";
+                Class.forName(jdbcDriver);
+                
+                String url = "jdbc:mysql://localhost:3306/kasir_awan";
+                String user = "root";
+                String pass = "";
+                
+                con = DriverManager.getConnection(url, user, pass);
+                Statement stm = (Statement) con.createStatement();
+                
+                try{
+                    String report = ("D:\\Github\\CLONE LAGI 12.12\\Awan-adventure-FIX\\src\\subMenu\\Nota.jrxml");
+                    HashMap hash = new HashMap();
+                    hash.put("id_sewaan",txt_idsewaan.getText());
+                    JasperReport JRpt = JasperCompileManager.compileReport(report);
+                    JasperPrint JPrint = JasperFillManager.fillReport(JRpt, hash, con);
+                    JasperViewer.viewReport(JPrint, false);
+                } catch (Exception rptexcpt){
+                    System.out.println("Report tidak bisa dilihat karena : " + rptexcpt);
+                }
+            } catch (Exception e){
+                System.out.println(e);
+            }
 
     }//GEN-LAST:event_jPanel6MouseClicked
 
@@ -261,6 +311,14 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         new Detail_Transaksi().setVisible(true);
     }//GEN-LAST:event_jPanel7MouseClicked
+
+    private void txt_carisewaan1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_carisewaan1KeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_carisewaan1KeyReleased
+
+    private void txt_idsewaanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_idsewaanActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_idsewaanActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -275,5 +333,7 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable table_sewaan;
     private javax.swing.JTextField txt_carisewaan;
+    private javax.swing.JTextField txt_carisewaan1;
+    private javax.swing.JTextField txt_idsewaan;
     // End of variables declaration//GEN-END:variables
 }
