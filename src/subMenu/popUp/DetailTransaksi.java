@@ -2,19 +2,25 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package subMenu.popUp;
+package subMenu;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author DELL
  */
-public class DetailTransaksi extends javax.swing.JFrame {
+public class Detail_Transaksi extends javax.swing.JFrame {
 
     /**
      * Creates new form Detail_Transaksi
      */
-    public DetailTransaksi() {
+    public Detail_Transaksi() {
         initComponents();
+        LoadTable();
     }
 
     /**
@@ -32,17 +38,15 @@ public class DetailTransaksi extends javax.swing.JFrame {
         lbl_exit1 = new javax.swing.JLabel();
         lbl_exit2 = new javax.swing.JLabel();
         lbl_exit3 = new javax.swing.JLabel();
-        lbl_exit4 = new javax.swing.JLabel();
         lbl_exit5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        table_detail = new javax.swing.JTable();
         lbl_exit6 = new javax.swing.JLabel();
         lbl_exit7 = new javax.swing.JLabel();
-        lbl_exit8 = new javax.swing.JLabel();
-        lbl_exit9 = new javax.swing.JLabel();
-        lbl_exit10 = new javax.swing.JLabel();
-        lbl_exit11 = new javax.swing.JLabel();
-        lbl_exit12 = new javax.swing.JLabel();
+        lbl_kode = new javax.swing.JLabel();
+        lbl_nama = new javax.swing.JLabel();
+        lbl_tgl = new javax.swing.JLabel();
+        lbl_total = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -51,7 +55,7 @@ public class DetailTransaksi extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(252, 191, 73));
 
-        lbl_exit.setFont(new java.awt.Font("Outfit Medium", 0, 18)); // NOI18N
+        lbl_exit.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lbl_exit.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_exit.setText("X");
         lbl_exit.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -60,7 +64,7 @@ public class DetailTransaksi extends javax.swing.JFrame {
             }
         });
 
-        lbl_exit1.setFont(new java.awt.Font("Outfit Medium", 0, 18)); // NOI18N
+        lbl_exit1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lbl_exit1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_exit1.setText("Detail Transaksi");
         lbl_exit1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -74,11 +78,11 @@ public class DetailTransaksi extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lbl_exit1, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(108, 108, 108)
                 .addComponent(lbl_exit, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(1, 1, 1))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -87,7 +91,7 @@ public class DetailTransaksi extends javax.swing.JFrame {
                 .addComponent(lbl_exit1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        lbl_exit2.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
+        lbl_exit2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lbl_exit2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_exit2.setText("Kode Sewaan :");
         lbl_exit2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -96,7 +100,7 @@ public class DetailTransaksi extends javax.swing.JFrame {
             }
         });
 
-        lbl_exit3.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
+        lbl_exit3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lbl_exit3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_exit3.setText("Nama Penyewa :");
         lbl_exit3.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -105,16 +109,7 @@ public class DetailTransaksi extends javax.swing.JFrame {
             }
         });
 
-        lbl_exit4.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
-        lbl_exit4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbl_exit4.setText("Nama Penyewa :");
-        lbl_exit4.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lbl_exit4MouseClicked(evt);
-            }
-        });
-
-        lbl_exit5.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
+        lbl_exit5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lbl_exit5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_exit5.setText("Tanggal Penyewaan :");
         lbl_exit5.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -123,8 +118,7 @@ public class DetailTransaksi extends javax.swing.JFrame {
             }
         });
 
-        jTable1.setFont(new java.awt.Font("Outfit", 0, 12)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        table_detail.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -135,9 +129,14 @@ public class DetailTransaksi extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        table_detail.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                table_detailMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(table_detail);
 
-        lbl_exit6.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
+        lbl_exit6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lbl_exit6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_exit6.setText("Total :");
         lbl_exit6.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -146,7 +145,7 @@ public class DetailTransaksi extends javax.swing.JFrame {
             }
         });
 
-        lbl_exit7.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
+        lbl_exit7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lbl_exit7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_exit7.setText("10 - 03 - 2022");
         lbl_exit7.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -155,48 +154,39 @@ public class DetailTransaksi extends javax.swing.JFrame {
             }
         });
 
-        lbl_exit8.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
-        lbl_exit8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbl_exit8.setText("-");
-        lbl_exit8.addMouseListener(new java.awt.event.MouseAdapter() {
+        lbl_kode.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbl_kode.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbl_kode.setText("-");
+        lbl_kode.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lbl_exit8MouseClicked(evt);
+                lbl_kodeMouseClicked(evt);
             }
         });
 
-        lbl_exit9.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
-        lbl_exit9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbl_exit9.setText("-");
-        lbl_exit9.addMouseListener(new java.awt.event.MouseAdapter() {
+        lbl_nama.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbl_nama.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbl_nama.setText("-");
+        lbl_nama.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lbl_exit9MouseClicked(evt);
+                lbl_namaMouseClicked(evt);
             }
         });
 
-        lbl_exit10.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
-        lbl_exit10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbl_exit10.setText("-");
-        lbl_exit10.addMouseListener(new java.awt.event.MouseAdapter() {
+        lbl_tgl.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbl_tgl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbl_tgl.setText("-");
+        lbl_tgl.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lbl_exit10MouseClicked(evt);
+                lbl_tglMouseClicked(evt);
             }
         });
 
-        lbl_exit11.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
-        lbl_exit11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbl_exit11.setText("-");
-        lbl_exit11.addMouseListener(new java.awt.event.MouseAdapter() {
+        lbl_total.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbl_total.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbl_total.setText("-");
+        lbl_total.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lbl_exit11MouseClicked(evt);
-            }
-        });
-
-        lbl_exit12.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
-        lbl_exit12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbl_exit12.setText("-");
-        lbl_exit12.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lbl_exit12MouseClicked(evt);
+                lbl_totalMouseClicked(evt);
             }
         });
 
@@ -212,7 +202,7 @@ public class DetailTransaksi extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(lbl_exit2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_exit8)
+                        .addComponent(lbl_kode)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(lbl_exit7))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -220,22 +210,18 @@ public class DetailTransaksi extends javax.swing.JFrame {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(lbl_exit3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lbl_exit9))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(lbl_exit4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lbl_exit10))
+                                .addComponent(lbl_nama))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(lbl_exit5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lbl_exit11)))
+                                .addComponent(lbl_tgl)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lbl_exit6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbl_exit12)
+                .addComponent(lbl_total)
                 .addGap(94, 94, 94))
         );
         jPanel1Layout.setVerticalGroup(
@@ -246,25 +232,21 @@ public class DetailTransaksi extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl_exit2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_exit7)
-                    .addComponent(lbl_exit8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lbl_kode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(12, 12, 12)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl_exit3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_exit9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lbl_nama, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbl_exit4)
-                    .addComponent(lbl_exit10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lbl_tgl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_exit5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbl_exit5)
-                    .addComponent(lbl_exit11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl_exit6)
-                    .addComponent(lbl_exit12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lbl_total, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(29, 29, 29))
         );
 
@@ -282,7 +264,41 @@ public class DetailTransaksi extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+    private void kode_sewaan(){
+        try{
+            
+        }
+        catch(Exception e){}
+    }
+    
+    private void LoadTable(){
+        DefaultTableModel tableModel = new DefaultTableModel();
+        tableModel.addColumn("Kode Barang");
+        tableModel.addColumn("Nama Barang");
+        tableModel.addColumn("Jumlah");
+        
+        try {
+            String sql = "SELECT detail_data_sewaan.id_sewaan, data_barang.nama_barang, detail_data_sewaan.jumlah\n" +
+                        "FROM detail_data_sewaan\n" +
+                        "INNER JOIN data_barang\n" +
+                        "ON detail_data_sewaan.id_barang = data_barang.id_barang";
 
+            Connection connect = koneksi.Connect.GetConnection();
+            PreparedStatement pst = connect.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                tableModel.addRow(new Object[]{
+                    rs.getString("id_sewaan"),
+                    rs.getString("nama_barang"),
+                    rs.getString("jumlah")
+                });
+            }
+            table_detail.setModel(tableModel);
+        } catch (Exception e) {
+
+        }
+    }
     private void lbl_exitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbl_exitMouseClicked
         // TODO add your handling code here:
         this.setVisible(false);
@@ -300,10 +316,6 @@ public class DetailTransaksi extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_lbl_exit3MouseClicked
 
-    private void lbl_exit4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbl_exit4MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_lbl_exit4MouseClicked
-
     private void lbl_exit5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbl_exit5MouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_lbl_exit5MouseClicked
@@ -316,25 +328,26 @@ public class DetailTransaksi extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_lbl_exit7MouseClicked
 
-    private void lbl_exit8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbl_exit8MouseClicked
+    private void lbl_kodeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbl_kodeMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_lbl_exit8MouseClicked
+    }//GEN-LAST:event_lbl_kodeMouseClicked
 
-    private void lbl_exit9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbl_exit9MouseClicked
+    private void lbl_namaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbl_namaMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_lbl_exit9MouseClicked
+    }//GEN-LAST:event_lbl_namaMouseClicked
 
-    private void lbl_exit10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbl_exit10MouseClicked
+    private void lbl_tglMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbl_tglMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_lbl_exit10MouseClicked
+    }//GEN-LAST:event_lbl_tglMouseClicked
 
-    private void lbl_exit11MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbl_exit11MouseClicked
+    private void lbl_totalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbl_totalMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_lbl_exit11MouseClicked
+    }//GEN-LAST:event_lbl_totalMouseClicked
 
-    private void lbl_exit12MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbl_exit12MouseClicked
+    private void table_detailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_detailMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_lbl_exit12MouseClicked
+            
+    }//GEN-LAST:event_table_detailMouseClicked
 
     /**
      * @param args the command line arguments
@@ -353,21 +366,20 @@ public class DetailTransaksi extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(DetailTransaksi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Detail_Transaksi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(DetailTransaksi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Detail_Transaksi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(DetailTransaksi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Detail_Transaksi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(DetailTransaksi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Detail_Transaksi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new DetailTransaksi().setVisible(true);
+                new Detail_Transaksi().setVisible(true);
             }
         });
     }
@@ -376,19 +388,17 @@ public class DetailTransaksi extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lbl_exit;
     private javax.swing.JLabel lbl_exit1;
-    private javax.swing.JLabel lbl_exit10;
-    private javax.swing.JLabel lbl_exit11;
-    private javax.swing.JLabel lbl_exit12;
     private javax.swing.JLabel lbl_exit2;
     private javax.swing.JLabel lbl_exit3;
-    private javax.swing.JLabel lbl_exit4;
     private javax.swing.JLabel lbl_exit5;
     private javax.swing.JLabel lbl_exit6;
     private javax.swing.JLabel lbl_exit7;
-    private javax.swing.JLabel lbl_exit8;
-    private javax.swing.JLabel lbl_exit9;
+    private javax.swing.JLabel lbl_kode;
+    private javax.swing.JLabel lbl_nama;
+    private javax.swing.JLabel lbl_tgl;
+    private javax.swing.JLabel lbl_total;
+    private javax.swing.JTable table_detail;
     // End of variables declaration//GEN-END:variables
 }
