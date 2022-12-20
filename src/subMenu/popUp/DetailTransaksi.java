@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package subMenu;
+package subMenu.popUp;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,12 +13,12 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author DELL
  */
-public class Detail_Transaksi extends javax.swing.JFrame {
+public class DetailTransaksi extends javax.swing.JFrame {
 
     /**
      * Creates new form Detail_Transaksi
      */
-    public Detail_Transaksi() {
+    public DetailTransaksi() {
         initComponents();
         LoadTable();
     }
@@ -366,20 +366,20 @@ public class Detail_Transaksi extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Detail_Transaksi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DetailTransaksi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Detail_Transaksi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DetailTransaksi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Detail_Transaksi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DetailTransaksi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Detail_Transaksi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DetailTransaksi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Detail_Transaksi().setVisible(true);
+                new DetailTransaksi().setVisible(true);
             }
         });
     }
