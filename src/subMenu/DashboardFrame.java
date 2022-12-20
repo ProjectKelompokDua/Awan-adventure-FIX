@@ -18,8 +18,7 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
  * @author perlengkapan
  */
 public class DashboardFrame extends javax.swing.JInternalFrame {
-    
-    public String filter = "Hari";
+
     /**
      * Creates new form Dashboard
      */
@@ -31,17 +30,9 @@ public class DashboardFrame extends javax.swing.JInternalFrame {
         BasicInternalFrameUI bif = (BasicInternalFrameUI) this.getUI();
         bif.setNorthPane(null);
         
+        hari();
         tanggal();
         showTime();
-    }
-    
-        public void load_data(){
-        hari();
-        if(filter.equals("hari")){
-            hari();
-        }else if(filter.equals("Bulan")){
-            bulan();
-        }
     }
 
     public void hari(){
@@ -167,7 +158,7 @@ public class DashboardFrame extends javax.swing.JInternalFrame {
         getContentPane().add(txtwaktu, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 520, -1, 30));
 
         cmbFilter.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cmbFilter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "............", "Hari", "Bulan" }));
+        cmbFilter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hari ini", "Sebulan Terakhir" }));
         cmbFilter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmbFilterActionPerformed(evt);
@@ -186,13 +177,10 @@ public class DashboardFrame extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cmbFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbFilterActionPerformed
-        String flt = String.valueOf(cmbFilter.getSelectedItem());
-        if(flt.equals("Hari")){
-            filter = "Hari";
-            load_data();
-        }else if(flt.equals("Bulan")){
-            filter = "Bulan";
-            load_data();
+        if(cmbFilter.getSelectedIndex() == 0){
+            hari();
+        }else if(cmbFilter.getSelectedIndex() == 1){
+            bulan();
         }
     }//GEN-LAST:event_cmbFilterActionPerformed
 

@@ -18,12 +18,13 @@ import koneksi.Connect;
  * @author perlengkapan
  */
 public class Login extends javax.swing.JFrame {
-
+    
     /**
      * Creates new form NewJFrame
      */
     public Login() {
         initComponents();
+        txt_password.setEchoChar('*');
     }
     
     
@@ -71,11 +72,6 @@ public class Login extends javax.swing.JFrame {
 
         txt_password.setFont(new java.awt.Font("Outfit", 0, 20)); // NOI18N
         txt_password.setBorder(null);
-        txt_password.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                txt_passwordKeyPressed(evt);
-            }
-        });
         getContentPane().add(txt_password, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 410, 310, 20));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -120,7 +116,7 @@ public class Login extends javax.swing.JFrame {
 
         exit.setFont(new java.awt.Font("Outfit Black", 0, 24)); // NOI18N
         exit.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        exit.setText("X");
+        exit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icon/close.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -133,7 +129,7 @@ public class Login extends javax.swing.JFrame {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(exit, javax.swing.GroupLayout.PREFERRED_SIZE, 30, Short.MAX_VALUE)
+            .addComponent(exit, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
         );
 
         getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1160, 0, 40, -1));
@@ -146,16 +142,20 @@ public class Login extends javax.swing.JFrame {
         });
 
         minimize.setFont(new java.awt.Font("Outfit Black", 0, 24)); // NOI18N
-        minimize.setText("-");
+        minimize.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        minimize.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icon/minimize.png"))); // NOI18N
+        minimize.setToolTipText("");
+        minimize.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                minimizeMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(15, Short.MAX_VALUE)
-                .addComponent(minimize, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+            .addComponent(minimize, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -234,16 +234,14 @@ public class Login extends javax.swing.JFrame {
         jPanel9Layout.setHorizontalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel9Layout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addGap(0, 28, Short.MAX_VALUE))
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel9Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel6)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+                .addGap(0, 9, Short.MAX_VALUE)
+                .addComponent(jLabel6))
         );
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
@@ -259,7 +257,7 @@ public class Login extends javax.swing.JFrame {
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -275,9 +273,8 @@ public class Login extends javax.swing.JFrame {
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addGap(0, 36, Short.MAX_VALUE))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -312,7 +309,7 @@ public class Login extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
+    
     private void checkPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkPassActionPerformed
         // TODO add your handling code here:
         if(checkPass.isSelected()){
@@ -330,7 +327,7 @@ public class Login extends javax.swing.JFrame {
 
     private void jPanel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MouseClicked
         // TODO add your handling code here:
-        int confirmExit = JOptionPane.showConfirmDialog(rootPane, "Yakin ingin keluar ?", "Confirmation", JOptionPane.YES_NO_OPTION);
+        int confirmExit = JOptionPane.showConfirmDialog(null, "Yakin ingin keluar ?", "Confirmation", JOptionPane.YES_NO_OPTION);
         if(confirmExit == JOptionPane.YES_OPTION){
             System.exit(0);
         }        
@@ -361,7 +358,7 @@ public class Login extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Password tidak boleh kosong", "Warning", JOptionPane.WARNING_MESSAGE);
                 txt_password.requestFocus();
             }else{
-                java.sql.Connection conn = (Connection)Connect.GetConnection();
+                Connection conn = (Connection)Connect.GetConnection();
                 String sql = "SELECT * FROM pengguna WHERE username = '"+ txt_username.getText() +"' AND password = '"+ txt_password.getText() +"'";
                 PreparedStatement pst = conn.prepareStatement(sql);
                 ResultSet rs = pst.executeQuery(sql);
@@ -371,7 +368,8 @@ public class Login extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(null, "berhasil login");
                         this.setVisible(false);
                         MenuUtama mu = new MenuUtama();
-                        mu.setAkun(rs.getString("hak_akses"));
+                        
+                        mu.setAkun(rs.getString("hak_akses"), rs.getString("nama_pengguna"), rs.getString("id_pengguna"));
                         mu.setVisible(true);
                     }
                 }else{
@@ -380,14 +378,15 @@ public class Login extends javax.swing.JFrame {
                 }
             }
         }catch(Exception e){
-          JOptionPane.showMessageDialog(this, e.getMessage());
+            JOptionPane.showMessageDialog(null, "Error login");
+            System.out.println(e.getMessage());
         }
     }//GEN-LAST:event_loginMouseClicked
 
-    private void txt_passwordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_passwordKeyPressed
+    private void minimizeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_minimizeMouseClicked
         // TODO add your handling code here:
-        
-    }//GEN-LAST:event_txt_passwordKeyPressed
+        this.setState(Frame.ICONIFIED);
+    }//GEN-LAST:event_minimizeMouseClicked
 
     /**
      * @param args the command line arguments
@@ -400,7 +399,7 @@ public class Login extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Metal".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }

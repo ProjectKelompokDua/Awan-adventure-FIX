@@ -7,6 +7,7 @@ package subMenu;
 
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import com.toedter.calendar.JDateChooser;
+import java.awt.Color;
 import java.awt.Frame;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -26,6 +27,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import koneksi.Connect;
+import mainMenu.Login;
 
 /**
  *
@@ -46,15 +48,20 @@ public class KasirFrame extends javax.swing.JInternalFrame {
         BasicInternalFrameUI bif = (BasicInternalFrameUI) this.getUI();
         bif.setNorthPane(null);
         
-        updateComboBarang();
+        addComboBarang();
         clear();
         tanggalHariIni();
         cekInputanStringOnly(txt_nama);
         cekInputanIntegerOnly(txt_identitas);
-        cekInputanIntegerOnly(txt_dp);
+        cekInputanIntegerOnly(txt_deposit);
+        cekInputanIntegerOnly(txt_bayar);
     }
     
-    public void cekInputanIntegerOnly(JTextField textfield){
+    public void ambilId(String idpengguna){
+        txt_tempatIdPengguna.setText(idpengguna);
+    }
+    
+    private void cekInputanIntegerOnly(JTextField textfield){
         textfield.addKeyListener(new KeyAdapter() {
          public void keyPressed(KeyEvent ke) {
             String value = textfield.getText();
@@ -62,14 +69,14 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                textfield.setEditable(true);
             }else if(ke.getKeyCode() == 8){
                textfield.setEditable(true);
-            }else {
+            }else{
                textfield.setEditable(false);
             }
          }
       });
     }
     
-    public void cekInputanStringOnly(JTextField textfield){
+    private void cekInputanStringOnly(JTextField textfield){
         textfield.addKeyListener(new KeyAdapter() {
          public void keyPressed(KeyEvent ke) {
             String value = textfield.getText();
@@ -84,14 +91,15 @@ public class KasirFrame extends javax.swing.JInternalFrame {
       });
     }
     
-    private void updateComboBarang(){
+    private void addComboBarang(){
         try{
             String sql = "select * from data_barang";
             Connection conn = koneksi.Connect.GetConnection();
             PreparedStatement pst = conn.prepareStatement(sql);
             ResultSet res = pst.executeQuery();
+            
             while(res.next()){
-                combo_barang.addItem(res.getString("nama_barang"));
+                combo_barang.addItem(res.getString("nama_barang"));   
             }
             combo_jumlah.disable();
         }catch(Exception e){
@@ -100,7 +108,15 @@ public class KasirFrame extends javax.swing.JInternalFrame {
         }
     }
     
-    private void updateComboJumlah(){
+//    private void updateComboBarang(){
+//        int jumlahRow = tbl_barang.getModel().getRowCount();
+//        for (int i = 0; i < jumlahRow; i++) {
+//            String isiTable = tbl_barang.getModel().getValueAt(i, 1).toString();
+//            combo_barang.removeItem(isiTable);
+//        }
+//    }
+    
+    private void addComboJumlah(){
         try{
             String namaBarang = (String) combo_barang.getSelectedItem();
             
@@ -131,8 +147,8 @@ public class KasirFrame extends javax.swing.JInternalFrame {
         txt_identitas.disable();
         tgl_pinjam.setDate(null);
         tgl_kembali.setDate(null);
-        txt_dp.setText("");
-        txt_dp.enable();
+        txt_deposit.setText("");
+        txt_deposit.enable();
         tbl_barang.removeAll();
         tbl_barang.setRowSelectionAllowed(true);
         combo_barang.setSelectedIndex(0);
@@ -143,7 +159,12 @@ public class KasirFrame extends javax.swing.JInternalFrame {
         loadTable();
         tbl_barang.setDefaultEditor(Object.class, null);
         btn_clearSelection.setEnabled(false);
-        total_harga.setText("");
+        txt_total.setText("");
+        tanggalHariIni();
+        txt_bayar.setText("");
+        txt_bayar.setEnabled(false);
+        txt_kembalian.setText("");
+        txt_hp.setText("");
     }
     
     private void loadTable(){
@@ -207,7 +228,7 @@ public class KasirFrame extends javax.swing.JInternalFrame {
         jLabel14 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
-        txt_dp = new javax.swing.JTextField();
+        txt_deposit = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         btn_tambahBarang = new javax.swing.JButton();
         btn_editBarang = new javax.swing.JButton();
@@ -217,9 +238,16 @@ public class KasirFrame extends javax.swing.JInternalFrame {
         tgl_kembali = new com.toedter.calendar.JDateChooser();
         tgl_pinjam = new com.toedter.calendar.JDateChooser();
         jSeparator1 = new javax.swing.JSeparator();
-        jSeparator2 = new javax.swing.JSeparator();
-        total_harga = new javax.swing.JLabel();
+        txt_total = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        txt_kembalian = new javax.swing.JLabel();
+        txt_bayar = new javax.swing.JTextField();
+        label_blmCukup = new javax.swing.JLabel();
+        txt_hp = new javax.swing.JTextField();
+        label_hp = new javax.swing.JLabel();
         bg = new javax.swing.JLabel();
+        txt_tempatIdPengguna = new javax.swing.JLabel();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -233,7 +261,7 @@ public class KasirFrame extends javax.swing.JInternalFrame {
 
         label_alamat.setFont(new java.awt.Font("Outfit", 0, 18)); // NOI18N
         label_alamat.setText("Alamat");
-        getContentPane().add(label_alamat, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, -1, -1));
+        getContentPane().add(label_alamat, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 110, -1, -1));
 
         tbl_barang.setFont(new java.awt.Font("Outfit", 0, 16)); // NOI18N
         tbl_barang.setModel(new javax.swing.table.DefaultTableModel(
@@ -260,7 +288,7 @@ public class KasirFrame extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(tbl_barang);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 230, 550, 250));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 230, 550, 200));
 
         btn_proses.setBackground(new java.awt.Color(252, 191, 73));
         btn_proses.setFont(new java.awt.Font("Outfit", 0, 16)); // NOI18N
@@ -313,15 +341,16 @@ public class KasirFrame extends javax.swing.JInternalFrame {
 
         text_areaAlamat.setColumns(15);
         text_areaAlamat.setFont(new java.awt.Font("Outfit", 0, 16)); // NOI18N
-        text_areaAlamat.setRows(5);
+        text_areaAlamat.setLineWrap(true);
+        text_areaAlamat.setRows(3);
         text_areaAlamat.setBorder(null);
         jScrollPane2.setViewportView(text_areaAlamat);
 
-        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 70, 360, -1));
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 107, 360, 70));
 
         jLabel8.setFont(new java.awt.Font("Outfit", 0, 18)); // NOI18N
         jLabel8.setText("Identitas diri");
-        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 70, -1, 30));
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 30, -1, 30));
 
         combo_identitas.setFont(new java.awt.Font("Outfit", 0, 16)); // NOI18N
         combo_identitas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pilih Identitas...", "KTP", "SIM", "Kartu Pelajar" }));
@@ -334,15 +363,10 @@ public class KasirFrame extends javax.swing.JInternalFrame {
 
         jLabel9.setFont(new java.awt.Font("Outfit", 0, 18)); // NOI18N
         jLabel9.setText("Nomor Identitas");
-        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 30, -1, 30));
+        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 70, -1, 30));
 
         txt_identitas.setFont(new java.awt.Font("Outfit", 0, 16)); // NOI18N
         txt_identitas.setBorder(null);
-        txt_identitas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_identitasActionPerformed(evt);
-            }
-        });
         getContentPane().add(txt_identitas, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 70, 260, 30));
 
         jLabel10.setFont(new java.awt.Font("Outfit", 0, 18)); // NOI18N
@@ -350,7 +374,7 @@ public class KasirFrame extends javax.swing.JInternalFrame {
         getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 110, -1, 30));
 
         jLabel13.setFont(new java.awt.Font("Outfit", 0, 16)); // NOI18N
-        jLabel13.setText("Total    :      Rp");
+        jLabel13.setText("Kembalian     :     Rp");
         getContentPane().add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 510, -1, -1));
 
         jLabel14.setFont(new java.awt.Font("Outfit", 0, 16)); // NOI18N
@@ -363,12 +387,12 @@ public class KasirFrame extends javax.swing.JInternalFrame {
         getContentPane().add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 110, 40, 30));
 
         jLabel16.setFont(new java.awt.Font("Outfit", 0, 18)); // NOI18N
-        jLabel16.setText("DP");
+        jLabel16.setText("Deposit");
         getContentPane().add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 150, -1, 30));
 
-        txt_dp.setFont(new java.awt.Font("Outfit", 0, 16)); // NOI18N
-        txt_dp.setBorder(null);
-        getContentPane().add(txt_dp, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 150, 260, 30));
+        txt_deposit.setFont(new java.awt.Font("Outfit", 0, 16)); // NOI18N
+        txt_deposit.setBorder(null);
+        getContentPane().add(txt_deposit, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 150, 260, 30));
 
         jPanel4.setBackground(new java.awt.Color(242, 242, 242));
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Proses"));
@@ -443,14 +467,51 @@ public class KasirFrame extends javax.swing.JInternalFrame {
         getContentPane().add(tgl_kembali, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 110, 110, 30));
         getContentPane().add(tgl_pinjam, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 110, 110, 30));
         getContentPane().add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 200, 1010, 20));
-        getContentPane().add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 530, 200, 10));
 
-        total_harga.setFont(new java.awt.Font("Outfit", 0, 18)); // NOI18N
-        total_harga.setForeground(new java.awt.Color(0, 0, 0));
-        getContentPane().add(total_harga, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 510, 100, 20));
+        txt_total.setFont(new java.awt.Font("Outfit", 0, 18)); // NOI18N
+        txt_total.setForeground(new java.awt.Color(0, 0, 0));
+        getContentPane().add(txt_total, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 450, 100, 20));
+
+        jLabel15.setFont(new java.awt.Font("Outfit", 0, 16)); // NOI18N
+        jLabel15.setText("Total                  :      Rp");
+        getContentPane().add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 450, -1, -1));
+
+        jLabel17.setFont(new java.awt.Font("Outfit", 0, 16)); // NOI18N
+        jLabel17.setText("Bayar                :      Rp");
+        getContentPane().add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 480, -1, -1));
+
+        txt_kembalian.setFont(new java.awt.Font("Outfit", 0, 18)); // NOI18N
+        getContentPane().add(txt_kembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 510, 100, 20));
+
+        txt_bayar.setBackground(new java.awt.Color(255, 255, 255));
+        txt_bayar.setFont(new java.awt.Font("Outfit", 0, 18)); // NOI18N
+        txt_bayar.setForeground(new java.awt.Color(0, 0, 0));
+        txt_bayar.setBorder(null);
+        txt_bayar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_bayarKeyReleased(evt);
+            }
+        });
+        getContentPane().add(txt_bayar, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 480, 100, 20));
+
+        label_blmCukup.setFont(new java.awt.Font("Outfit Light", 0, 12)); // NOI18N
+        label_blmCukup.setForeground(new java.awt.Color(242, 242, 242));
+        label_blmCukup.setText("Uang tidak cukup");
+        getContentPane().add(label_blmCukup, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 480, -1, 20));
+
+        txt_hp.setFont(new java.awt.Font("Outfit", 0, 16)); // NOI18N
+        txt_hp.setBorder(null);
+        getContentPane().add(txt_hp, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 70, 360, 30));
+
+        label_hp.setFont(new java.awt.Font("Outfit", 0, 18)); // NOI18N
+        label_hp.setText("No HP");
+        getContentPane().add(label_hp, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, -1, 30));
 
         bg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/images/background.png"))); // NOI18N
         getContentPane().add(bg, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1010, 560));
+
+        txt_tempatIdPengguna.setText("jLabel1");
+        getContentPane().add(txt_tempatIdPengguna, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 490, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -470,10 +531,13 @@ public class KasirFrame extends javax.swing.JInternalFrame {
         btn_editBarang.setEnabled(true);
         btn_hapusBarang.setEnabled(true);
         btn_clearSelection.setEnabled(true);
+        combo_barang.setEnabled(false);
     }//GEN-LAST:event_tbl_barangMouseClicked
-
+   
     private void btn_prosesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_prosesActionPerformed
         // TODO add your handling code here:
+        Login login = new Login();
+        
         try{
             //check identitas ada atau tidak
             if(txt_nama.getText().equals("")){
@@ -482,12 +546,12 @@ public class KasirFrame extends javax.swing.JInternalFrame {
             }else if(text_areaAlamat.getText().equals("")){
                 JOptionPane.showMessageDialog(rootPane, "Data Alamat harus diisi");
                 text_areaAlamat.requestFocus();
-            }else if(combo_identitas.getSelectedIndex() == 0 && txt_dp.getText().equals("")){
+            }else if(combo_identitas.getSelectedIndex() == 0 && txt_deposit.getText().equals("")){
                 JOptionPane.showMessageDialog(rootPane, "Data DP harus diisi, karena tidak menyertakan kartu identitas");
-                txt_dp.requestFocus();
+                txt_deposit.requestFocus();
             }else if(combo_identitas.getSelectedIndex() != 0 && txt_identitas.getText().equals("")){
                 JOptionPane.showMessageDialog(rootPane, "Data Nomor Identitas harus diisi, karena menyertakan kartu identitas");
-                txt_dp.requestFocus();
+                txt_deposit.requestFocus();
             }else if(tgl_pinjam.getDate() == null){
                 JOptionPane.showMessageDialog(rootPane, "Data tanggal pinjam harus diisi");
                 tgl_pinjam.requestFocus();
@@ -497,14 +561,23 @@ public class KasirFrame extends javax.swing.JInternalFrame {
             }else if(tbl_barang.getModel().getRowCount() == 0){
                 JOptionPane.showMessageDialog(rootPane, "Silahkan pilih barang yang ingin disewa");
             }else{
-
+                String identitas = null;
+                if(combo_identitas.getSelectedIndex() == 0){
+                    identitas = "";
+                }else{
+                    identitas = combo_identitas.getSelectedItem().toString();
+                }
+                
                 Connection conn = koneksi.Connect.GetConnection();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
                 int rowCount = tbl_barang.getModel().getRowCount();
 
                 //input data_sewaan
-                String sqlDataSewaan = "insert into data_sewaan values(null,'"+ txt_nama.getText() +"' ,'"+ total_harga.getText() +"', 'proses', "
-                + "'"+ sdf.format(tgl_pinjam.getDate()) +"', '"+ sdf.format(tgl_kembali.getDate()) +"', now())";
+                String sqlDataSewaan = "insert into data_sewaan values(null ,'"+ txt_tempatIdPengguna.getText() +"' ,"
+                        + "'"+ txt_nama.getText() +"' ,'"+ text_areaAlamat.getText() +"' ,'"+ txt_hp.getText() +"' ,"
+                        + "'"+ identitas +"' ,'"+ txt_identitas.getText() +"' ,"
+                        + "'"+ txt_deposit.getText() +"' ,'"+ txt_total.getText() +"', 'proses', "
+                        + "'"+ sdf.format(tgl_pinjam.getDate()) +"', '"+ sdf.format(tgl_kembali.getDate()) +"', now())";
                 PreparedStatement prepare = conn.prepareStatement(sqlDataSewaan);
                 prepare.execute();
                               
@@ -515,16 +588,11 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                 hasilId.next();
                 
                 //input laporan
-                String sqlLaporan = "insert into laporan values (null, '"+ hasilId.getString("id_sewaan") +"', now(), '"+ total_harga.getText() +"')";
+                String sqlLaporan = "insert into laporan values (null, '"+ hasilId.getString("id_sewaan") +"', '"+ txt_tempatIdPengguna.getText() +"', now(), '"+ txt_total.getText() +"')";
                 PreparedStatement statemen = conn.prepareStatement(sqlLaporan);
                 statemen.execute();
 
-                String identitas = null;
-                if(combo_identitas.getSelectedIndex() == 0){
-                    identitas = "";
-                }else{
-                    identitas = combo_identitas.getSelectedItem().toString();
-                }
+                
                 for (int i = 0; i < rowCount; i++){
                     //ngambil nama barang dan stok barang dari jTable
                     Object namaBarang = tbl_barang.getValueAt(i, 1);
@@ -536,11 +604,8 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                     ResultSet res = pst.executeQuery();
                     if(res.next()){
                         String sqlDetailSewaan = "insert into detail_data_sewaan values ('"+ hasilId.getString("id_sewaan") +"',"
-                        + "'"+ txt_nama.getText() +"', '"+ text_areaAlamat.getText() +"', '"+ identitas +"',"
-                        + "'"+ txt_identitas.getText() +"', '"+ txt_dp.getText() +"', '"+ res.getString("id_barang") +"', "
-                        + "'"+ sdf.format(tgl_pinjam.getDate()) +"', '"+ sdf.format(tgl_kembali.getDate()) +"',"
-                        + "'"+ stokBarang +"', '"+ total_harga.getText() +"')";
-                        
+                        + "'"+ txt_nama.getText() +"', '"+ res.getString("id_barang") +"', '"+ stokBarang +"')";
+
                         PreparedStatement statement = conn.prepareStatement(sqlDetailSewaan);
                         statement.execute();
                     }
@@ -557,7 +622,7 @@ public class KasirFrame extends javax.swing.JInternalFrame {
     private void combo_barangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_combo_barangActionPerformed
         // TODO add your handling code here:
         combo_jumlah.setEnabled(true);
-        updateComboJumlah();
+        addComboJumlah();
         if(combo_barang.getSelectedItem().equals("Pilih Barang...")){
             combo_jumlah.removeAllItems();
             combo_jumlah.addItem("0");
@@ -570,25 +635,21 @@ public class KasirFrame extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         if(combo_identitas.getSelectedItem().equals("Pilih Identitas...")){
             txt_identitas.disable();
-            txt_dp.enable();
+            txt_deposit.enable();
             txt_identitas.setText("");
-            txt_dp.setText("");
+            txt_deposit.setText("");
         }else{
             txt_identitas.enable();
-            txt_dp.disable();
+            txt_deposit.disable();
             txt_identitas.setText("");
-            txt_dp.setText("");
+            txt_deposit.setText("");
         }
     }//GEN-LAST:event_combo_identitasActionPerformed
-
-    private void txt_identitasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_identitasActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txt_identitasActionPerformed
 
     private void btn_tambahBarangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_tambahBarangActionPerformed
         // TODO add your handling code here:
 
-        if(tgl_pinjam.getDate() == null && tgl_kembali.getDate() == null){
+        if(tgl_pinjam.getDate() == null || tgl_kembali.getDate() == null){
             JOptionPane.showMessageDialog(rootPane, "Silahkan pilih tanggal pinjam dan tanggal kembali terlebih dahulu");
         }else{
             try{
@@ -605,7 +666,7 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                 }else if(combo_jumlah.getSelectedItem().equals("0")){
                     JOptionPane.showMessageDialog(rootPane, "Silahkan pilih jumlah barang terlebih dahulu");
                 }else if(jarak.getDays() < 1){
-                    JOptionPane.showMessageDialog(rootPane, "Silahkan dicek kembali tanggal peminjaman dan pengembalian");
+                    JOptionPane.showMessageDialog(rootPane, "Silahkan cek kembali tanggal peminjaman dan pengembalian");
                 }else{
 
                     //ambil data barang
@@ -619,13 +680,13 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                         int jumlah = Integer.parseInt(combo_jumlah.getSelectedItem().toString());
                         int harga = Integer.parseInt(res.getString("harga_2hari"));
                         int hasil = jumlah * harga;
-                        String total = total_harga.getText().toString();
+                        String total = txt_total.getText().toString();
                         if(total.equals("")){
                             int totalSebelumnya = 0;
                             int totalFix = totalSebelumnya + hasil;
                             String hasilString = String.valueOf(totalFix);
 
-                            total_harga.setText(hasilString);
+                            txt_total.setText(hasilString);
 
                             //query tambah data ke jTable
                             DefaultTableModel dtm = (DefaultTableModel)tbl_barang.getModel();
@@ -638,11 +699,11 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                                 res.getString("harga_2hari")
                             });
                         }else{
-                            int totalSebelumnya = Integer.parseInt(total_harga.getText().toString());
+                            int totalSebelumnya = Integer.parseInt(txt_total.getText().toString());
                             int totalFix = totalSebelumnya + hasil;
                             String hasilString = String.valueOf(totalFix);
 
-                            total_harga.setText(hasilString);
+                            txt_total.setText(hasilString);
 
                             //query tambah data ke jTable
                             DefaultTableModel dtm = (DefaultTableModel)tbl_barang.getModel();
@@ -660,13 +721,13 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                         int jumlah = Integer.parseInt(combo_jumlah.getSelectedItem().toString());
                         int harga = Integer.parseInt(res.getString("harga_hari"));
                         int hasil = jumlah * harga;
-                        String total = total_harga.getText().toString();
+                        String total = txt_total.getText().toString();
                         if(total.equals("")){
                             int totalSebelumnya = 0;
                             int totalFix = totalSebelumnya + hasil;
                             String hasilString = String.valueOf(totalFix);
 
-                            total_harga.setText(hasilString);
+                            txt_total.setText(hasilString);
 
                             //query tambah data ke jTable
                             DefaultTableModel dtm = (DefaultTableModel)tbl_barang.getModel();
@@ -679,11 +740,11 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                                 res.getString("harga_2hari")
                             });
                         }else{
-                            int totalSebelumnya = Integer.parseInt(total_harga.getText().toString());
+                            int totalSebelumnya = Integer.parseInt(txt_total.getText().toString());
                             int totalFix = totalSebelumnya + hasil;
                             String hasilString = String.valueOf(totalFix);
 
-                            total_harga.setText(hasilString);
+                            txt_total.setText(hasilString);
 
                             //query tambah data ke jTable
                             DefaultTableModel dtm = (DefaultTableModel)tbl_barang.getModel();
@@ -697,11 +758,11 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                             });
                         }
                     }
-
+                    
                     combo_barang.setSelectedIndex(0);
                     combo_jumlah.removeAllItems();
                     combo_jumlah.disable();
-
+                    txt_bayar.setEnabled(true);
                 }
             }catch(Exception e){
                 JOptionPane.showMessageDialog(rootPane, "Error");
@@ -715,6 +776,8 @@ public class KasirFrame extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         if(tgl_pinjam.getDate() == null && tgl_kembali.getDate() == null){
             JOptionPane.showMessageDialog(rootPane, "Silahkan pilih tanggal pinjam dan tanggal kembali terlebih dahulu");
+        }else if(combo_jumlah.getSelectedIndex() == 0){
+            JOptionPane.showMessageDialog(null, "Silahkan pilih jumlah barang terlebih dahulu");
         }else{
             int confirmEdit = JOptionPane.showConfirmDialog(rootPane, "Yakin ingin mengubah data ini?", "Edit", JOptionPane.YES_NO_OPTION);
             if (confirmEdit == JOptionPane.YES_OPTION) {
@@ -735,25 +798,25 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                     Period jarak = Period.between(tanggalPinjam , tanggalKembali);
 
                     if(jarak.getDays() > 2){
-                        int totalHarga = Integer.parseInt(total_harga.getText()) - fieldharga3Hari;
+                        int totalHarga = Integer.parseInt(txt_total.getText()) - fieldharga3Hari;
                         String total = String.valueOf(totalHarga);
-                        total_harga.setText(total);
+                        txt_total.setText(total);
                     }else{
-                        int totalHarga = Integer.parseInt(total_harga.getText()) - fieldhargaHari;
+                        int totalHarga = Integer.parseInt(txt_total.getText()) - fieldhargaHari;
                         String total = String.valueOf(totalHarga);
-                        total_harga.setText(total);
+                        txt_total.setText(total);
                     }
 
                     DefaultTableModel hapus = (DefaultTableModel) tbl_barang.getModel();
                     hapus.removeRow(i);
 
-                    if(combo_barang.getSelectedItem().equals("Pilih Barang...")){
-                        JOptionPane.showMessageDialog(rootPane, "Silahkan pilih barang terlebih dahulu");
-                    }else if(combo_jumlah.getSelectedItem().equals("0")){
-                        JOptionPane.showMessageDialog(rootPane, "Silahkan pilih jumlah barang terlebih dahulu");
-                    }else if(jarak.getDays() < 1){
-                        JOptionPane.showMessageDialog(rootPane, "Silahkan dicek kembali tanggal peminjaman dan pengembalian");
-                    }else{
+//                    if(combo_barang.getSelectedItem().equals("Pilih Barang...")){
+//                        JOptionPane.showMessageDialog(rootPane, "Silahkan pilih barang terlebih dahulu");
+//                    }else if(combo_jumlah.getSelectedItem().equals("0")){
+//                        JOptionPane.showMessageDialog(rootPane, "Silahkan pilih jumlah barang terlebih dahulu");
+//                    }else if(jarak.getDays() < 1){
+//                        JOptionPane.showMessageDialog(rootPane, "Silahkan dicek kembali tanggal peminjaman dan pengembalian");
+//                    }else{
 
                         //ambil data barang
                         String sql = "select * from data_barang where nama_barang='"+ combo_barang.getSelectedItem() +"'";
@@ -766,13 +829,13 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                             int jumlah = Integer.parseInt(combo_jumlah.getSelectedItem().toString());
                             int harga = Integer.parseInt(res.getString("harga_2hari"));
                             int hasil = jumlah * harga;
-                            String total = total_harga.getText().toString();
+                            String total = txt_total.getText().toString();
                             if(total.equals("")){
                                 int totalSebelumnya = 0;
                                 int totalFix = totalSebelumnya + hasil;
                                 String hasilString = String.valueOf(totalFix);
 
-                                total_harga.setText(hasilString);
+                                txt_total.setText(hasilString);
 
                                 //query tambah data ke jTable
                                 DefaultTableModel dtm = (DefaultTableModel)tbl_barang.getModel();
@@ -785,11 +848,11 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                                     res.getString("harga_2hari")
                                 });
                             }else{
-                                int totalSebelumnya = Integer.parseInt(total_harga.getText().toString());
+                                int totalSebelumnya = Integer.parseInt(txt_total.getText().toString());
                                 int totalFix = totalSebelumnya + hasil;
                                 String hasilString = String.valueOf(totalFix);
 
-                                total_harga.setText(hasilString);
+                                txt_total.setText(hasilString);
 
                                 //query tambah data ke jTable
                                 DefaultTableModel dtm = (DefaultTableModel)tbl_barang.getModel();
@@ -807,13 +870,13 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                             int jumlah = Integer.parseInt(combo_jumlah.getSelectedItem().toString());
                             int harga = Integer.parseInt(res.getString("harga_hari"));
                             int hasil = jumlah * harga;
-                            String total = total_harga.getText().toString();
+                            String total = txt_total.getText().toString();
                             if(total.equals("")){
                                 int totalSebelumnya = 0;
                                 int totalFix = totalSebelumnya + hasil;
                                 String hasilString = String.valueOf(totalFix);
 
-                                total_harga.setText(hasilString);
+                                txt_total.setText(hasilString);
 
                                 //query tambah data ke jTable
                                 DefaultTableModel dtm = (DefaultTableModel)tbl_barang.getModel();
@@ -826,11 +889,11 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                                     res.getString("harga_2hari")
                                 });
                             }else{
-                                int totalSebelumnya = Integer.parseInt(total_harga.getText().toString());
+                                int totalSebelumnya = Integer.parseInt(txt_total.getText().toString());
                                 int totalFix = totalSebelumnya + hasil;
                                 String hasilString = String.valueOf(totalFix);
 
-                                total_harga.setText(hasilString);
+                                txt_total.setText(hasilString);
 
                                 //query tambah data ke jTable
                                 DefaultTableModel dtm = (DefaultTableModel)tbl_barang.getModel();
@@ -848,10 +911,11 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                         btn_editBarang.setEnabled(false);
                         btn_hapusBarang.setEnabled(false);
                         combo_barang.setSelectedIndex(0);
+                        combo_barang.setEnabled(true);
                         combo_jumlah.setSelectedIndex(0);
                         combo_jumlah.setEnabled(false);
                         btn_clearSelection.setEnabled(false);
-                    }
+//                    }
                 }catch(Exception e){
                     JOptionPane.showMessageDialog(rootPane, "Error");
                     System.out.println(e.getMessage());
@@ -880,13 +944,13 @@ public class KasirFrame extends javax.swing.JInternalFrame {
             Period jarak = Period.between(tanggalPinjam , tanggalKembali);
 
             if(jarak.getDays() > 2){
-                int totalHarga = Integer.parseInt(total_harga.getText()) - fieldharga3Hari;
+                int totalHarga = Integer.parseInt(txt_total.getText()) - fieldharga3Hari;
                 String total = String.valueOf(totalHarga);
-                total_harga.setText(total);
+                txt_total.setText(total);
             }else{
-                int totalHarga = Integer.parseInt(total_harga.getText()) - fieldhargaHari;
+                int totalHarga = Integer.parseInt(txt_total.getText()) - fieldhargaHari;
                 String total = String.valueOf(totalHarga);
-                total_harga.setText(total);
+                txt_total.setText(total);
             }
 
             DefaultTableModel dtm = (DefaultTableModel) tbl_barang.getModel();
@@ -910,6 +974,7 @@ public class KasirFrame extends javax.swing.JInternalFrame {
             clear();
             tanggalHariIni();
         }
+        System.out.println(tbl_barang.getName());
 
     }//GEN-LAST:event_btn_clearActionPerformed
 
@@ -923,7 +988,26 @@ public class KasirFrame extends javax.swing.JInternalFrame {
         btn_tambahBarang.setEnabled(true);
         btn_editBarang.setEnabled(false);
         btn_hapusBarang.setEnabled(false);
+        combo_barang.setEnabled(true);
     }//GEN-LAST:event_btn_clearSelectionActionPerformed
+
+    private void txt_bayarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_bayarKeyReleased
+        // TODO add your handling code here:
+        int total = Integer.parseInt(txt_total.getText());
+        int bayar = Integer.parseInt(txt_bayar.getText());
+        if(bayar < total){
+            label_blmCukup.setForeground(Color.red);
+            txt_kembalian.setText("");
+        }else if(bayar > total){
+            label_blmCukup.setForeground(new Color(242,242,242));
+            int kembalian = bayar - total;
+            String kembalianfix = String.valueOf(kembalian);
+            txt_kembalian.setText(kembalianfix);
+        }else{
+            label_blmCukup.setForeground(new Color(242,242,242));
+            txt_kembalian.setText("-");
+        }
+    }//GEN-LAST:event_txt_bayarKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -942,7 +1026,9 @@ public class KasirFrame extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel8;
@@ -952,17 +1038,22 @@ public class KasirFrame extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel label_alamat;
+    private javax.swing.JLabel label_blmCukup;
+    private javax.swing.JLabel label_hp;
     private javax.swing.JLabel label_nama;
     private javax.swing.JTable tbl_barang;
     private javax.swing.JTextArea text_areaAlamat;
     private com.toedter.calendar.JDateChooser tgl_kembali;
     private com.toedter.calendar.JDateChooser tgl_pinjam;
-    private javax.swing.JLabel total_harga;
-    private javax.swing.JTextField txt_dp;
+    private javax.swing.JTextField txt_bayar;
+    private javax.swing.JTextField txt_deposit;
+    private javax.swing.JTextField txt_hp;
     private javax.swing.JTextField txt_identitas;
+    private javax.swing.JLabel txt_kembalian;
     private javax.swing.JTextField txt_nama;
     private javax.swing.JLabel txt_stok;
+    private javax.swing.JLabel txt_tempatIdPengguna;
+    private javax.swing.JLabel txt_total;
     // End of variables declaration//GEN-END:variables
 }

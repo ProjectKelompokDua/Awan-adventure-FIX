@@ -36,8 +36,10 @@ public class MenuUtama extends javax.swing.JFrame {
         infoSubmenu.setText("Home / Dashboard");
     }
     
-    public void setAkun(String akses){
+    public void setAkun(String akses, String namapengguna, String idpengguna){
         txt_akses.setText(akses);
+        txt_namaUser.setText(namapengguna);
+        tempat_idPengguna.setText(idpengguna);
     }
     
     /**
@@ -75,10 +77,6 @@ public class MenuUtama extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         logout = new javax.swing.JLabel();
-        jPanel19 = new javax.swing.JPanel();
-        minimize = new javax.swing.JLabel();
-        jPanel20 = new javax.swing.JPanel();
-        exit = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         infoMenu = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
@@ -86,7 +84,13 @@ public class MenuUtama extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         txt_akses = new javax.swing.JLabel();
         jDesktopPane1 = new javax.swing.JDesktopPane();
+        txt_namaUser = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        exit = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        minimize = new javax.swing.JLabel();
         bg = new javax.swing.JLabel();
+        tempat_idPengguna = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -365,61 +369,6 @@ public class MenuUtama extends javax.swing.JFrame {
         });
         getContentPane().add(logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 80, -1, 40));
 
-        jPanel19.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jPanel19.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jPanel19MouseClicked(evt);
-            }
-        });
-
-        minimize.setFont(new java.awt.Font("Outfit Black", 0, 24)); // NOI18N
-        minimize.setText("-");
-
-        javax.swing.GroupLayout jPanel19Layout = new javax.swing.GroupLayout(jPanel19);
-        jPanel19.setLayout(jPanel19Layout);
-        jPanel19Layout.setHorizontalGroup(
-            jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel19Layout.createSequentialGroup()
-                .addContainerGap(15, Short.MAX_VALUE)
-                .addComponent(minimize, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        jPanel19Layout.setVerticalGroup(
-            jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel19Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(minimize, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-
-        getContentPane().add(jPanel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 0, 40, -1));
-
-        jPanel20.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jPanel20.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jPanel20MouseClicked(evt);
-            }
-        });
-
-        exit.setFont(new java.awt.Font("Outfit Black", 0, 24)); // NOI18N
-        exit.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        exit.setText("X");
-
-        javax.swing.GroupLayout jPanel20Layout = new javax.swing.GroupLayout(jPanel20);
-        jPanel20.setLayout(jPanel20Layout);
-        jPanel20Layout.setHorizontalGroup(
-            jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel20Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(exit, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel20Layout.setVerticalGroup(
-            jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(exit, javax.swing.GroupLayout.PREFERRED_SIZE, 30, Short.MAX_VALUE)
-        );
-
-        getContentPane().add(jPanel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(1160, 0, 40, -1));
-
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         infoMenu.setFont(new java.awt.Font("Outfit", 1, 36)); // NOI18N
@@ -460,39 +409,92 @@ public class MenuUtama extends javax.swing.JFrame {
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 90, 570, 20));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icon/user.png"))); // NOI18N
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 2, -1, 80));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 0, -1, 80));
 
-        txt_akses.setFont(new java.awt.Font("Outfit", 0, 18)); // NOI18N
+        txt_akses.setFont(new java.awt.Font("Outfit", 1, 18)); // NOI18N
         txt_akses.setForeground(new java.awt.Color(0, 0, 0));
         txt_akses.setText("Akun");
-        getContentPane().add(txt_akses, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 20, -1, 40));
+        getContentPane().add(txt_akses, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 20, 60, 30));
 
         jDesktopPane1.setLayout(new java.awt.BorderLayout());
         getContentPane().add(jDesktopPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 120, 1010, 560));
 
+        txt_namaUser.setFont(new java.awt.Font("Outfit Thin", 0, 14)); // NOI18N
+        txt_namaUser.setText("nama");
+        getContentPane().add(txt_namaUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 42, 60, -1));
+
+        jPanel3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel3MouseClicked(evt);
+            }
+        });
+
+        exit.setFont(new java.awt.Font("Outfit Black", 0, 24)); // NOI18N
+        exit.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        exit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icon/close.png"))); // NOI18N
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(exit, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(exit, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1160, 0, 40, -1));
+
+        jPanel4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel4MouseClicked(evt);
+            }
+        });
+
+        minimize.setFont(new java.awt.Font("Outfit Black", 0, 24)); // NOI18N
+        minimize.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        minimize.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icon/minimize.png"))); // NOI18N
+        minimize.setToolTipText("");
+        minimize.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                minimizeMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(minimize, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(minimize, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 0, 40, -1));
+
         bg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/images/main.png"))); // NOI18N
         getContentPane().add(bg, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 0, 1010, 670));
+
+        tempat_idPengguna.setText("jLabel3");
+        getContentPane().add(tempat_idPengguna, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 90, -1, -1));
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jPanel19MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel19MouseClicked
-        // TODO add your handling code here:
-        this.setState(Frame.ICONIFIED);
-    }//GEN-LAST:event_jPanel19MouseClicked
-
-    private void jPanel20MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel20MouseClicked
-        // TODO add your handling code here:
-        int confirmExit = JOptionPane.showConfirmDialog(rootPane, "Yakin ingin keluar ?", "Confirmation", JOptionPane.YES_NO_OPTION);
-        if(confirmExit == JOptionPane.YES_OPTION){
-            System.exit(0);
-        }
-    }//GEN-LAST:event_jPanel20MouseClicked
-
     private void logoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseClicked
         // TODO add your handling code here:
-        int confirmLogout = JOptionPane.showConfirmDialog(rootPane, "Yakin ingin Logout ?", "Confirmation", JOptionPane.YES_NO_OPTION);
+        int confirmLogout = JOptionPane.showConfirmDialog(null, "Yakin ingin Logout ?", "Confirmation", JOptionPane.YES_NO_OPTION);
         if(confirmLogout == JOptionPane.YES_OPTION){
             this.setVisible(false);
             new Login().setVisible(true);
@@ -504,6 +506,7 @@ public class MenuUtama extends javax.swing.JFrame {
         // TODO add your handling code here:
         KasirFrame kf = new KasirFrame();
         jDesktopPane1.add(kf);
+        kf.ambilId(tempat_idPengguna.getText());
         kf.setVisible(true);
         
         new DashboardFrame().setVisible(false);
@@ -535,6 +538,7 @@ public class MenuUtama extends javax.swing.JFrame {
         // TODO add your handling code here:
         KasirFrame kf = new KasirFrame();
         jDesktopPane1.add(kf);
+        kf.ambilId(tempat_idPengguna.getText());
         kf.setVisible(true);
         
         new DashboardFrame().setVisible(false);
@@ -822,9 +826,9 @@ public class MenuUtama extends javax.swing.JFrame {
     private void LaporanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_LaporanMouseClicked
         // TODO add your handling code here:
         if (txt_akses.getText().equals("Admin")) {
-//            LaporanFrame lf = new LaporanFrame();
-//            jDesktopPane1.add(lf);
-//            lf.setVisible(true);
+            LaporanFrame lf = new LaporanFrame();
+            jDesktopPane1.add(lf);
+            lf.setVisible(true);
             infoMenu.setText("Laporan");
             infoSubmenu.setText("Home / Laporan");
 
@@ -850,9 +854,9 @@ public class MenuUtama extends javax.swing.JFrame {
     private void btn_laporanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_laporanMouseClicked
         // TODO add your handling code here:
         if (txt_akses.getText().equals("Admin")) {
-//            LaporanFrame lf = new LaporanFrame();
-//            jDesktopPane1.add(lf);
-//            lf.setVisible(true);
+            LaporanFrame lf = new LaporanFrame();
+            jDesktopPane1.add(lf);
+            lf.setVisible(true);
             infoMenu.setText("Laporan");
             infoSubmenu.setText("Home / Laporan");
 
@@ -935,6 +939,24 @@ public class MenuUtama extends javax.swing.JFrame {
         Laporan.setBackground(exitHover);
     }//GEN-LAST:event_BerandaMouseClicked
 
+    private void jPanel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MouseClicked
+        // TODO add your handling code here:
+        int confirmExit = JOptionPane.showConfirmDialog(rootPane, "Yakin ingin keluar ?", "Confirmation", JOptionPane.YES_NO_OPTION);
+        if(confirmExit == JOptionPane.YES_OPTION){
+            System.exit(0);
+        }
+    }//GEN-LAST:event_jPanel3MouseClicked
+
+    private void minimizeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_minimizeMouseClicked
+        // TODO add your handling code here:
+        this.setState(Frame.ICONIFIED);
+    }//GEN-LAST:event_minimizeMouseClicked
+
+    private void jPanel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel4MouseClicked
+        // TODO add your handling code here:
+        this.setState(Frame.ICONIFIED);
+    }//GEN-LAST:event_jPanel4MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -946,7 +968,7 @@ public class MenuUtama extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Metal".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -1002,12 +1024,14 @@ public class MenuUtama extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel19;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel20;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JLabel logout;
     private javax.swing.JPanel menubar;
     private javax.swing.JLabel minimize;
+    private javax.swing.JLabel tempat_idPengguna;
     private javax.swing.JLabel txt_akses;
+    private javax.swing.JLabel txt_namaUser;
     // End of variables declaration//GEN-END:variables
 }

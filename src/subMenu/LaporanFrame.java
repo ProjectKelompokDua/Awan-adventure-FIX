@@ -1,42 +1,72 @@
-package subMenu;
-
-
-import com.toedter.calendar.JTextFieldDateEditor;
-import com.toedter.calendar.JYearChooser;
-import java.sql.Connection;
-import java.sql.Statement;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import java.awt.Frame;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.MessageFormat;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-import javax.swing.table.TableModel;
-import koneksi.Connect;
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package subMenu;
 
+import com.mysql.cj.jdbc.Driver;
+import java.awt.Color;
+import java.sql.*;
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.plaf.basic.BasicInternalFrameUI;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import koneksi.Connect;
 /**
  *
- * @author user
+ * @author perlengkapan
  */
-public class LaporanFrame extends javax.swing.JFrame {
+public class LaporanFrame extends javax.swing.JInternalFrame {
 
+    /**
+     * Creates new form LaporanFrame
+     */
     public LaporanFrame() {
         initComponents();
         tampilkandata();
         
+        //hilangin border 
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        BasicInternalFrameUI bif = (BasicInternalFrameUI) this.getUI();
+        bif.setNorthPane(null);
         
+        msg_tblKosong.setForeground(Color.white);
+        
+        long waktu = System.currentTimeMillis();
+        Date today = new Date(waktu);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+        int tahunNow = Integer.parseInt(sdf.format(today));
+        pilihTahun.setEndYear(tahunNow);
     }
+    
+    public void tampilkandata(){
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("No");
+        model.addColumn("Id Penyewa");
+        model.addColumn("Nama Karyawan");
+        model.addColumn("Tanggal Input");
+        model.addColumn("Total");
 
+        try {
+            int no=1;
+            String sql = "SELECT * FROM laporan JOIN data_sewaan ON laporan.id_sewaan = data_sewaan.id_sewaan\n" +
+                         "JOIN pengguna ON pengguna.id_pengguna = laporan.id_pengguna";
+            Connection conn = (Connection)Connect.GetConnection();
+            Statement stm = conn.createStatement();
+            ResultSet res = stm.executeQuery(sql);
+            while(res.next()){
+                    model.addRow(new Object[] {no++,res.getString("id_sewaan"),
+                    res.getString("nama_pengguna"),res.getString("tanggal_transaksi"),res.getString("total")});
+            }
+            
+            jTable1.setModel(model);
+        } catch (Exception e){
+
+      }}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -46,69 +76,39 @@ public class LaporanFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel4 = new javax.swing.JLabel();
-        jPanel5 = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        pilihTahun = new com.toedter.calendar.JYearChooser();
         jfilterbulan = new javax.swing.JComboBox<>();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
         btn_cari = new javax.swing.JButton();
         btn_refresh = new javax.swing.JButton();
         btn_cetak = new javax.swing.JButton();
-        jYearChooser1 = new com.toedter.calendar.JYearChooser();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jpenyewa = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jPanel9 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jPanel8 = new javax.swing.JPanel();
-        btn_beranda = new javax.swing.JButton();
-        btn_kasir = new javax.swing.JButton();
-        btn_dataBarang = new javax.swing.JButton();
-        btn_sewa = new javax.swing.JButton();
-        btn_return = new javax.swing.JButton();
-        btn_pengguna = new javax.swing.JButton();
-        btn_report = new javax.swing.JButton();
+        msg_tblKosong = new javax.swing.JLabel();
+        bg = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().setLayout(null);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        jLabel4.setText("Laporan ");
-        getContentPane().add(jLabel4);
-        jLabel4.setBounds(250, 150, 62, 20);
+        jPanel1.setBackground(new java.awt.Color(242, 242, 242));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Proses"));
+        jPanel1.setForeground(new java.awt.Color(0, 0, 0));
 
-        jPanel5.setBackground(new java.awt.Color(204, 204, 204));
+        pilihTahun.setForeground(new java.awt.Color(187, 187, 187));
+        pilihTahun.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
 
-        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel7.setText("Bulan");
-
-        jfilterbulan.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
+        jfilterbulan.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
         jfilterbulan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember" }));
-        jfilterbulan.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jfilterbulanActionPerformed(evt);
-            }
-        });
-
-        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel8.setText("Tahun");
-
-        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel10.setText("Aksi");
 
         btn_cari.setBackground(new java.awt.Color(66, 139, 202));
         btn_cari.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
-        btn_cari.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/cari.png"))); // NOI18N
+        btn_cari.setForeground(new java.awt.Color(255, 255, 255));
+        btn_cari.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icon/cari.png"))); // NOI18N
         btn_cari.setText("Cari");
-        btn_cari.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btn_cariMouseClicked(evt);
-            }
-        });
+        btn_cari.setBorder(null);
         btn_cari.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_cariActionPerformed(evt);
@@ -117,8 +117,10 @@ public class LaporanFrame extends javax.swing.JFrame {
 
         btn_refresh.setBackground(new java.awt.Color(92, 184, 92));
         btn_refresh.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
-        btn_refresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/reload.png"))); // NOI18N
+        btn_refresh.setForeground(new java.awt.Color(255, 255, 255));
+        btn_refresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icon/reload.png"))); // NOI18N
         btn_refresh.setText("Refresh");
+        btn_refresh.setBorder(null);
         btn_refresh.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btn_refreshMouseClicked(evt);
@@ -127,62 +129,64 @@ public class LaporanFrame extends javax.swing.JFrame {
 
         btn_cetak.setBackground(new java.awt.Color(91, 192, 222));
         btn_cetak.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
-        btn_cetak.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/cetak.png"))); // NOI18N
+        btn_cetak.setForeground(new java.awt.Color(255, 255, 255));
+        btn_cetak.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icon/cetak.png"))); // NOI18N
         btn_cetak.setText("Cetak");
+        btn_cetak.setBorder(null);
         btn_cetak.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btn_cetakMouseClicked(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel7)
-                        .addComponent(jfilterbulan, 0, 146, Short.MAX_VALUE))
-                    .addComponent(jLabel8)
-                    .addComponent(jYearChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(210, 210, 210)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel10)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(btn_cari, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(35, 35, 35)
-                        .addComponent(btn_refresh)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
-                        .addComponent(btn_cetak, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(42, 42, 42))))
+        jLabel1.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel1.setText("Bulan");
+
+        jLabel2.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel2.setText("Tahun");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel1)
+                        .addComponent(jfilterbulan, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(pilihTahun, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel2))
+                .addGap(47, 47, 47)
+                .addComponent(btn_cari, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btn_refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btn_cetak, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(283, Short.MAX_VALUE))
         );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel10))
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jfilterbulan, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btn_cari, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btn_refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btn_cetak, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btn_cari, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jfilterbulan, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel8)
+                        .addComponent(btn_cetak, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(21, 21, 21)
+                .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jYearChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addComponent(pilihTahun, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jPanel5);
-        jPanel5.setBounds(250, 190, 780, 150);
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 40, 890, 200));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -192,9 +196,17 @@ public class LaporanFrame extends javax.swing.JFrame {
                 {null, null, null, null, null}
             },
             new String [] {
-                "No", "id_ penyewa", "Nama Karyawan", "Tanggal Input", "Jumlah"
+                "No.", "Nama Penyewa", "Nama Karyawan", "Tanggal Transaksi", "Total"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTable1MouseClicked(evt);
@@ -202,286 +214,62 @@ public class LaporanFrame extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTable1);
 
-        getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(300, 400, 610, 170);
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 300, 890, 210));
 
         jpenyewa.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jpenyewaKeyReleased(evt);
             }
         });
-        getContentPane().add(jpenyewa);
-        jpenyewa.setBounds(760, 360, 146, 34);
+        getContentPane().add(jpenyewa, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 250, 190, 30));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel5.setText("Cari");
-        getContentPane().add(jLabel5);
-        jLabel5.setBounds(714, 370, 30, 17);
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 250, -1, 30));
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/laporan.jpg"))); // NOI18N
-        getContentPane().add(jLabel2);
-        jLabel2.setBounds(180, 0, 1020, 670);
+        msg_tblKosong.setFont(new java.awt.Font("Outfit", 0, 12)); // NOI18N
+        msg_tblKosong.setForeground(new java.awt.Color(255, 255, 255));
+        msg_tblKosong.setText("Data yang anda cari kosong / tidak ada");
+        getContentPane().add(msg_tblKosong, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 270, 230, 20));
 
-        jPanel9.setBackground(new java.awt.Color(252, 191, 73));
-
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logo.png"))); // NOI18N
-
-        jLabel3.setFont(new java.awt.Font("Outfit Medium", 1, 18)); // NOI18N
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("Awan Adventure");
-
-        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
-        jPanel9.setLayout(jPanel9Layout);
-        jPanel9Layout.setHorizontalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
-            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel9Layout.setVerticalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel9Layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3)
-                .addContainerGap(14, Short.MAX_VALUE))
-        );
-
-        getContentPane().add(jPanel9);
-        jPanel9.setBounds(0, 0, 0, 0);
-
-        jPanel8.setBackground(new java.awt.Color(248, 221, 113));
-
-        btn_beranda.setBackground(new java.awt.Color(248, 221, 113));
-        btn_beranda.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
-        btn_beranda.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/home.png"))); // NOI18N
-        btn_beranda.setText("Beranda");
-        btn_beranda.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 15, 1, 1, new java.awt.Color(248, 221, 113)));
-        btn_beranda.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btn_beranda.setIconTextGap(12);
-
-        btn_kasir.setBackground(new java.awt.Color(248, 221, 113));
-        btn_kasir.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
-        btn_kasir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/trolley-removebg-preview.png"))); // NOI18N
-        btn_kasir.setText("Form Kasir");
-        btn_kasir.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 15, 1, 1, new java.awt.Color(248, 221, 113)));
-        btn_kasir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btn_kasir.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btn_kasir.setIconTextGap(12);
-        btn_kasir.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btn_kasirMouseClicked(evt);
-            }
-        });
-
-        btn_dataBarang.setBackground(new java.awt.Color(248, 221, 113));
-        btn_dataBarang.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
-        btn_dataBarang.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/package.png"))); // NOI18N
-        btn_dataBarang.setText("Data Barang");
-        btn_dataBarang.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 15, 1, 1, new java.awt.Color(248, 221, 113)));
-        btn_dataBarang.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btn_dataBarang.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btn_dataBarang.setIconTextGap(12);
-        btn_dataBarang.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btn_dataBarangMouseClicked(evt);
-            }
-        });
-
-        btn_sewa.setBackground(new java.awt.Color(248, 221, 113));
-        btn_sewa.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
-        btn_sewa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/rent-removebg-preview.png"))); // NOI18N
-        btn_sewa.setText("Data Sewaan");
-        btn_sewa.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 15, 1, 1, new java.awt.Color(248, 221, 113)));
-        btn_sewa.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btn_sewa.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btn_sewa.setIconTextGap(12);
-        btn_sewa.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btn_sewaMouseClicked(evt);
-            }
-        });
-
-        btn_return.setBackground(new java.awt.Color(248, 221, 113));
-        btn_return.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
-        btn_return.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/product-return-removebg-preview.png"))); // NOI18N
-        btn_return.setText("Form Pengembalian");
-        btn_return.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 15, 1, 1, new java.awt.Color(248, 221, 113)));
-        btn_return.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btn_return.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btn_return.setIconTextGap(12);
-        btn_return.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btn_returnMouseClicked(evt);
-            }
-        });
-
-        btn_pengguna.setBackground(new java.awt.Color(248, 221, 113));
-        btn_pengguna.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
-        btn_pengguna.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/user-removebg-preview.png"))); // NOI18N
-        btn_pengguna.setText("Pengguna");
-        btn_pengguna.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 15, 1, 1, new java.awt.Color(248, 221, 113)));
-        btn_pengguna.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btn_pengguna.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btn_pengguna.setIconTextGap(12);
-        btn_pengguna.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btn_penggunaMouseClicked(evt);
-            }
-        });
-
-        btn_report.setBackground(new java.awt.Color(248, 221, 113));
-        btn_report.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
-        btn_report.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/report-removebg-preview.png"))); // NOI18N
-        btn_report.setText("Laporan");
-        btn_report.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 15, 1, 1, new java.awt.Color(248, 221, 113)));
-        btn_report.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btn_report.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btn_report.setIconTextGap(12);
-
-        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
-        jPanel8.setLayout(jPanel8Layout);
-        jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btn_beranda, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btn_kasir, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btn_dataBarang, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btn_sewa, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btn_return, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btn_pengguna, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btn_report, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(btn_beranda, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btn_kasir, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btn_dataBarang, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btn_sewa, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btn_return, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btn_pengguna, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btn_report, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(101, 101, 101))
-        );
-
-        getContentPane().add(jPanel8);
-        jPanel8.setBounds(0, 120, 180, 0);
+        bg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/images/background.png"))); // NOI18N
+        getContentPane().add(bg, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         pack();
-        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jfilterbulanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jfilterbulanActionPerformed
-//         try{
-//        int filter = jfilterbulan.getSelectedIndex();
-//       Connection conn = koneksi.Connect.GetConnection();
-//       
-//       
-//       String msql ="";
-//       
-//        if (filter == 0){
-//           msql = "SELECT ";
-//       }
-//       else if (filter == 1){
-//           msql = "SELECT * FROM laporan WHERE month(tanggal_input)=2 ";
-//           }
-//       else if (filter == 2){
-//           msql = "SELECT * FROM laporan WHERE month(tanggal_input)=3 ";
-//           }
-//       else if (filter == 3){
-//           msql = "SELECT * FROM laporan WHERE month(tanggal_input)=4 ";
-//           }
-//       else if (filter == 4){
-//           msql = "SELECT * FROM laporan WHERE month(tanggal_input)=5 ";
-//           }
-//       else if (filter == 5){
-//           msql = "SELECT * FROM laporan WHERE month(tanggal_input)=6 ";
-//           }
-//       else if (filter == 6){
-//           msql = "SELECT * FROM laporan WHERE month(tanggal_input)=7 ";
-//           }
-//       else if (filter == 7){
-//           msql = "SELECT * FROM laporan WHERE month(tanggal_input)=8 ";
-//           }
-//       else if (filter == 8){
-//           msql = "SELECT * FROM laporan WHERE month(tanggal_input)=9 ";
-//           }
-//       else if (filter == 9){
-//           msql = "SELECT * FROM laporan WHERE month(tanggal_input)=10 ";
-//           }
-//       else if (filter == 10){
-//           msql = "SELECT * FROM laporan WHERE month(tanggal_input)=11 ";
-//           }
-//       else if (filter == 11){
-//           msql = "SELECT * FROM laporan WHERE month(tanggal_input)=12 ";
-//           }
-//             System.out.println(msql);
-//        
-//        PreparedStatement stm = conn.prepareStatement(msql);
-//        ResultSet res = stm.executeQuery();
-//        DefaultTableModel dtm = new DefaultTableModel();
-//        dtm.addColumn("No");
-//        dtm.addColumn("Id_penyewa");
-//        dtm.addColumn("Nama Karyawan");
-//        dtm.addColumn("Tanggal Input");
-//        dtm.addColumn("Total");
-//        jTable1.setModel(dtm);
-//        
-//        int no = 1;
-//        while(res.next()){
-//            dtm.addRow(new Object[]{
-//                no++, 
-//                    res.getString("id_sewaan"), 
-//                    res.getString("Nama Karyawan"), 
-//                    res.getString("Tanggal Input"), 
-//                    res.getString("Total"),
-//            });
-//        }
-//        jTable1.setModel(dtm);
-//        
-//         }catch (Exception e) {
-//                 
-//                 
-//         }
-    }//GEN-LAST:event_jfilterbulanActionPerformed
+    private void btn_cariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cariActionPerformed
+        try {
+            int year = pilihTahun.getYear();
+            int bulan = jfilterbulan.getSelectedIndex()+1;
+            
+            String sqlCari = "SELECT * FROM laporan WHERE month(tanggal_transaksi)="+bulan+" and year(tanggal_transaksi)="+year+"";
 
-    private void btn_kasirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_kasirMouseClicked
-        // TODO add your handling code here:
-        this.setVisible(false);
-        new FormKasir().setVisible(true);
-    }//GEN-LAST:event_btn_kasirMouseClicked
+            Connection conn = koneksi.Connect.GetConnection();
+            PreparedStatement stm = conn.prepareStatement(sqlCari);
+            ResultSet res = stm.executeQuery();
+            DefaultTableModel dtm = new DefaultTableModel();
+            dtm.addColumn("No");
+            dtm.addColumn("Id Penyewa");
+            dtm.addColumn("Nama Karyawan");
+            dtm.addColumn("Tanggal Input");
+            dtm.addColumn("Total");
+            jTable1.setModel(dtm);
 
-    private void btn_dataBarangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_dataBarangMouseClicked
-        // TODO add your handling code here:
-        this.setVisible(false);
-        new DataBarang().setVisible(true);
-    }//GEN-LAST:event_btn_dataBarangMouseClicked
+            int no = 1;
+            while(res.next()){
+                dtm.addRow(new Object[]{
+                    no++,
+                    res.getString("id_sewaan"),
+                    res.getString("id_pengguna"),
+                    res.getString("tanggal_transaksi"),
+                    res.getString("total"),
+                });
+            }
+        }catch (Exception e){
 
-    private void btn_sewaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_sewaMouseClicked
-        // TODO add your handling code here:
-        this.setVisible(false);
-        new DataSewaan().setVisible(true);
-    }//GEN-LAST:event_btn_sewaMouseClicked
-
-    private void btn_returnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_returnMouseClicked
-        // TODO add your handling code here:
-        this.setVisible(false);
-        new FormPengembalian().setVisible(true);
-    }//GEN-LAST:event_btn_returnMouseClicked
-
-    private void btn_penggunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_penggunaMouseClicked
-        // TODO add your handling code here:
-        this.setVisible(false);
-        new Pengguna().setVisible(true);
-    }//GEN-LAST:event_btn_penggunaMouseClicked
+        }
+    }//GEN-LAST:event_btn_cariActionPerformed
 
     private void btn_refreshMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_refreshMouseClicked
         DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
@@ -492,201 +280,79 @@ public class LaporanFrame extends javax.swing.JFrame {
     private void btn_cetakMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_cetakMouseClicked
         MessageFormat header = new MessageFormat("Print");
         MessageFormat footer = new MessageFormat("");
-                
-             try{
-             jTable1.print(JTable.PrintMode.NORMAL , header, footer);
-             } catch (Exception e){
-                 JOptionPane.showMessageDialog(null, e);
-             }
+
+        try{
+            jTable1.print(JTable.PrintMode.NORMAL , header, footer);
+        } catch (Exception e){
+            JOptionPane.showMessageDialog(null, e);
+        }
     }//GEN-LAST:event_btn_cetakMouseClicked
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        int i = jTable1.getSelectedRow(); 
-        TableModel tbl = jTable1.getModel(); 
-         
-        String field1 = tbl.getValueAt(i, 1).toString(); 
-        String field2 = tbl.getValueAt(i, 2).toString(); 
-        String field3 = tbl.getValueAt(i, 3).toString(); 
-        String field4 = tbl.getValueAt(i, 4).toString(); 
-        String field5 = tbl.getValueAt(i, 5).toString(); 
-        String field6 = tbl.getValueAt(i, 6).toString(); 
-        
-        
-         try{
-        String sql = "SELECT * FROM laporan WHERE laporan ='"+field1+"'";
-        Connection conn = koneksi.Connect.GetConnection();
-        PreparedStatement pst = conn.prepareStatement(sql);
-        ResultSet rs = pst.executeQuery();
-        rs.next();
+        int i = jTable1.getSelectedRow();
+        TableModel tbl = jTable1.getModel();
+
+        String field1 = tbl.getValueAt(i, 1).toString();
+        String field2 = tbl.getValueAt(i, 2).toString();
+        String field3 = tbl.getValueAt(i, 3).toString();
+        String field4 = tbl.getValueAt(i, 4).toString();
+        String field5 = tbl.getValueAt(i, 5).toString();
+        String field6 = tbl.getValueAt(i, 6).toString();
+
+        try{
+            String sql = "SELECT * FROM laporan WHERE laporan ='"+field1+"'";
+            Connection conn = koneksi.Connect.GetConnection();
+            PreparedStatement pst = conn.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+            rs.next();
         } catch(Exception e){
-            
+
         }
-         
+
     }//GEN-LAST:event_jTable1MouseClicked
 
-    private void btn_cariMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_cariMouseClicked
-       
-    }//GEN-LAST:event_btn_cariMouseClicked
-
-    private void btn_cariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cariActionPerformed
-        try {
-        int year = jYearChooser1.getYear();
-        
-        int bulan = jfilterbulan.getSelectedIndex()+1;
-        String tahun = "SELECT * FROM laporan WHERE month(tanggal_input)="+bulan+" and year(tanggal_input)="+year+"";
-        
-            System.out.println(tahun);
-        Connection conn = koneksi.Connect.GetConnection();
-        PreparedStatement stm = conn.prepareStatement(tahun);
-        ResultSet res = stm.executeQuery();
-        DefaultTableModel dtm = new DefaultTableModel();
-        dtm.addColumn("No");
-        dtm.addColumn("Id_penyewa");
-        dtm.addColumn("Nama Karyawan");
-        dtm.addColumn("Tanggal Input");
-        dtm.addColumn("Total");
-            System.out.println(res.getString("id_sewaan"));
-        jTable1.setModel(dtm);
-        
-        int no = 1;
-        while(res.next()){
-            dtm.addRow(new Object[]{
-                no++, 
-                    res.getString("id_sewaan"), 
-                    res.getString("id_laporan"), 
-                    res.getString("tanggal_input"), 
-                    res.getString("total"),
-            });
-        }
-        }catch (Exception e){
-        
-        }
-    }//GEN-LAST:event_btn_cariActionPerformed
-
     private void jpenyewaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jpenyewaKeyReleased
-         DefaultTableModel dtm = new DefaultTableModel();
+        DefaultTableModel dtm = new DefaultTableModel();
         dtm.addColumn("id_sewaan");
         dtm.addColumn("id_laporan");
         dtm.addColumn("tanggal_input");
         dtm.addColumn("total");
         jTable1.setModel(dtm);
-        
-        try { 
-            Statement statement = (Statement)Connect.GetConnection().createStatement(); 
-            ResultSet res = statement.executeQuery("select * from laporan where id_sewaan like '%"+ jTable1 +"%'"); 
-             
-            while(res.next()){ 
-                dtm.addRow(new Object[]{ 
-                    res.getString("id_sewaan"), 
-                    res.getString("id_laporan"), 
-                    res.getString("tanggal_input"), 
-                    res.getString("total"), 
-                }); 
-                jTable1.setModel(dtm); 
-                
-                
-            } 
-        } catch(Exception e) { 
+
+        try {
+            Statement statement = (Statement)Connect.GetConnection().createStatement();
+            ResultSet res = statement.executeQuery("select * from laporan where id_sewaan like '%"+ jTable1 +"%'");
+
+            while(res.next()){
+                dtm.addRow(new Object[]{
+                    res.getString("id_sewaan"),
+                    res.getString("id_laporan"),
+                    res.getString("tanggal_input"),
+                    res.getString("total"),
+                });
+                jTable1.setModel(dtm);
+
+            }
+        } catch(Exception e) {
             System.out.println(e);
         }
     }//GEN-LAST:event_jpenyewaKeyReleased
 
-    public void tampilkandata(){
-    DefaultTableModel model = new DefaultTableModel();
-    model.addColumn("No");
-    model.addColumn("Id_Penyewa");
-    model.addColumn("Nama Karyawan");
-    model.addColumn("Tanggal Input");
-    model.addColumn("Total");
-    
-    try {
-    int no=1;
-    String sql = "select * from laporan ";
-    java.sql.Connection conn=(Connection)Connect.GetConnection();
-    java.sql.Statement stm=conn.createStatement();
-    java.sql.ResultSet res=stm.executeQuery(sql);
-    while(res.next()){
-        model.addRow(new Object[] {no++,res.getString(1),
-            res.getString(2),res.getString(3),res.getString(4),
-            res.getString(5),res.getString(6)});
-    }
-    jTable1.setModel(model);
-    } catch (Exception e){
-
-      }}
-    
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Metal".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Laporan.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Laporan.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Laporan.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Laporan.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Laporan().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn_beranda;
+    private javax.swing.JLabel bg;
     private javax.swing.JButton btn_cari;
     private javax.swing.JButton btn_cetak;
-    private javax.swing.JButton btn_dataBarang;
-    private javax.swing.JButton btn_kasir;
-    private javax.swing.JButton btn_pengguna;
     private javax.swing.JButton btn_refresh;
-    private javax.swing.JButton btn_report;
-    private javax.swing.JButton btn_return;
-    private javax.swing.JButton btn_sewa;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private com.toedter.calendar.JYearChooser jYearChooser1;
     private javax.swing.JComboBox<String> jfilterbulan;
     private javax.swing.JTextField jpenyewa;
+    private javax.swing.JLabel msg_tblKosong;
+    private com.toedter.calendar.JYearChooser pilihTahun;
     // End of variables declaration//GEN-END:variables
-
-    private static class conn {
-
-        private static Statement createStatement() {
-            return null;
-           // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        public conn() {
-        }
-    }
 }

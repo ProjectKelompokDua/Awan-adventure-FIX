@@ -242,7 +242,7 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
                     res.getString("id_sewaan"),
                     res.getString("nama_penyewa"),
                     res.getString("jenis_identitas"),
-                    res.getString("dp"),
+                    res.getString("deposit"),
                     res.getString("nama_barang"),
                     res.getString("tanggal_pinjam"),
                     res.getString("tanggal_kembali"),
