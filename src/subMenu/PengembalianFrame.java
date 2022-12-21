@@ -19,7 +19,7 @@ import javax.swing.table.TableModel;
  */
 public class PengembalianFrame extends javax.swing.JInternalFrame {
 
-    String TotalDenda = "-";
+    String TotalDenda = "0";
 
     /**
      * Creates new form PengembalianFrame
@@ -219,6 +219,7 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
         jSeparator2 = new javax.swing.JSeparator();
         jLabel19 = new javax.swing.JLabel();
         txt_terlambat = new javax.swing.JLabel();
+        btn_proses = new javax.swing.JButton();
         bg = new javax.swing.JLabel();
         id_jenisKerusakan = new javax.swing.JLabel();
 
@@ -333,6 +334,11 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
         btn_hapus.setForeground(new java.awt.Color(255, 255, 255));
         btn_hapus.setText("Hapus");
         btn_hapus.setBorder(null);
+        btn_hapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_hapusActionPerformed(evt);
+            }
+        });
 
         btn_clear.setBackground(new java.awt.Color(108, 117, 125));
         btn_clear.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
@@ -538,6 +544,12 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
         txt_terlambat.setText("-");
         getContentPane().add(txt_terlambat, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 280, 150, 21));
 
+        btn_proses.setBackground(new java.awt.Color(252, 191, 73));
+        btn_proses.setFont(new java.awt.Font("Outfit", 0, 16)); // NOI18N
+        btn_proses.setText("Proses");
+        btn_proses.setBorder(null);
+        getContentPane().add(btn_proses, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 500, 100, 40));
+
         bg.setFont(new java.awt.Font("Outfit", 0, 16)); // NOI18N
         bg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/images/background.png"))); // NOI18N
         getContentPane().add(bg, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
@@ -556,24 +568,41 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
         String field3 = tbl_pengembalian.getValueAt(i, 2).toString();
         String hasilSubstring = field3.substring(field3.length() - 5);
         int biayaRusak = Integer.parseInt(hasilSubstring);
-        
+
         //delete row selected
-        if(combo_jenisKerusakan.getSelectedIndex() == 0){
+        if (combo_jenisKerusakan.getSelectedIndex() == 0) {
             JOptionPane.showMessageDialog(null, "Silahkan pilih jenis kerusakan terlebih dahulu");
-        }else{
-            //update biaya
-            int totalTerbaru = Integer.parseInt(txt_total.getText());
-            int hitungTotal = totalTerbaru - biayaRusak;
-            String hitungTotalFix = String.valueOf(hitungTotal);
-            txt_total.setText(hitungTotalFix);
-            
-            DefaultTableModel dtm = (DefaultTableModel) tbl_pengembalian.getModel();
-            dtm.removeRow(i);
-            dtm.addRow(new Object[]{
-                field1,
-                field2,
-                combo_jenisKerusakan.getSelectedItem()
-            });
+        } else {
+            int confirmEdit = JOptionPane.showConfirmDialog(null, "Yakin ingin mengubah dengan data ini?", "Confirmation", JOptionPane.YES_NO_OPTION);
+            if (confirmEdit == JOptionPane.YES_OPTION) {
+                String comboKerusakan = combo_jenisKerusakan.getSelectedItem().toString();
+                String substringJenisKerusakan = comboKerusakan.substring(comboKerusakan.length() - 5);
+                int jenisKerusakan = Integer.parseInt(substringJenisKerusakan);
+
+                //update biaya
+                int totalTerbaru = Integer.parseInt(txt_total.getText());
+                int hitungTotal = totalTerbaru - biayaRusak;
+                int totalDendaTerbaru = hitungTotal + jenisKerusakan;
+                String hitungTotalFix = String.valueOf(totalDendaTerbaru);
+                txt_total.setText(hitungTotalFix);
+
+                DefaultTableModel dtm = (DefaultTableModel) tbl_pengembalian.getModel();
+                dtm.removeRow(i);
+                dtm.addRow(new Object[]{
+                    field1,
+                    field2,
+                    combo_jenisKerusakan.getSelectedItem()
+                });
+                
+                combo_barangRusak.setSelectedIndex(0);
+                combo_barangRusak.setEnabled(true);
+                combo_jenisKerusakan.setSelectedIndex(0);
+                combo_jenisKerusakan.setEnabled(false);
+                btn_tambah.setEnabled(true);
+                btn_edit.setEnabled(false);
+                btn_hapus.setEnabled(false);
+                btn_batal.setEnabled(false);
+            }
         }
     }//GEN-LAST:event_btn_editActionPerformed
 
@@ -743,16 +772,20 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
                     ResultSet rs = pst.executeQuery();
                     if (rs.next()) {
                         int biayaKerusakan = Integer.parseInt(rs.getString("biaya_kerusakan"));
+                        //convert Global totaldenda ke int
+                        int TotalDenda = Integer.parseInt(this.TotalDenda);
+                        int HitungTotalDenda = TotalDenda + biayaKerusakan;
+                        this.TotalDenda = String.valueOf(HitungTotalDenda);
+                        
                         int hasilAkhir = totalDenda + biayaKerusakan;
                         String hasilAkhirFix = String.valueOf(hasilAkhir);
                         txt_total.setText(hasilAkhirFix);
+                        System.out.println(hasilAkhirFix);
                     }
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Error ambil data kerusakan / keterlambatan");
 
                 }
-                
-                this.TotalDenda = txt_total.getText();
                 combo_barangRusak.setSelectedIndex(0);
                 combo_jenisKerusakan.setSelectedIndex(0);
                 combo_jenisKerusakan.setEnabled(false);
@@ -793,6 +826,11 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
                     ResultSet rs = pst.executeQuery();
                     if (rs.next()) {
                         int biayaKerusakan = Integer.parseInt(rs.getString("biaya_kerusakan"));
+                        //convert Global totaldenda ke int
+                        int TotalDenda = Integer.parseInt(this.TotalDenda);
+                        int HitungTotalDenda = TotalDenda + biayaKerusakan;
+                        this.TotalDenda = String.valueOf(HitungTotalDenda);
+                        
                         int hasilAkhir = totalDenda + biayaKerusakan;
                         String hasilAkhirFix = String.valueOf(hasilAkhir);
                         txt_total.setText(hasilAkhirFix);
@@ -801,8 +839,6 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
                     JOptionPane.showMessageDialog(null, "Error ambil data kerusakan / keterlambatan");
                     System.out.println(e.getMessage());
                 }
-
-                this.TotalDenda = txt_total.getText();
                 combo_barangRusak.setSelectedIndex(0);
                 combo_jenisKerusakan.setSelectedIndex(0);
                 combo_jenisKerusakan.setEnabled(false);
@@ -862,16 +898,53 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
 
         String field2 = tbl.getValueAt(i, 1).toString();
         String field3 = tbl.getValueAt(i, 2).toString();
-        
+
         combo_barangRusak.setSelectedItem(field2);
         combo_jenisKerusakan.setSelectedItem(field3);
-        
+
         combo_barangRusak.setEnabled(false);
         btn_tambah.setEnabled(false);
         btn_edit.setEnabled(true);
         btn_hapus.setEnabled(true);
         btn_batal.setEnabled(true);
     }//GEN-LAST:event_tbl_pengembalianMouseClicked
+
+    private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
+        // TODO add your handling code here:
+        int i = tbl_pengembalian.getSelectedRow();
+        String field1 = tbl_pengembalian.getValueAt(i, 0).toString();
+        String field2 = tbl_pengembalian.getValueAt(i, 1).toString();
+        String field3 = tbl_pengembalian.getValueAt(i, 2).toString();
+        String hasilSubstring = field3.substring(field3.length() - 5);
+        int biayaRusak = Integer.parseInt(hasilSubstring);
+
+        //delete row selected
+        if (combo_jenisKerusakan.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(null, "Silahkan pilih jenis kerusakan terlebih dahulu");
+        } else {
+            int confirmEdit = JOptionPane.showConfirmDialog(null, "Yakin ingin menghapus data ini?", "Confirmation", JOptionPane.YES_NO_OPTION);
+            if (confirmEdit == JOptionPane.YES_OPTION) {
+
+                //update biaya
+                int totalTerbaru = Integer.parseInt(txt_total.getText());
+                int hitungTotal = totalTerbaru - biayaRusak;
+                String hitungTotalFix = String.valueOf(hitungTotal);
+                txt_total.setText(hitungTotalFix);
+
+                DefaultTableModel dtm = (DefaultTableModel) tbl_pengembalian.getModel();
+                dtm.removeRow(i);
+                
+                combo_barangRusak.setSelectedIndex(0);
+                combo_barangRusak.setEnabled(true);
+                combo_jenisKerusakan.setSelectedIndex(0);
+                combo_jenisKerusakan.setEnabled(false);
+                btn_tambah.setEnabled(true);
+                btn_edit.setEnabled(false);
+                btn_hapus.setEnabled(false);
+                btn_batal.setEnabled(false);
+            }
+        }
+    }//GEN-LAST:event_btn_hapusActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -880,6 +953,7 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
     private javax.swing.JButton btn_clear;
     private javax.swing.JButton btn_edit;
     private javax.swing.JButton btn_hapus;
+    private javax.swing.JButton btn_proses;
     private javax.swing.JButton btn_tambah;
     private javax.swing.JComboBox<String> combo_barangRusak;
     private javax.swing.JComboBox<String> combo_jenisKerusakan;
