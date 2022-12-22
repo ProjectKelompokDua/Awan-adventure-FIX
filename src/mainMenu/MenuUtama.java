@@ -694,6 +694,7 @@ public class MenuUtama extends javax.swing.JFrame {
         // TODO add your handling code here:
         PengembalianFrame pf = new PengembalianFrame();
         jDesktopPane1.add(pf);
+        pf.getIdPengguna(tempat_idPengguna.getText());
         pf.setVisible(true);
         
         new DashboardFrame().setVisible(false);
@@ -725,6 +726,7 @@ public class MenuUtama extends javax.swing.JFrame {
         // TODO add your handling code here:
         PengembalianFrame pf = new PengembalianFrame();
         jDesktopPane1.add(pf);
+        pf.getIdPengguna(tempat_idPengguna.getText());
         pf.setVisible(true);
         
         new DashboardFrame().setVisible(false);

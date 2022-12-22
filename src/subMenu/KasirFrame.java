@@ -535,9 +535,7 @@ public class KasirFrame extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_tbl_barangMouseClicked
    
     private void btn_prosesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_prosesActionPerformed
-        // TODO add your handling code here:
-        Login login = new Login();
-        
+        // TODO add your handling code here:        
         try{
             //check identitas ada atau tidak
             if(txt_nama.getText().equals("")){

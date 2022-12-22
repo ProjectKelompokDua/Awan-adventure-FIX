@@ -38,7 +38,11 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
         clear();
         loadTable();
     }
-
+    
+    public void getIdPengguna(String id){
+        id_pengguna.setText(id);
+    }
+    
     public void loadTable() {
         DefaultTableModel dtm = new DefaultTableModel() {
             boolean[] canEdit = new boolean[]{
@@ -221,6 +225,7 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
         txt_terlambat = new javax.swing.JLabel();
         btn_proses = new javax.swing.JButton();
         bg = new javax.swing.JLabel();
+        id_pengguna = new javax.swing.JLabel();
         id_jenisKerusakan = new javax.swing.JLabel();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -548,11 +553,19 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
         btn_proses.setFont(new java.awt.Font("Outfit", 0, 16)); // NOI18N
         btn_proses.setText("Proses");
         btn_proses.setBorder(null);
+        btn_proses.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_prosesActionPerformed(evt);
+            }
+        });
         getContentPane().add(btn_proses, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 500, 100, 40));
 
         bg.setFont(new java.awt.Font("Outfit", 0, 16)); // NOI18N
         bg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/images/background.png"))); // NOI18N
         getContentPane().add(bg, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+
+        id_pengguna.setText("jLabel20");
+        getContentPane().add(id_pengguna, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 490, -1, -1));
 
         id_jenisKerusakan.setText("jLabel20");
         getContentPane().add(id_jenisKerusakan, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 180, -1, -1));
@@ -946,6 +959,96 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btn_hapusActionPerformed
 
+    private void btn_prosesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_prosesActionPerformed
+        // TODO add your handling code here:
+        try{
+            if(combo_penyewa.getSelectedIndex() == 0){
+                JOptionPane.showMessageDialog(null, "Data penyewa harus diisi");
+            }else if(combo_keterlambatan.getSelectedIndex() == 0 && tbl_pengembalian.getModel().getRowCount() == 0){
+                int confirmProses = JOptionPane.showConfirmDialog(null, "Yakin tidak ada keterlambatan dan barang dalam keadaan yang baik ?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                if (confirmProses == JOptionPane.YES_OPTION) {
+                    //insert into data_pengembalian
+                    Connection conn = koneksi.Connect.GetConnection();
+                    String insertPengembalian = "insert into data_pengembalian values (null, '"+ id_pengguna.getText() +"', '"+ txt_idSewaan.getText()+"', null, 0)";
+                    PreparedStatement pst = conn.prepareStatement(insertPengembalian);
+                    pst.execute();
+                    
+                    //update selesai di data_sewaan
+                    String updateSewaan = "update data_sewaan set status = 'Selesai' where id_sewaan = '"+ txt_idSewaan.getText() +"'";
+                    PreparedStatement ps = conn.prepareStatement(updateSewaan);
+                    ps.execute();
+                    
+                    JOptionPane.showMessageDialog(null, "Pengembalian berhasil");
+                    clear();
+                }
+            }else{
+                int confirmProses = JOptionPane.showConfirmDialog(null, "Yakin ingin melakukan proses pengembalian?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                if(confirmProses == JOptionPane.YES_OPTION){
+                    Connection conn = koneksi.Connect.GetConnection();
+                    
+                    //get id keterlambatan
+                    String isiKeterlambatan;
+                    String terlambat;
+                    if(txt_terlambat.getText().equals("-")){
+                        isiKeterlambatan = null;
+                        terlambat = null;
+                    }else{
+                        isiKeterlambatan = txt_terlambat.getText();
+                        terlambat = "'"+isiKeterlambatan.substring(0, 1)+"'";
+                    }
+                    
+                    //insert into pengembalian
+                    String insertPengembalian = "insert into data_pengembalian values (null, '"+ id_pengguna.getText() +"', '"+ txt_idSewaan.getText()+"', "+ terlambat +", '"+ txt_total.getText() +"')";
+                    PreparedStatement pst = conn.prepareStatement(insertPengembalian);
+                    pst.execute();
+                    
+                    //get id pengembalian
+                    String sqlIdPengembalian = "select * from data_pengembalian where id_sewaan = '"+ txt_idSewaan.getText() +"'";
+                    PreparedStatement ps = conn.prepareStatement(sqlIdPengembalian);
+                    ResultSet res = ps.executeQuery();
+                    res.next();
+                    
+                    //update selesai di data_sewaan
+                    String updateSewaan = "update data_sewaan set status = 'Selesai' where id_sewaan = '"+ txt_idSewaan.getText() +"'";
+                    PreparedStatement statements = conn.prepareStatement(updateSewaan);
+                    statements.execute();
+                    
+                    //insert into detail pengembalian
+                    int rowCount = tbl_pengembalian.getModel().getRowCount();
+                    
+                    for (int i = 0; i < rowCount; i++) {
+                        String namaBarang = tbl_pengembalian.getValueAt(i, 1).toString();
+                        String DatajenisKerusakan = tbl_pengembalian.getValueAt(i, 2).toString();
+                        String jenisKerusakan = DatajenisKerusakan.substring(DatajenisKerusakan.length() - 5);
+                        
+                        
+                        //get id_barang
+                        String sqlIdBarang = "select * from data_barang where nama_barang = '"+ namaBarang +"'";
+                        PreparedStatement statemenBarang = conn.prepareStatement(sqlIdBarang);
+                        ResultSet IdBarang = statemenBarang.executeQuery();
+                        IdBarang.next();
+                        
+                        //get id_kerusakan
+                        String sqlIdKerusakan = "select * from kerusakan where biaya_kerusakan = '"+ jenisKerusakan +"'";
+                        PreparedStatement statemenKerusakan = conn.prepareStatement(sqlIdKerusakan);
+                        ResultSet IdKerusakan = statemenKerusakan.executeQuery();
+                        IdKerusakan.next();
+                        
+                        //insert into detail_data_pengembalian
+                        String insertDetailPengembalian = "insert into detail_data_pengembalian values ('"+ res.getString("id_pengembalian") +"', '"+ IdBarang.getString("id_barang") +"', '"+ IdKerusakan.getString("id_kerusakan") +"')";
+                        PreparedStatement statement = conn.prepareStatement(insertDetailPengembalian);
+                        statement.execute();
+                    }
+                    JOptionPane.showMessageDialog(null, "Pengembalian berhasil");
+                    clear();
+                }
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Error tombol proses");
+            System.out.println(e.getMessage());
+        }
+    }//GEN-LAST:event_btn_prosesActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel bg;
@@ -960,6 +1063,7 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
     private javax.swing.JComboBox<String> combo_keterlambatan;
     private javax.swing.JComboBox<String> combo_penyewa;
     private javax.swing.JLabel id_jenisKerusakan;
+    private javax.swing.JLabel id_pengguna;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

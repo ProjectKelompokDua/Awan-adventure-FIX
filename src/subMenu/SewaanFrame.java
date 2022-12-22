@@ -230,24 +230,23 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
 
         try {
             Statement statement = (Statement) Connect.GetConnection().createStatement();
-            ResultSet res = statement.executeQuery("SELECT data_sewaan.id_sewaan, data_sewaan.nama_penyewa, data_sewaan.jenis_identitas,\n"
-                + "data_sewaan.dp, data_barang.nama_barang, data_sewaan.tanggal_pinjam, data_sewaan.tanggal_kembali,\n"
-                + "data_sewaan.jumlah, data_sewaan.total\n"
-                + "FROM data_sewaan join data_barang\n"
-                + "on data_sewaan.id_barang = data_barang.id_barang \n"
-                + "where nama_penyewa like '%"+cari+"%' or jenis_identitas like '%"+cari+"%'");
+            ResultSet res = statement.executeQuery("SELECT data_sewaan.id_sewaan, data_sewaan.nama_penyewa, "
+                    + "COUNT(detail_data_sewaan.id_barang) AS jumlah_barang ,data_sewaan.tgl_pinjam, "
+                    + "data_sewaan.tgl_kembali, data_sewaan.total, STATUS FROM data_sewaan JOIN detail_data_sewaan "
+                    + "ON data_sewaan.id_sewaan = detail_data_sewaan.id_sewaan "
+                    + "WHERE data_sewaan.nama_penyewa LIKE '%"+ txt_carisewaan.getText() +"%' GROUP BY id_sewaan");
 
             while (res.next()) {
+                int no = 1;
                 dtm.addRow(new Object[]{
+                    no++,
                     res.getString("id_sewaan"),
                     res.getString("nama_penyewa"),
-                    res.getString("jenis_identitas"),
-                    res.getString("deposit"),
-                    res.getString("nama_barang"),
-                    res.getString("tanggal_pinjam"),
-                    res.getString("tanggal_kembali"),
-                    res.getString("jumlah"),
-                    res.getString("total")
+                    res.getString("jumlah_barang"),
+                    res.getString("tgl_pinjam"),
+                    res.getString("tgl_kembali"),
+                    res.getString("total"),
+                    res.getString("status"),
                 });
                 table_sewaan.setModel(dtm);
             }

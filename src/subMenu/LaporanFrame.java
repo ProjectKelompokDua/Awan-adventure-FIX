@@ -97,9 +97,6 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Proses"));
         jPanel1.setForeground(new java.awt.Color(0, 0, 0));
 
-        pilihTahun.setForeground(new java.awt.Color(187, 187, 187));
-        pilihTahun.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
-
         jfilterbulan.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
         jfilterbulan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember" }));
 
