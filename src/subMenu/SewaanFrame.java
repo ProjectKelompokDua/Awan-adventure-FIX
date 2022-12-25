@@ -7,8 +7,11 @@ package subMenu;
 
 import subMenu.popUp.DetailTransaksi;
 import com.mysql.cj.jdbc.Driver;
+import java.awt.Dimension;
 import java.sql.*;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -268,7 +271,9 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
 
     private void jPanel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel7MouseClicked
         // TODO add your handling code here:
+        this.hide();
         new DetailTransaksi().setVisible(true);
+        new DetailTransaksi().setLocationRelativeTo(null);
     }//GEN-LAST:event_jPanel7MouseClicked
 
 

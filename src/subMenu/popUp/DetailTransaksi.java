@@ -13,7 +13,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author DELL
  */
-public class DetailTransaksi extends javax.swing.JFrame {
+public class DetailTransaksi extends javax.swing.JFrame{
 
     /**
      * Creates new form Detail_Transaksi
