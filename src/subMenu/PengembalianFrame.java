@@ -20,6 +20,7 @@ import javax.swing.table.TableModel;
 public class PengembalianFrame extends javax.swing.JInternalFrame {
 
     String TotalDenda = "0";
+    
 
     /**
      * Creates new form PengembalianFrame

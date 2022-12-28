@@ -11,6 +11,7 @@ import java.awt.Dimension;
 import java.sql.*;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -19,6 +20,12 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import koneksi.Connect;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
+
 /**
  *
  * @author perlengkapan
@@ -29,73 +36,70 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
      * Creates new form LaporanFrame
      */
     public LaporanFrame() {
-        
+
         initComponents();
         loadTable();
-        
+
         //hilangin border 
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         BasicInternalFrameUI bif = (BasicInternalFrameUI) this.getUI();
         bif.setNorthPane(null);
-        
-        if(tbl_laporan.getRowCount() == 0){
-            msg_tblKosong.setText("Data pada bulan "+combo_filterBulan.getSelectedItem()+" tidak ada");
+
+        if (tbl_laporan.getRowCount() == 0) {
+            msg_tblKosong.setText("Data pada bulan " + combo_filterBulan.getSelectedItem() + " tidak ada");
             msg_tblKosong.setForeground(Color.red);
-        }else{
-            msg_tblKosong.setForeground(new Color(242,242,242));
+        } else {
+            msg_tblKosong.setForeground(new Color(242, 242, 242));
         }
-        
+
         //set max year
         long waktu = System.currentTimeMillis();
         Date today = new Date(waktu);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
         int tahunNow = Integer.parseInt(sdf.format(today));
         pilihTahun.setEndYear(tahunNow);
-        
-        
+
     }
-    
-    public void loadTable(){
+
+    public void loadTable() {
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("No");
         model.addColumn("Hak Akses");
         model.addColumn("Total Transaksi");
         model.addColumn("Total Barang Disewa");
         model.addColumn("Total Pendapatan");
-        
+
         try {
-            int no=1;
+            int no = 1;
             int bulan = combo_filterBulan.getSelectedIndex() + 1;
             Connection conn = koneksi.Connect.GetConnection();
-            String sqlTransaksi = "SELECT hak_akses, COUNT(laporan.id_sewaan) AS total_transaksi, SUM(laporan.total) AS total_pendapatan "
-                    + "FROM laporan JOIN data_sewaan ON laporan.id_sewaan = data_sewaan.id_sewaan JOIN pengguna ON "
-                    + "data_sewaan.id_pengguna = pengguna.id_pengguna "
-                    + "WHERE MONTH(laporan.tanggal_transaksi) = "+ bulan +" AND YEAR(laporan.tanggal_transaksi) = "+ pilihTahun.getYear() +" GROUP BY hak_akses";
-            String sqlTotalBarang = "SELECT hak_akses, SUM(jumlah) AS totalBarang FROM detail_data_sewaan JOIN data_sewaan ON detail_data_sewaan.id_sewaan = data_sewaan.id_sewaan JOIN pengguna ON data_sewaan.id_pengguna = pengguna.id_pengguna WHERE MONTH(data_sewaan.tgl_transaksi) = "+ bulan +" AND YEAR(data_sewaan.tgl_transaksi) = "+ pilihTahun.getYear() +" GROUP BY hak_akses;";
+            String sqlTransaksi = "SELECT hak_akses, COUNT(laporan.id_laporan) AS total_transaksi, SUM(laporan.total) AS total_pendapatan, SUM(laporan.jumlah) AS totalBarang "
+                    + "FROM laporan JOIN data_sewaan ON laporan.id_sewaan = data_sewaan.id_sewaan "
+                    + "JOIN pengguna ON data_sewaan.id_pengguna = pengguna.id_pengguna "
+                    + "WHERE MONTH(laporan.tanggal_transaksi) = " + bulan + " AND YEAR(laporan.tanggal_transaksi) = " + pilihTahun.getYear() + " "
+                    + "GROUP BY hak_akses";
             PreparedStatement pst = conn.prepareStatement(sqlTransaksi);
-            PreparedStatement ps = conn.prepareStatement(sqlTotalBarang);
             ResultSet res = pst.executeQuery();
-            ResultSet rs = ps.executeQuery();
 
-            while(rs.next() && res.next()){
-                model.addRow(new Object[] {
+            while (res.next()) {
+                model.addRow(new Object[]{
                     no++,
                     res.getString("hak_akses"),
                     res.getString("total_transaksi"),
-                    rs.getString("totalBarang"),
+                    res.getString("totalBarang"),
                     res.getString("total_pendapatan")
                 });
             }
             tbl_laporan.setModel(model);
             tbl_laporan.setRowHeight(30);
-        } catch (Exception e){
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error load table");
             System.out.println(e.getMessage());
         }
     }
-    
-    public void loadTableAkses(String hak_akses, int bulan, int tahun){
-        try{
+
+    public void loadTableAkses(String hak_akses, int bulan, int tahun) {
+        try {
             DefaultTableModel model = new DefaultTableModel();
             model.addColumn("Id Sewaan");
             model.addColumn("Nama Penyewa");
@@ -106,19 +110,19 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
             model.addColumn("Tanggal Pinjam");
             model.addColumn("Tanggal Kembali");
             model.addColumn("Tanggal Transaksi");
-            
+
             int no = 1;
             Connection conn = koneksi.Connect.GetConnection();
             String sql = "SELECT data_sewaan.id_sewaan, data_sewaan.nama_penyewa, nomor_identitas, deposit, "
                     + "COUNT(id_barang) AS total_barang, total, tgl_pinjam, tgl_kembali, tgl_transaksi "
                     + "FROM data_sewaan JOIN detail_data_sewaan ON data_sewaan.id_sewaan = detail_data_sewaan.id_sewaan "
                     + "JOIN pengguna ON pengguna.id_pengguna = data_sewaan.id_pengguna "
-                    + "WHERE hak_akses = '"+ hak_akses +"' && MONTH(tgl_transaksi) = "+ bulan +" && YEAR(tgl_transaksi) = "+ tahun +" "
+                    + "WHERE hak_akses = '" + hak_akses + "' && MONTH(tgl_transaksi) = " + bulan + " && YEAR(tgl_transaksi) = " + tahun + " "
                     + "GROUP BY id_sewaan";
             PreparedStatement pst = conn.prepareStatement(sql);
             ResultSet res = pst.executeQuery();
-            while(res.next()){
-                model.addRow(new Object[] {
+            while (res.next()) {
+                model.addRow(new Object[]{
                     no++,
                     res.getString(1),
                     res.getString(2),
@@ -133,11 +137,12 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
             }
             tbl_laporan.setModel(model);
             tbl_laporan.setRowHeight(30);
-        }catch(Exception e){
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error load table akses");
             System.out.println(e.getMessage());
         }
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -156,7 +161,7 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
         combo_filterAkses = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_laporan = new javax.swing.JTable();
-        jpenyewa = new javax.swing.JTextField();
+        txt_cari = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         msg_tblKosong = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
@@ -164,6 +169,9 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
         btn_refresh = new javax.swing.JButton();
         btn_cetak = new javax.swing.JButton();
         bg = new javax.swing.JLabel();
+        label_bulan = new javax.swing.JLabel();
+        label_tahun = new javax.swing.JLabel();
+        label_akses = new javax.swing.JLabel();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -229,6 +237,7 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 40, 480, 200));
 
+        tbl_laporan.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
         tbl_laporan.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
@@ -248,6 +257,7 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
+        tbl_laporan.setRowHeight(30);
         tbl_laporan.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tbl_laporanMouseClicked(evt);
@@ -257,14 +267,15 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 300, 890, 210));
 
-        jpenyewa.addKeyListener(new java.awt.event.KeyAdapter() {
+        txt_cari.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
+        txt_cari.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                jpenyewaKeyReleased(evt);
+                txt_cariKeyReleased(evt);
             }
         });
-        getContentPane().add(jpenyewa, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 250, 190, 30));
+        getContentPane().add(txt_cari, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 250, 190, 30));
 
-        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
         jLabel5.setText("Cari");
         getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 250, -1, 30));
 
@@ -277,7 +288,7 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Proses"));
 
         btn_submit.setBackground(new java.awt.Color(66, 139, 202));
-        btn_submit.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
+        btn_submit.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
         btn_submit.setForeground(new java.awt.Color(255, 255, 255));
         btn_submit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icon/checked.png"))); // NOI18N
         btn_submit.setText("Terapkan");
@@ -290,7 +301,7 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
         });
 
         btn_refresh.setBackground(new java.awt.Color(92, 184, 92));
-        btn_refresh.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
+        btn_refresh.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
         btn_refresh.setForeground(new java.awt.Color(255, 255, 255));
         btn_refresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icon/reload.png"))); // NOI18N
         btn_refresh.setText("Segarkan");
@@ -303,15 +314,15 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
         });
 
         btn_cetak.setBackground(new java.awt.Color(91, 192, 222));
-        btn_cetak.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
+        btn_cetak.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
         btn_cetak.setForeground(new java.awt.Color(255, 255, 255));
         btn_cetak.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icon/printer.png"))); // NOI18N
         btn_cetak.setText("Cetak");
         btn_cetak.setBorder(null);
         btn_cetak.setIconTextGap(15);
-        btn_cetak.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btn_cetakMouseClicked(evt);
+        btn_cetak.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_cetakActionPerformed(evt);
             }
         });
 
@@ -344,36 +355,38 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
         bg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/images/background.png"))); // NOI18N
         getContentPane().add(bg, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
+        label_bulan.setText("jLabel4");
+        getContentPane().add(label_bulan, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 280, -1, -1));
+
+        label_tahun.setText("jLabel6");
+        getContentPane().add(label_tahun, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 280, -1, -1));
+
+        label_akses.setText("jLabel7");
+        getContentPane().add(label_akses, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 280, -1, -1));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_submitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_submitActionPerformed
         int bulan = combo_filterBulan.getSelectedIndex() + 1;
-        
-        if(combo_filterAkses.getSelectedIndex() == 0){
+
+        if (combo_filterAkses.getSelectedIndex() == 0) {
             loadTable();
-        }else{
+        } else {
             loadTableAkses(combo_filterAkses.getSelectedItem().toString(), bulan, pilihTahun.getYear());
         }
-        
-        if(tbl_laporan.getRowCount() == 0){
-            msg_tblKosong.setText("Data pada bulan "+combo_filterBulan.getSelectedItem()+" tidak ada");
+
+        if (tbl_laporan.getRowCount() == 0) {
+            msg_tblKosong.setText("Data pada bulan " + combo_filterBulan.getSelectedItem() + " tidak ada");
             msg_tblKosong.setForeground(Color.red);
-        }else{
-            msg_tblKosong.setForeground(new Color(242,242,242));
+        } else {
+            msg_tblKosong.setForeground(new Color(242, 242, 242));
         }
+        
+        label_akses.setText(combo_filterAkses.getSelectedItem().toString());
+        label_bulan.setText(String.valueOf(bulan));
+        label_tahun.setText(String.valueOf(pilihTahun.getYear()));
     }//GEN-LAST:event_btn_submitActionPerformed
-
-    private void btn_cetakMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_cetakMouseClicked
-        MessageFormat header = new MessageFormat("Print");
-        MessageFormat footer = new MessageFormat("");
-
-        try{
-            tbl_laporan.print(JTable.PrintMode.NORMAL , header, footer);
-        } catch (Exception e){
-            JOptionPane.showMessageDialog(null, e);
-        }
-    }//GEN-LAST:event_btn_cetakMouseClicked
 
     private void tbl_laporanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_laporanMouseClicked
         int i = tbl_laporan.getSelectedRow();
@@ -386,19 +399,19 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
         String field5 = tbl.getValueAt(i, 5).toString();
         String field6 = tbl.getValueAt(i, 6).toString();
 
-        try{
-            String sql = "SELECT * FROM laporan WHERE laporan ='"+field1+"'";
+        try {
+            String sql = "SELECT * FROM laporan WHERE laporan ='" + field1 + "'";
             Connection conn = koneksi.Connect.GetConnection();
             PreparedStatement pst = conn.prepareStatement(sql);
             ResultSet rs = pst.executeQuery();
             rs.next();
-        } catch(Exception e){
+        } catch (Exception e) {
 
         }
 
     }//GEN-LAST:event_tbl_laporanMouseClicked
 
-    private void jpenyewaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jpenyewaKeyReleased
+    private void txt_cariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cariKeyReleased
         DefaultTableModel dtm = new DefaultTableModel();
         dtm.addColumn("id_sewaan");
         dtm.addColumn("id_laporan");
@@ -407,32 +420,75 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
         tbl_laporan.setModel(dtm);
 
         try {
-            Statement statement = (Statement)Connect.GetConnection().createStatement();
-            ResultSet res = statement.executeQuery("select * from laporan where id_sewaan like '%"+ tbl_laporan +"%'");
+            Statement statement = (Statement) Connect.GetConnection().createStatement();
+            ResultSet res = statement.executeQuery("select * from laporan where id_sewaan like '%" + tbl_laporan + "%'");
 
-            while(res.next()){
+            while (res.next()) {
                 dtm.addRow(new Object[]{
                     res.getString("id_sewaan"),
                     res.getString("id_laporan"),
                     res.getString("tanggal_input"),
-                    res.getString("total"),
-                });
+                    res.getString("total"),});
                 tbl_laporan.setModel(dtm);
 
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println(e);
         }
-    }//GEN-LAST:event_jpenyewaKeyReleased
+    }//GEN-LAST:event_txt_cariKeyReleased
 
     private void btn_refreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_refreshActionPerformed
         // TODO add your handling code here:
         combo_filterBulan.setSelectedIndex(0);
         combo_filterAkses.setSelectedIndex(0);
         pilihTahun.setYear(2022);
-        msg_tblKosong.setForeground(new Color(242,242,242));
+        msg_tblKosong.setForeground(new Color(242, 242, 242));
         loadTable();
     }//GEN-LAST:event_btn_refreshActionPerformed
+
+    private void btn_cetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cetakActionPerformed
+        if (tbl_laporan.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(null, "Tidak ada data yang bisa dicetak, silahkan cari datanya terlebih dahulu");
+        } else if (tbl_laporan.getColumnCount() == 5) {
+            String bulan = label_bulan.getText();
+            String tahun = label_tahun.getText();
+            
+            try{
+                Connection conn = koneksi.Connect.GetConnection();
+                Statement stm = conn.createStatement();
+
+                String report = ("C:\\Users\\perlengkapan\\Documents\\KULIAH\\Project Tugas Akhir\\Awan-adventure-FIX\\src\\subMenu\\nota\\notaLaporan.jrxml");
+                HashMap hash = new HashMap();
+                hash.put("bulan", bulan);
+                hash.put("tahun", tahun);
+                JasperReport jasper = JasperCompileManager.compileReport(report);
+                JasperPrint jasperP = JasperFillManager.fillReport(jasper, hash, conn);
+                JasperViewer.viewReport(jasperP, false);
+            }catch(Exception e){
+                JOptionPane.showMessageDialog(null, "Error iReport");
+            }
+        }else if(tbl_laporan.getColumnCount() == 9){
+            String bulan = label_bulan.getText();
+            String tahun = label_tahun.getText();
+            String akses = label_akses.getText();
+            
+            try{
+                Connection conn = koneksi.Connect.GetConnection();
+                Statement stm = conn.createStatement();
+
+                String report = ("C:\\Users\\perlengkapan\\Documents\\KULIAH\\Project Tugas Akhir\\Awan-adventure-FIX\\src\\subMenu\\nota\\notaLaporanAkses.jrxml");
+                HashMap hash = new HashMap();
+                hash.put("bulan", bulan);
+                hash.put("tahun", tahun);
+                hash.put("akses", akses);
+                JasperReport jasper = JasperCompileManager.compileReport(report);
+                JasperPrint jasperP = JasperFillManager.fillReport(jasper, hash, conn);
+                JasperViewer.viewReport(jasperP, false);
+            }catch(Exception e){
+                JOptionPane.showMessageDialog(null, "Error iReport");
+            }
+        }
+    }//GEN-LAST:event_btn_cetakActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -449,9 +505,12 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jpenyewa;
+    private javax.swing.JLabel label_akses;
+    private javax.swing.JLabel label_bulan;
+    private javax.swing.JLabel label_tahun;
     private javax.swing.JLabel msg_tblKosong;
     private com.toedter.calendar.JYearChooser pilihTahun;
     private javax.swing.JTable tbl_laporan;
+    private javax.swing.JTextField txt_cari;
     // End of variables declaration//GEN-END:variables
 }

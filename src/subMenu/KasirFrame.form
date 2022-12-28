@@ -80,12 +80,13 @@
               <Font name="Outfit" size="16" style="0"/>
             </Property>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="5" rowCount="0">
+              <Table columnCount="6" rowCount="0">
                 <Column editable="false" title="No." type="java.lang.Object"/>
                 <Column editable="false" title="Nama Barang" type="java.lang.Object"/>
                 <Column editable="false" title="Jumlah" type="java.lang.Object"/>
                 <Column editable="false" title="Harga/hari" type="java.lang.Object"/>
                 <Column editable="false" title="Harga &gt; 2 hari" type="java.lang.Object"/>
+                <Column editable="false" title="Sub Total" type="java.lang.Object"/>
               </Table>
             </Property>
             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">

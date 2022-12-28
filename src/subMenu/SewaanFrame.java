@@ -9,13 +9,20 @@ import subMenu.popUp.DetailTransaksi;
 import com.mysql.cj.jdbc.Driver;
 import java.awt.Dimension;
 import java.sql.*;
+import java.util.HashMap;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import koneksi.Connect;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -28,11 +35,11 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
      */
     public SewaanFrame() {
         initComponents();
-        
+
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         BasicInternalFrameUI bif = (BasicInternalFrameUI) this.getUI();
         bif.setNorthPane(null);
-        
+
         loadTable();
     }
 
@@ -47,14 +54,10 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
 
         txt_carisewaan = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
-        table_sewaan = new javax.swing.JTable();
+        tbl_sewaan = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
-        jPanel6 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        jPanel7 = new javax.swing.JPanel();
-        jLabel8 = new javax.swing.JLabel();
+        btn_cetak = new javax.swing.JButton();
+        btn_detail = new javax.swing.JButton();
         bg = new javax.swing.JLabel();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -66,9 +69,9 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
         });
         getContentPane().add(txt_carisewaan, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 40, 190, 30));
 
-        table_sewaan.setAutoCreateRowSorter(true);
-        table_sewaan.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        table_sewaan.setModel(new javax.swing.table.DefaultTableModel(
+        tbl_sewaan.setAutoCreateRowSorter(true);
+        tbl_sewaan.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        tbl_sewaan.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -87,13 +90,13 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
-        table_sewaan.setRowHeight(40);
-        table_sewaan.addMouseListener(new java.awt.event.MouseAdapter() {
+        tbl_sewaan.setRowHeight(30);
+        tbl_sewaan.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                table_sewaanMouseClicked(evt);
+                tbl_sewaanMouseClicked(evt);
             }
         });
-        jScrollPane2.setViewportView(table_sewaan);
+        jScrollPane2.setViewportView(tbl_sewaan);
 
         getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, 960, 230));
 
@@ -101,65 +104,36 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
         jLabel5.setText("Cari");
         getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 40, -1, 30));
 
-        jPanel6.setBackground(new java.awt.Color(252, 191, 73));
-
-        jLabel6.setFont(new java.awt.Font("Outfit", 1, 14)); // NOI18N
-        jLabel6.setText("Cetak");
-
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icon/icons8_print_25px.png"))); // NOI18N
-
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel6)
-                .addContainerGap(21, Short.MAX_VALUE))
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        getContentPane().add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 110, 40));
-
-        jPanel7.setBackground(new java.awt.Color(252, 191, 73));
-        jPanel7.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jPanel7MouseClicked(evt);
+        btn_cetak.setBackground(new java.awt.Color(252, 191, 73));
+        btn_cetak.setFont(new java.awt.Font("Outfit Medium", 0, 14)); // NOI18N
+        btn_cetak.setForeground(new java.awt.Color(255, 255, 255));
+        btn_cetak.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icon/printer.png"))); // NOI18N
+        btn_cetak.setText("Cetak");
+        btn_cetak.setBorder(null);
+        btn_cetak.setBorderPainted(false);
+        btn_cetak.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_cetak.setFocusPainted(false);
+        btn_cetak.setIconTextGap(20);
+        btn_cetak.setRequestFocusEnabled(false);
+        btn_cetak.setVerifyInputWhenFocusTarget(false);
+        btn_cetak.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_cetakActionPerformed(evt);
             }
         });
+        getContentPane().add(btn_cetak, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 120, 40));
 
-        jLabel8.setFont(new java.awt.Font("Outfit", 1, 14)); // NOI18N
-        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel8.setText("Detail Transaksi");
-
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 120, Short.MAX_VALUE)
-            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))
-        );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 50, Short.MAX_VALUE)
-            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
-        );
-
-        getContentPane().add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 330, 120, 50));
+        btn_detail.setBackground(new java.awt.Color(252, 191, 73));
+        btn_detail.setFont(new java.awt.Font("Outfit Medium", 0, 14)); // NOI18N
+        btn_detail.setForeground(new java.awt.Color(255, 255, 255));
+        btn_detail.setText("Detail Transaksi");
+        btn_detail.setBorder(null);
+        btn_detail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_detailActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btn_detail, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 330, 140, 50));
 
         bg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/images/background.png"))); // NOI18N
         getContentPane().add(bg, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
@@ -167,14 +141,14 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-        private void loadTable() {
-        DefaultTableModel tableModel = new DefaultTableModel(){
-            boolean[] canEdit = new boolean [] {
+    private void loadTable() {
+        DefaultTableModel tableModel = new DefaultTableModel() {
+            boolean[] canEdit = new boolean[]{
                 false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         };
         tableModel.addColumn("No");
@@ -195,30 +169,30 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
             Connection connect = koneksi.Connect.GetConnection();
             PreparedStatement pst = connect.prepareStatement(sql);
             ResultSet rs = pst.executeQuery();
-
+            int no = 1;
             while (rs.next()) {
-                int no = 1;
-                tableModel.addRow(new Object[]{no++ ,rs.getString("id_sewaan"), rs.getString("nama_penyewa"),
+                
+                tableModel.addRow(new Object[]{no++, rs.getString("id_sewaan"), rs.getString("nama_penyewa"),
                     rs.getString("jumlah_barang"), rs.getString("tgl_pinjam"), rs.getString("tgl_kembali"), rs.getString("total"),
                     rs.getString("status")});
             }
-            table_sewaan.setModel(tableModel);
+            tbl_sewaan.setModel(tableModel);
         } catch (Exception e) {
 
         }
     }
-    
+
     private void txt_carisewaanKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_carisewaanKeyReleased
         // TODO add your handling code here:
         String cari = txt_carisewaan.getText();
 
-        DefaultTableModel dtm = new DefaultTableModel(){
-            boolean[] canEdit = new boolean [] {
+        DefaultTableModel dtm = new DefaultTableModel() {
+            boolean[] canEdit = new boolean[]{
                 false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         };
         dtm.addColumn("No");
@@ -229,7 +203,7 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
         dtm.addColumn("Tanggal Kembali");
         dtm.addColumn("Total");
         dtm.addColumn("Status");
-        table_sewaan.setModel(dtm);
+        tbl_sewaan.setModel(dtm);
 
         try {
             Statement statement = (Statement) Connect.GetConnection().createStatement();
@@ -237,57 +211,76 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
                     + "COUNT(detail_data_sewaan.id_barang) AS jumlah_barang ,data_sewaan.tgl_pinjam, "
                     + "data_sewaan.tgl_kembali, data_sewaan.total, STATUS FROM data_sewaan JOIN detail_data_sewaan "
                     + "ON data_sewaan.id_sewaan = detail_data_sewaan.id_sewaan "
-                    + "WHERE data_sewaan.nama_penyewa LIKE '%"+ txt_carisewaan.getText() +"%' GROUP BY id_sewaan");
+                    + "WHERE data_sewaan.nama_penyewa LIKE '%" + txt_carisewaan.getText() + "%' GROUP BY id_sewaan");
 
             while (res.next()) {
-                int no = 1;
+                int jumlahrow = tbl_sewaan.getModel().getRowCount();
                 dtm.addRow(new Object[]{
-                    no++,
+                    jumlahrow++,
                     res.getString("id_sewaan"),
                     res.getString("nama_penyewa"),
                     res.getString("jumlah_barang"),
                     res.getString("tgl_pinjam"),
                     res.getString("tgl_kembali"),
                     res.getString("total"),
-                    res.getString("status"),
-                });
-                table_sewaan.setModel(dtm);
+                    res.getString("status"),});
+                tbl_sewaan.setModel(dtm);
             }
         } catch (Exception e) {
             System.out.println(e);
         }
     }//GEN-LAST:event_txt_carisewaanKeyReleased
 
-    private void table_sewaanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_sewaanMouseClicked
+    private void tbl_sewaanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_sewaanMouseClicked
         // TODO add your handling code here:
-        int i = table_sewaan.getSelectedRow();
-        TableModel tbl = table_sewaan.getModel();
-    }//GEN-LAST:event_table_sewaanMouseClicked
+        int i = tbl_sewaan.getSelectedRow();
+        TableModel tbl = tbl_sewaan.getModel();
+    }//GEN-LAST:event_tbl_sewaanMouseClicked
 
     private void jPanel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel6MouseClicked
-        // TODO add your handling code here:
 
     }//GEN-LAST:event_jPanel6MouseClicked
 
-    private void jPanel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel7MouseClicked
+    private void btn_detailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_detailActionPerformed
         // TODO add your handling code here:
         this.hide();
         new DetailTransaksi().setVisible(true);
         new DetailTransaksi().setLocationRelativeTo(null);
-    }//GEN-LAST:event_jPanel7MouseClicked
+    }//GEN-LAST:event_btn_detailActionPerformed
+
+    private void btn_cetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cetakActionPerformed
+        //ambil id sewaan dari table
+        if(tbl_sewaan.getSelectionModel().isSelectionEmpty()){
+            JOptionPane.showMessageDialog(null, "Silahkan pilih data pada table terlebih dahulu");
+        }else{
+            int i = tbl_sewaan.getSelectedRow();
+            String idSewaan = tbl_sewaan.getValueAt(i, 1).toString();
+
+            try{
+                Connection conn = koneksi.Connect.GetConnection();
+                Statement stm = conn.createStatement();
+
+                String report = ("C:\\Users\\perlengkapan\\Documents\\KULIAH\\Project Tugas Akhir\\Awan-adventure-FIX\\src\\subMenu\\nota\\notaSewaan.jrxml");
+                HashMap hash = new HashMap();
+                hash.put("id_sewaan", idSewaan);
+                JasperReport jasper = JasperCompileManager.compileReport(report);
+                JasperPrint jasperP = JasperFillManager.fillReport(jasper, hash, conn);
+                JasperViewer.viewReport(jasperP, false);
+            }catch(Exception e){
+                JOptionPane.showMessageDialog(null, "Error iReport");
+                System.out.println(e.getMessage());
+            }
+        }
+    }//GEN-LAST:event_btn_cetakActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel bg;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JButton btn_cetak;
+    private javax.swing.JButton btn_detail;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable table_sewaan;
+    private javax.swing.JTable tbl_sewaan;
     private javax.swing.JTextField txt_carisewaan;
     // End of variables declaration//GEN-END:variables
 }

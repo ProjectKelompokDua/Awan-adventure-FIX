@@ -170,7 +170,7 @@ public class KasirFrame extends javax.swing.JInternalFrame {
     private void loadTable(){
         DefaultTableModel dtm = new DefaultTableModel(){
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -182,6 +182,7 @@ public class KasirFrame extends javax.swing.JInternalFrame {
         dtm.addColumn("Jumlah");
         dtm.addColumn("Harga/Hari");
         dtm.addColumn("Harga > 2 Hari");
+        dtm.addColumn("Sub Total");
         tbl_barang.setModel(dtm);
     }
     
@@ -194,6 +195,14 @@ public class KasirFrame extends javax.swing.JInternalFrame {
         tgl_kembali.setMinSelectableDate(today);
         tgl_kembali.setLocale(new Locale("id", "ID"));
         
+    }
+    
+    private void cekKembalian(){
+        int total = Integer.parseInt(txt_total.getText());
+        
+        if(total > 0){
+            label_blmCukup.setForeground(Color.red);
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -269,11 +278,11 @@ public class KasirFrame extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "No.", "Nama Barang", "Jumlah", "Harga/hari", "Harga > 2 hari"
+                "No.", "Nama Barang", "Jumlah", "Harga/hari", "Harga > 2 hari", "Sub Total"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -542,22 +551,25 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                 JOptionPane.showMessageDialog(null,  "Data Nama harus diisi");
                 txt_nama.requestFocus();
             }else if(text_areaAlamat.getText().equals("")){
-                JOptionPane.showMessageDialog(rootPane, "Data Alamat harus diisi");
+                JOptionPane.showMessageDialog(null, "Data Alamat harus diisi");
                 text_areaAlamat.requestFocus();
             }else if(combo_identitas.getSelectedIndex() == 0 && txt_deposit.getText().equals("")){
-                JOptionPane.showMessageDialog(rootPane, "Data DP harus diisi, karena tidak menyertakan kartu identitas");
+                JOptionPane.showMessageDialog(null, "Data DP harus diisi, karena tidak menyertakan kartu identitas");
                 txt_deposit.requestFocus();
             }else if(combo_identitas.getSelectedIndex() != 0 && txt_identitas.getText().equals("")){
-                JOptionPane.showMessageDialog(rootPane, "Data Nomor Identitas harus diisi, karena menyertakan kartu identitas");
+                JOptionPane.showMessageDialog(null, "Data Nomor Identitas harus diisi, karena menyertakan kartu identitas");
                 txt_deposit.requestFocus();
             }else if(tgl_pinjam.getDate() == null){
-                JOptionPane.showMessageDialog(rootPane, "Data tanggal pinjam harus diisi");
+                JOptionPane.showMessageDialog(null, "Data tanggal pinjam harus diisi");
                 tgl_pinjam.requestFocus();
             }else if(tgl_kembali.getDate() == null){
-                JOptionPane.showMessageDialog(rootPane, "Data tanggal kembali harus diisi");
+                JOptionPane.showMessageDialog(null, "Data tanggal kembali harus diisi");
                 tgl_kembali.requestFocus();
             }else if(tbl_barang.getModel().getRowCount() == 0){
-                JOptionPane.showMessageDialog(rootPane, "Silahkan pilih barang yang ingin disewa");
+                JOptionPane.showMessageDialog(null, "Silahkan pilih barang yang ingin disewa");
+            }else if(label_blmCukup.getForeground() == Color.red){
+                JOptionPane.showMessageDialog(null, "Silahkan cek pembayaran kembali");
+                txt_bayar.requestFocus();
             }else{
                 String identitas = null;
                 if(combo_identitas.getSelectedIndex() == 0){
@@ -566,35 +578,38 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                     identitas = combo_identitas.getSelectedItem().toString();
                 }
                 
+                int kembalian = 0;
+                if(txt_kembalian.getText().equals("-")){
+                    kembalian = 0;
+                }else{
+                    kembalian = Integer.parseInt(txt_kembalian.getText());
+                }
+                
                 Connection conn = koneksi.Connect.GetConnection();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
                 int rowCount = tbl_barang.getModel().getRowCount();
-
+                
                 //input data_sewaan
                 String sqlDataSewaan = "insert into data_sewaan values(null ,'"+ txt_tempatIdPengguna.getText() +"' ,"
                         + "'"+ txt_nama.getText() +"' ,'"+ text_areaAlamat.getText() +"' ,'"+ txt_hp.getText() +"' ,"
                         + "'"+ identitas +"' ,'"+ txt_identitas.getText() +"' ,"
-                        + "'"+ txt_deposit.getText() +"' ,'"+ txt_total.getText() +"', 'proses', "
+                        + "'"+ txt_deposit.getText() +"' , '"+txt_bayar.getText()+"', "+ kembalian +", '"+ txt_total.getText() +"', 'proses', "
                         + "'"+ sdf.format(tgl_pinjam.getDate()) +"', '"+ sdf.format(tgl_kembali.getDate()) +"', now())";
                 PreparedStatement prepare = conn.prepareStatement(sqlDataSewaan);
                 prepare.execute();
                               
                 //ambil id_sewaan
-                String sqlAmbilId = "select id_sewaan from data_sewaan where nama_penyewa='"+ txt_nama.getText() +"'";
+                String sqlAmbilId = "SELECT MAX(id_sewaan) AS id_sewaan FROM data_sewaan";
                 PreparedStatement stm = conn.prepareStatement(sqlAmbilId);
                 ResultSet hasilId = stm.executeQuery();
                 hasilId.next();
-                
-                //input laporan
-                String sqlLaporan = "insert into laporan values (null, '"+ hasilId.getString("id_sewaan") +"', '"+ txt_tempatIdPengguna.getText() +"', now(), '"+ txt_total.getText() +"')";
-                PreparedStatement statemen = conn.prepareStatement(sqlLaporan);
-                statemen.execute();
 
-                
+                int jumlah = 0;
                 for (int i = 0; i < rowCount; i++){
-                    //ngambil nama barang dan stok barang dari jTable
+                    //ngambil nama barang, jumlah barang dari jTable
                     Object namaBarang = tbl_barang.getValueAt(i, 1);
-                    Object stokBarang = tbl_barang.getValueAt(i, 2);
+                    Object jumlahBarang = tbl_barang.getValueAt(i, 2);
+                    Object subTotal = tbl_barang.getValueAt(i, 5);
 
                     //ngambil data berdasarkan nama barang di jTable;
                     String dataBarang = "Select * from data_barang where nama_barang='"+ namaBarang +"'";
@@ -602,13 +617,20 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                     ResultSet res = pst.executeQuery();
                     if(res.next()){
                         String sqlDetailSewaan = "insert into detail_data_sewaan values ('"+ hasilId.getString("id_sewaan") +"',"
-                        + "'"+ txt_nama.getText() +"', '"+ res.getString("id_barang") +"', '"+ stokBarang +"')";
+                        + "'"+ txt_nama.getText() +"', '"+ res.getString("id_barang") +"', '"+ jumlahBarang +"', '"+ subTotal +"')";
 
                         PreparedStatement statement = conn.prepareStatement(sqlDetailSewaan);
                         statement.execute();
+                        jumlah = jumlah + Integer.parseInt(jumlahBarang.toString());
                     }
                 }
-                JOptionPane.showMessageDialog(rootPane, "Transaksi Behasil");
+                
+                //input laporan
+                String sqlLaporan = "insert into laporan values (null, '"+ hasilId.getString("id_sewaan") +"', '"+ txt_tempatIdPengguna.getText() +"', now(), "+ jumlah +", '"+ txt_total.getText() +"')";
+                PreparedStatement statemen = conn.prepareStatement(sqlLaporan);
+                statemen.execute();
+                
+                JOptionPane.showMessageDialog(null, "Transaksi Behasil");
                 clear();
             }
         }catch(Exception e){
@@ -694,7 +716,8 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                                 res.getString("nama_barang"),
                                 combo_jumlah.getSelectedItem(),
                                 res.getString("harga_hari"),
-                                res.getString("harga_2hari")
+                                res.getString("harga_2hari"),
+                                hasil
                             });
                         }else{
                             int totalSebelumnya = Integer.parseInt(txt_total.getText().toString());
@@ -711,7 +734,8 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                                 res.getString("nama_barang"),
                                 combo_jumlah.getSelectedItem(),
                                 res.getString("harga_hari"),
-                                res.getString("harga_2hari")
+                                res.getString("harga_2hari"),
+                                hasil
                             });
                         }
 
@@ -735,7 +759,8 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                                 res.getString("nama_barang"),
                                 combo_jumlah.getSelectedItem(),
                                 res.getString("harga_hari"),
-                                res.getString("harga_2hari")
+                                res.getString("harga_2hari"),
+                                hasil
                             });
                         }else{
                             int totalSebelumnya = Integer.parseInt(txt_total.getText().toString());
@@ -752,11 +777,13 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                                 res.getString("nama_barang"),
                                 combo_jumlah.getSelectedItem(),
                                 res.getString("harga_hari"),
-                                res.getString("harga_2hari")
+                                res.getString("harga_2hari"),
+                                hasil
                             });
                         }
                     }
                     
+                    cekKembalian();
                     combo_barang.setSelectedIndex(0);
                     combo_jumlah.removeAllItems();
                     combo_jumlah.disable();

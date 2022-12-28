@@ -223,6 +223,7 @@ public class BarangFrame extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
+        table_barang.setRowHeight(30);
         table_barang.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 table_barangMouseClicked(evt);
