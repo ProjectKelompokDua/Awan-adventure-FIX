@@ -91,11 +91,6 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
             }
         });
         tbl_sewaan.setRowHeight(30);
-        tbl_sewaan.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tbl_sewaanMouseClicked(evt);
-            }
-        });
         jScrollPane2.setViewportView(tbl_sewaan);
 
         getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, 960, 230));
@@ -231,21 +226,22 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_txt_carisewaanKeyReleased
 
-    private void tbl_sewaanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_sewaanMouseClicked
-        // TODO add your handling code here:
-        int i = tbl_sewaan.getSelectedRow();
-        TableModel tbl = tbl_sewaan.getModel();
-    }//GEN-LAST:event_tbl_sewaanMouseClicked
-
     private void jPanel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel6MouseClicked
 
     }//GEN-LAST:event_jPanel6MouseClicked
 
     private void btn_detailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_detailActionPerformed
         // TODO add your handling code here:
-        this.hide();
-        new DetailTransaksi().setVisible(true);
-        new DetailTransaksi().setLocationRelativeTo(null);
+        if(tbl_sewaan.getSelectionModel().isSelectionEmpty()){
+            JOptionPane.showMessageDialog(null, "Silahkan pilih data pada table terlebih dahulu");
+        }else{
+            int i = tbl_sewaan.getSelectedRow();
+            String idSewaan = tbl_sewaan.getValueAt(i, 1).toString();
+
+            DetailTransaksi dt = new DetailTransaksi();
+            dt.getKodeSewaan(idSewaan);
+            dt.setVisible(true);
+        }
     }//GEN-LAST:event_btn_detailActionPerformed
 
     private void btn_cetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cetakActionPerformed

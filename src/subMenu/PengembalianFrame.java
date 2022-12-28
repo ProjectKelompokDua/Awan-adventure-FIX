@@ -153,20 +153,20 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
         txt_deposit.setText("-");
     }
 
-    public void cekTable() {
-        int jumlahRow = tbl_pengembalian.getModel().getRowCount();
-        ArrayList isiTable = new ArrayList();
-        for (int i = 0; i < jumlahRow; i++) {
-            isiTable.add(tbl_pengembalian.getModel().getValueAt(i, 1));
-        }
-
-        boolean isian = isiTable.contains("Barang2");
-        if (isian) {
-            JOptionPane.showMessageDialog(null, "data sama tidak boleh");
-        } else {
-            System.out.println("tadek");
-        }
-    }
+//    public void cekTable() {
+//        int jumlahRow = tbl_pengembalian.getModel().getRowCount();
+//        ArrayList isiTable = new ArrayList();
+//        for (int i = 0; i < jumlahRow; i++) {
+//            isiTable.add(tbl_pengembalian.getModel().getValueAt(i, 1));
+//        }
+//
+//        boolean isian = isiTable.contains("Barang2");
+//        if (isian) {
+//            JOptionPane.showMessageDialog(null, "data sama tidak boleh");
+//        } else {
+//            System.out.println("tadek");
+//        }
+//    }
 
     /**
      * This method is called from within the constructor to initialize the form.
