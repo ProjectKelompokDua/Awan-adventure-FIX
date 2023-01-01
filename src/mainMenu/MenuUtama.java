@@ -17,11 +17,10 @@ import subMenu.*;
  * @author perlengkapan
  */
 public class MenuUtama extends javax.swing.JFrame {
-    
-    Color colorHover = new Color(252,191,73);
-    Color exitHover = new Color(248,221,113);
-    
-    
+
+    Color colorHover = new Color(252, 191, 73);
+    Color exitHover = new Color(248, 221, 113);
+
     /**
      * Creates new form MenuUtama
      */
@@ -35,13 +34,13 @@ public class MenuUtama extends javax.swing.JFrame {
         infoMenu.setText("Beranda");
         infoSubmenu.setText("Home / Dashboard");
     }
-    
-    public void setAkun(String akses, String namapengguna, String idpengguna){
+
+    public void setAkun(String akses, String namapengguna, String idpengguna) {
         txt_akses.setText(akses);
         txt_namaUser.setText(namapengguna);
         tempat_idPengguna.setText(idpengguna);
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -500,10 +499,10 @@ public class MenuUtama extends javax.swing.JFrame {
     private void logoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseClicked
         // TODO add your handling code here:
         int confirmLogout = JOptionPane.showConfirmDialog(null, "Yakin ingin Logout ?", "Confirmation", JOptionPane.YES_NO_OPTION);
-        if(confirmLogout == JOptionPane.YES_OPTION){
+        if (confirmLogout == JOptionPane.YES_OPTION) {
             this.setVisible(false);
             new Login().setVisible(true);
-            
+
         }
     }//GEN-LAST:event_logoutMouseClicked
 
@@ -513,16 +512,16 @@ public class MenuUtama extends javax.swing.JFrame {
         jDesktopPane1.add(kf);
         kf.ambilId(tempat_idPengguna.getText());
         kf.setVisible(true);
-        
+
         new DashboardFrame().setVisible(false);
         new SewaanFrame().setVisible(false);
         new PengembalianFrame().setVisible(false);
         new BarangFrame().setVisible(false);
         new PenggunaFrame().setVisible(false);
-                
+
         infoMenu.setText("Form Kasir");
         infoSubmenu.setText("Home / Kasir");
-        
+
         btn_beranda.setBackground(exitHover);
         Beranda.setBackground(exitHover);
         btn_kasir.setBackground(colorHover);
@@ -545,16 +544,16 @@ public class MenuUtama extends javax.swing.JFrame {
         jDesktopPane1.add(kf);
         kf.ambilId(tempat_idPengguna.getText());
         kf.setVisible(true);
-        
+
         new DashboardFrame().setVisible(false);
         new SewaanFrame().setVisible(false);
         new PengembalianFrame().setVisible(false);
         new BarangFrame().setVisible(false);
         new PenggunaFrame().setVisible(false);
-        
+
         infoMenu.setText("Form Kasir");
         infoSubmenu.setText("Home / Kasir");
-        
+
         btn_beranda.setBackground(exitHover);
         Beranda.setBackground(exitHover);
         btn_kasir.setBackground(colorHover);
@@ -576,16 +575,16 @@ public class MenuUtama extends javax.swing.JFrame {
         SewaanFrame sf = new SewaanFrame();
         jDesktopPane1.add(sf);
         sf.setVisible(true);
-        
+
         new DashboardFrame().setVisible(false);
         new KasirFrame().setVisible(false);
         new PengembalianFrame().setVisible(false);
         new BarangFrame().setVisible(false);
         new PenggunaFrame().setVisible(false);
-        
+
         infoMenu.setText("Data Sewaan");
         infoSubmenu.setText("Home / Sewaan");
-        
+
         btn_beranda.setBackground(exitHover);
         Beranda.setBackground(exitHover);
         btn_kasir.setBackground(exitHover);
@@ -607,16 +606,16 @@ public class MenuUtama extends javax.swing.JFrame {
         SewaanFrame sf = new SewaanFrame();
         jDesktopPane1.add(sf);
         sf.setVisible(true);
-        
+
         new DashboardFrame().setVisible(false);
         new KasirFrame().setVisible(false);
         new PengembalianFrame().setVisible(false);
         new BarangFrame().setVisible(false);
         new PenggunaFrame().setVisible(false);
-        
+
         infoMenu.setText("Data Sewaan");
         infoSubmenu.setText("Home / Sewaan");
-        
+
         btn_beranda.setBackground(exitHover);
         Beranda.setBackground(exitHover);
         btn_kasir.setBackground(exitHover);
@@ -638,16 +637,16 @@ public class MenuUtama extends javax.swing.JFrame {
         BarangFrame bf = new BarangFrame();
         jDesktopPane1.add(bf);
         bf.setVisible(true);
-        
+
         new DashboardFrame().setVisible(false);
         new KasirFrame().setVisible(false);
         new SewaanFrame().setVisible(false);
         new PengembalianFrame().setVisible(false);
         new PenggunaFrame().setVisible(false);
-        
+
         infoMenu.setText("Data Barang");
         infoSubmenu.setText("Home / Barang");
-        
+
         btn_beranda.setBackground(exitHover);
         Beranda.setBackground(exitHover);
         btn_kasir.setBackground(exitHover);
@@ -669,16 +668,16 @@ public class MenuUtama extends javax.swing.JFrame {
         BarangFrame bf = new BarangFrame();
         jDesktopPane1.add(bf);
         bf.setVisible(true);
-        
+
         new DashboardFrame().setVisible(false);
         new KasirFrame().setVisible(false);
         new SewaanFrame().setVisible(false);
         new PengembalianFrame().setVisible(false);
         new PenggunaFrame().setVisible(false);
-        
+
         infoMenu.setText("Data Barang");
         infoSubmenu.setText("Home / Barang");
-        
+
         btn_beranda.setBackground(exitHover);
         Beranda.setBackground(exitHover);
         btn_kasir.setBackground(exitHover);
@@ -701,16 +700,16 @@ public class MenuUtama extends javax.swing.JFrame {
         jDesktopPane1.add(pf);
         pf.getIdPengguna(tempat_idPengguna.getText());
         pf.setVisible(true);
-        
+
         new DashboardFrame().setVisible(false);
         new KasirFrame().setVisible(false);
         new SewaanFrame().setVisible(false);
         new BarangFrame().setVisible(false);
         new PenggunaFrame().setVisible(false);
-        
+
         infoMenu.setText("Form Pengembalian");
         infoSubmenu.setText("Home / Pengembalian");
-        
+
         btn_beranda.setBackground(exitHover);
         Beranda.setBackground(exitHover);
         btn_kasir.setBackground(exitHover);
@@ -733,16 +732,16 @@ public class MenuUtama extends javax.swing.JFrame {
         jDesktopPane1.add(pf);
         pf.getIdPengguna(tempat_idPengguna.getText());
         pf.setVisible(true);
-        
+
         new DashboardFrame().setVisible(false);
         new KasirFrame().setVisible(false);
         new SewaanFrame().setVisible(false);
         new BarangFrame().setVisible(false);
         new PenggunaFrame().setVisible(false);
-        
+
         infoMenu.setText("Form Pengembalian");
         infoSubmenu.setText("Home / Pengembalian");
-        
+
         btn_beranda.setBackground(exitHover);
         Beranda.setBackground(exitHover);
         btn_kasir.setBackground(exitHover);
@@ -761,7 +760,7 @@ public class MenuUtama extends javax.swing.JFrame {
 
     private void PenggunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PenggunaMouseClicked
         // TODO add your handling code here:
-        if(txt_akses.getText().equals("Admin")){
+        if (txt_akses.getText().equals("Admin")) {
             PenggunaFrame pf = new PenggunaFrame();
             jDesktopPane1.add(pf);
             pf.setVisible(true);
@@ -789,14 +788,14 @@ public class MenuUtama extends javax.swing.JFrame {
             Pengguna.setBackground(colorHover);
             btn_laporan.setBackground(exitHover);
             Laporan.setBackground(exitHover);
-        }else{
+        } else {
             JOptionPane.showMessageDialog(rootPane, "Mohon maaf anda tidak bisa mengakses menu ini");
         }
     }//GEN-LAST:event_PenggunaMouseClicked
 
     private void btn_penggunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_penggunaMouseClicked
         // TODO add your handling code here:
-        if(txt_akses.getText().equals("Admin")){
+        if (txt_akses.getText().equals("Admin")) {
             PenggunaFrame pf = new PenggunaFrame();
             jDesktopPane1.add(pf);
             pf.setVisible(true);
@@ -824,10 +823,10 @@ public class MenuUtama extends javax.swing.JFrame {
             Pengguna.setBackground(colorHover);
             btn_laporan.setBackground(exitHover);
             Laporan.setBackground(exitHover);
-        }else{
+        } else {
             JOptionPane.showMessageDialog(rootPane, "Mohon maaf anda tidak bisa mengakses menu ini");
         }
-        
+
     }//GEN-LAST:event_btn_penggunaMouseClicked
 
     private void LaporanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_LaporanMouseClicked
@@ -853,9 +852,9 @@ public class MenuUtama extends javax.swing.JFrame {
             Pengguna.setBackground(exitHover);
             btn_laporan.setBackground(colorHover);
             Laporan.setBackground(colorHover);
-        }else{
+        } else {
             JOptionPane.showMessageDialog(rootPane, "Mohon maaf anda tidak bisa mengakses menu ini");
-        }     
+        }
     }//GEN-LAST:event_LaporanMouseClicked
 
     private void btn_laporanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_laporanMouseClicked
@@ -881,7 +880,7 @@ public class MenuUtama extends javax.swing.JFrame {
             Pengguna.setBackground(exitHover);
             btn_laporan.setBackground(colorHover);
             Laporan.setBackground(colorHover);
-        }else{
+        } else {
             JOptionPane.showMessageDialog(rootPane, "Mohon maaf anda tidak bisa mengakses menu ini");
         }
     }//GEN-LAST:event_btn_laporanMouseClicked
@@ -949,7 +948,7 @@ public class MenuUtama extends javax.swing.JFrame {
     private void jPanel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MouseClicked
         // TODO add your handling code here:
         int confirmExit = JOptionPane.showConfirmDialog(rootPane, "Yakin ingin keluar ?", "Confirmation", JOptionPane.YES_NO_OPTION);
-        if(confirmExit == JOptionPane.YES_OPTION){
+        if (confirmExit == JOptionPane.YES_OPTION) {
             System.exit(0);
         }
     }//GEN-LAST:event_jPanel3MouseClicked

@@ -112,7 +112,7 @@ public class BarangFrame extends javax.swing.JInternalFrame {
             table_barang.setModel(model);
             
         }catch(Exception e) {
-            JOptionPane.showMessageDialog(rootPane, "Error");
+            JOptionPane.showMessageDialog(null, "Error load table");
             System.out.println(e.getMessage());
         }
   
@@ -158,6 +158,7 @@ public class BarangFrame extends javax.swing.JInternalFrame {
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        cmbfilter.setFont(new java.awt.Font("Outfit", 0, 13)); // NOI18N
         cmbfilter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Urutkan Dari--", "Data Paling Baru", "Data Paling lama", "Stok Paling Sedikit", "Stok Paling Banyak" }));
         cmbfilter.setBorder(null);
         cmbfilter.setName(""); // NOI18N
@@ -191,11 +192,20 @@ public class BarangFrame extends javax.swing.JInternalFrame {
         id_barang.setForeground(new java.awt.Color(242, 242, 242));
         id_barang.setText("jLabel21");
         getContentPane().add(id_barang, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 180, -1, -1));
+
+        txt_stok.setFont(new java.awt.Font("Outfit", 0, 12)); // NOI18N
         getContentPane().add(txt_stok, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 70, 310, 30));
+
+        txt_namaBarang.setFont(new java.awt.Font("Outfit", 0, 12)); // NOI18N
         getContentPane().add(txt_namaBarang, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 20, 310, 30));
+
+        txt_harga1.setFont(new java.awt.Font("Outfit", 0, 12)); // NOI18N
         getContentPane().add(txt_harga1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 120, 310, 30));
+
+        txt_harga2.setFont(new java.awt.Font("Outfit", 0, 12)); // NOI18N
         getContentPane().add(txt_harga2, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 170, 310, 30));
 
+        txt_cari.setFont(new java.awt.Font("Outfit", 0, 12)); // NOI18N
         txt_cari.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txt_cariKeyReleased(evt);
@@ -204,6 +214,7 @@ public class BarangFrame extends javax.swing.JInternalFrame {
         getContentPane().add(txt_cari, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 290, 240, 30));
 
         table_barang.setAutoCreateRowSorter(true);
+        table_barang.setFont(new java.awt.Font("Outfit", 0, 12)); // NOI18N
         table_barang.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -233,13 +244,15 @@ public class BarangFrame extends javax.swing.JInternalFrame {
 
         getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 340, 940, 190));
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBackground(new java.awt.Color(242, 242, 242));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Proses"));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         btn_tambah.setBackground(new java.awt.Color(252, 191, 74));
-        btn_tambah.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btn_tambah.setFont(new java.awt.Font("Outfit", 0, 15)); // NOI18N
+        btn_tambah.setForeground(new java.awt.Color(255, 255, 255));
         btn_tambah.setText("Tambah");
+        btn_tambah.setBorder(null);
         btn_tambah.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_tambahActionPerformed(evt);
@@ -248,8 +261,10 @@ public class BarangFrame extends javax.swing.JInternalFrame {
         jPanel1.add(btn_tambah, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 100, 40));
 
         btn_edit.setBackground(new java.awt.Color(252, 191, 74));
-        btn_edit.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btn_edit.setFont(new java.awt.Font("Outfit", 0, 15)); // NOI18N
+        btn_edit.setForeground(new java.awt.Color(255, 255, 255));
         btn_edit.setText("Edit");
+        btn_edit.setBorder(null);
         btn_edit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_editActionPerformed(evt);
@@ -258,8 +273,10 @@ public class BarangFrame extends javax.swing.JInternalFrame {
         jPanel1.add(btn_edit, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 30, 100, 40));
 
         btn_hapus.setBackground(new java.awt.Color(252, 191, 74));
-        btn_hapus.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btn_hapus.setFont(new java.awt.Font("Outfit", 0, 15)); // NOI18N
+        btn_hapus.setForeground(new java.awt.Color(255, 255, 255));
         btn_hapus.setText("Hapus");
+        btn_hapus.setBorder(null);
         btn_hapus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_hapusActionPerformed(evt);
@@ -270,6 +287,7 @@ public class BarangFrame extends javax.swing.JInternalFrame {
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 20, 370, 90));
 
         Terang.setColumns(20);
+        Terang.setFont(new java.awt.Font("Outfit", 0, 12)); // NOI18N
         Terang.setRows(5);
         jScrollPane1.setViewportView(Terang);
 
@@ -337,7 +355,7 @@ public class BarangFrame extends javax.swing.JInternalFrame {
 
             }
         }catch(Exception e) {
-            JOptionPane.showMessageDialog(rootPane, "Error");
+            JOptionPane.showMessageDialog(null, "Error filter");
             System.out.println(e.getMessage());
         }
 
@@ -380,7 +398,7 @@ public class BarangFrame extends javax.swing.JInternalFrame {
 
             }
         } catch(Exception e) {
-            JOptionPane.showMessageDialog(rootPane, "Error");
+            JOptionPane.showMessageDialog(null, "Error cari barang");
             System.out.println(e.getMessage());
         }
     }//GEN-LAST:event_txt_cariKeyReleased
@@ -410,7 +428,7 @@ public class BarangFrame extends javax.swing.JInternalFrame {
             rs.next();
             id_barang.setText(rs.getString("id_barang"));
         } catch(Exception e){
-            JOptionPane.showMessageDialog(rootPane, "Error");
+            JOptionPane.showMessageDialog(null, "Error klik table");
             System.out.println(e.getMessage());
         }
     }//GEN-LAST:event_table_barangMouseClicked
@@ -426,7 +444,7 @@ public class BarangFrame extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Data Berhasil Disimpan");
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error");
+            JOptionPane.showMessageDialog(null, "Error tambah barang");
             System.out.println(e.getMessage());
         }
         load_table();
@@ -462,10 +480,10 @@ public class BarangFrame extends javax.swing.JInternalFrame {
                 load_table();
                 kosong();
 
-                JOptionPane.showMessageDialog(rootPane, "Data Barang berhasil diperbarui");
+                JOptionPane.showMessageDialog(null, "Data Barang berhasil diperbarui");
             }
         }catch(Exception e){
-            JOptionPane.showMessageDialog(rootPane, "Error");
+            JOptionPane.showMessageDialog(null, "Error edit barang");
             System.out.println(e.getMessage());
         }
 
@@ -476,15 +494,15 @@ public class BarangFrame extends javax.swing.JInternalFrame {
             String sql = "DELETE FROM data_barang Where id_barang ='"+id_barang.getText()+"'";
             java.sql.Connection conn=(Connection)Connect.GetConnection();
             java.sql.PreparedStatement pst=conn.prepareStatement(sql);
-            int confirmLogout = JOptionPane.showConfirmDialog(rootPane, "Ingin menghapus data? ?", "Hapus Data", JOptionPane.YES_NO_OPTION);
-            if (confirmLogout == JOptionPane.YES_OPTION) {
+            int confirmDelete = JOptionPane.showConfirmDialog(null, "Ingin menghapus data? ?", "Hapus Data", JOptionPane.YES_NO_OPTION);
+            if (confirmDelete == JOptionPane.YES_OPTION) {
                 pst.execute();
                 JOptionPane.showMessageDialog(null, "Data Berhasil Dihapus");
                 kosong();
                 load_table();
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(rootPane, "Error");
+            JOptionPane.showMessageDialog(null, "Error hapus barang");
             System.out.println(e.getMessage());
         }
     }//GEN-LAST:event_btn_hapusActionPerformed

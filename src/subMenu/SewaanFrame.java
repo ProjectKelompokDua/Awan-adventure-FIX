@@ -8,12 +8,15 @@ package subMenu;
 import subMenu.popUp.DetailTransaksi;
 import com.mysql.cj.jdbc.Driver;
 import java.awt.Dimension;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.sql.*;
 import java.util.HashMap;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -41,6 +44,7 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
         bif.setNorthPane(null);
 
         loadTable();
+        cekInputanStringOnly(txt_carisewaan);
     }
 
     /**
@@ -175,6 +179,21 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
         } catch (Exception e) {
 
         }
+    }
+    
+        private void cekInputanStringOnly(JTextField textfield) {
+        textfield.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent ke) {
+                String value = textfield.getText();
+                if (ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9') {
+                    textfield.setEditable(false);
+                } else if (ke.getKeyCode() == 8 || ke.getKeyCode() == 49) {
+                    textfield.setEditable(true);
+                } else {
+                    textfield.setEditable(true);
+                }
+            }
+        });
     }
 
     private void txt_carisewaanKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_carisewaanKeyReleased

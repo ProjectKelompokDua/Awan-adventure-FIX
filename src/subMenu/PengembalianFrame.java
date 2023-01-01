@@ -20,11 +20,11 @@ import javax.swing.table.TableModel;
 public class PengembalianFrame extends javax.swing.JInternalFrame {
 
     String TotalDenda = "0";
-    
 
     /**
      * Creates new form PengembalianFrame
      */
+
     public PengembalianFrame() {
         initComponents();
 
@@ -38,12 +38,13 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
         updateComboKerusakan();
         clear();
         loadTable();
+
     }
-    
-    public void getIdPengguna(String id){
+
+    public void getIdPengguna(String id) {
         id_pengguna.setText(id);
     }
-    
+
     public void loadTable() {
         DefaultTableModel dtm = new DefaultTableModel() {
             boolean[] canEdit = new boolean[]{
@@ -167,7 +168,6 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
 //            System.out.println("tadek");
 //        }
 //    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -607,7 +607,7 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
                     field2,
                     combo_jenisKerusakan.getSelectedItem()
                 });
-                
+
                 combo_barangRusak.setSelectedIndex(0);
                 combo_barangRusak.setEnabled(true);
                 combo_jenisKerusakan.setSelectedIndex(0);
@@ -622,7 +622,7 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
 
     private void btn_clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clearActionPerformed
         // TODO add your handling code here:
-        int clear = JOptionPane.showConfirmDialog(rootPane, "Yakin ingin membersihkan seluruh isian ? (termasuk pada table pilihan barang)", "Clear", JOptionPane.YES_NO_OPTION);
+        int clear = JOptionPane.showConfirmDialog(null, "Yakin ingin membersihkan seluruh isian ? (termasuk pada table pilihan barang)", "Clear", JOptionPane.YES_NO_OPTION);
         if (clear == JOptionPane.YES_OPTION) {
             clear();
         }
@@ -790,7 +790,7 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
                         int TotalDenda = Integer.parseInt(this.TotalDenda);
                         int HitungTotalDenda = TotalDenda + biayaKerusakan;
                         this.TotalDenda = String.valueOf(HitungTotalDenda);
-                        
+
                         int hasilAkhir = totalDenda + biayaKerusakan;
                         String hasilAkhirFix = String.valueOf(hasilAkhir);
                         txt_total.setText(hasilAkhirFix);
@@ -844,7 +844,7 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
                         int TotalDenda = Integer.parseInt(this.TotalDenda);
                         int HitungTotalDenda = TotalDenda + biayaKerusakan;
                         this.TotalDenda = String.valueOf(HitungTotalDenda);
-                        
+
                         int hasilAkhir = totalDenda + biayaKerusakan;
                         String hasilAkhirFix = String.valueOf(hasilAkhir);
                         txt_total.setText(hasilAkhirFix);
@@ -947,7 +947,7 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
 
                 DefaultTableModel dtm = (DefaultTableModel) tbl_pengembalian.getModel();
                 dtm.removeRow(i);
-                
+
                 combo_barangRusak.setSelectedIndex(0);
                 combo_barangRusak.setEnabled(true);
                 combo_jenisKerusakan.setSelectedIndex(0);
@@ -962,81 +962,80 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
 
     private void btn_prosesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_prosesActionPerformed
         // TODO add your handling code here:
-        try{
-            if(combo_penyewa.getSelectedIndex() == 0){
+        try {
+            if (combo_penyewa.getSelectedIndex() == 0) {
                 JOptionPane.showMessageDialog(null, "Data penyewa harus diisi");
-            }else if(combo_keterlambatan.getSelectedIndex() == 0 && tbl_pengembalian.getModel().getRowCount() == 0){
+            } else if (combo_keterlambatan.getSelectedIndex() == 0 && tbl_pengembalian.getModel().getRowCount() == 0) {
                 int confirmProses = JOptionPane.showConfirmDialog(null, "Yakin tidak ada keterlambatan dan barang dalam keadaan yang baik ?", "Confirmation", JOptionPane.YES_NO_OPTION);
                 if (confirmProses == JOptionPane.YES_OPTION) {
                     //insert into data_pengembalian
                     Connection conn = koneksi.Connect.GetConnection();
-                    String insertPengembalian = "insert into data_pengembalian values (null, '"+ id_pengguna.getText() +"', '"+ txt_idSewaan.getText()+"', null, 0)";
+                    String insertPengembalian = "insert into data_pengembalian values (null, '" + id_pengguna.getText() + "', '" + txt_idSewaan.getText() + "', null, 0)";
                     PreparedStatement pst = conn.prepareStatement(insertPengembalian);
                     pst.execute();
-                    
+
                     //update selesai di data_sewaan
-                    String updateSewaan = "update data_sewaan set status = 'Selesai' where id_sewaan = '"+ txt_idSewaan.getText() +"'";
+                    String updateSewaan = "update data_sewaan set status = 'Selesai' where id_sewaan = '" + txt_idSewaan.getText() + "'";
                     PreparedStatement ps = conn.prepareStatement(updateSewaan);
                     ps.execute();
-                    
+
                     JOptionPane.showMessageDialog(null, "Pengembalian berhasil");
                     clear();
                 }
-            }else{
+            } else {
                 int confirmProses = JOptionPane.showConfirmDialog(null, "Yakin ingin melakukan proses pengembalian?", "Confirmation", JOptionPane.YES_NO_OPTION);
-                if(confirmProses == JOptionPane.YES_OPTION){
+                if (confirmProses == JOptionPane.YES_OPTION) {
                     Connection conn = koneksi.Connect.GetConnection();
-                    
+
                     //get id keterlambatan
                     String isiKeterlambatan;
                     String terlambat;
-                    if(txt_terlambat.getText().equals("-")){
+                    if (txt_terlambat.getText().equals("-")) {
                         isiKeterlambatan = null;
                         terlambat = null;
-                    }else{
+                    } else {
                         isiKeterlambatan = txt_terlambat.getText();
-                        terlambat = "'"+isiKeterlambatan.substring(0, 1)+"'";
+                        terlambat = "'" + isiKeterlambatan.substring(0, 1) + "'";
                     }
-                    
+
                     //insert into pengembalian
-                    String insertPengembalian = "insert into data_pengembalian values (null, '"+ id_pengguna.getText() +"', '"+ txt_idSewaan.getText()+"', "+ terlambat +", '"+ txt_total.getText() +"')";
+                    String insertPengembalian = "insert into data_pengembalian values (null, '" + id_pengguna.getText() + "', '" + txt_idSewaan.getText() + "', " + terlambat + ", '" + txt_total.getText() + "')";
                     PreparedStatement pst = conn.prepareStatement(insertPengembalian);
                     pst.execute();
-                    
+
                     //get id pengembalian
-                    String sqlIdPengembalian = "select * from data_pengembalian where id_sewaan = '"+ txt_idSewaan.getText() +"'";
+                    String sqlIdPengembalian = "select * from data_pengembalian where id_sewaan = '" + txt_idSewaan.getText() + "'";
                     PreparedStatement ps = conn.prepareStatement(sqlIdPengembalian);
                     ResultSet res = ps.executeQuery();
                     res.next();
-                    
+
                     //update selesai di data_sewaan
-                    String updateSewaan = "update data_sewaan set status = 'Selesai' where id_sewaan = '"+ txt_idSewaan.getText() +"'";
+                    String updateSewaan = "update data_sewaan set status = 'Selesai' where id_sewaan = '" + txt_idSewaan.getText() + "'";
                     PreparedStatement statements = conn.prepareStatement(updateSewaan);
                     statements.execute();
-                    
+
                     //insert into detail pengembalian
                     int rowCount = tbl_pengembalian.getModel().getRowCount();
-                    
+
                     for (int i = 0; i < rowCount; i++) {
                         String namaBarang = tbl_pengembalian.getValueAt(i, 1).toString();
                         String DatajenisKerusakan = tbl_pengembalian.getValueAt(i, 2).toString();
                         String jenisKerusakan = DatajenisKerusakan.substring(DatajenisKerusakan.length() - 5);
-                        
-                        
+
                         //get id_barang
-                        String sqlIdBarang = "select * from data_barang where nama_barang = '"+ namaBarang +"'";
+                        String sqlIdBarang = "select * from data_barang where nama_barang = '" + namaBarang + "'";
                         PreparedStatement statemenBarang = conn.prepareStatement(sqlIdBarang);
                         ResultSet IdBarang = statemenBarang.executeQuery();
                         IdBarang.next();
-                        
+
                         //get id_kerusakan
-                        String sqlIdKerusakan = "select * from kerusakan where biaya_kerusakan = '"+ jenisKerusakan +"'";
+                        String sqlIdKerusakan = "select * from kerusakan where biaya_kerusakan = '" + jenisKerusakan + "'";
                         PreparedStatement statemenKerusakan = conn.prepareStatement(sqlIdKerusakan);
                         ResultSet IdKerusakan = statemenKerusakan.executeQuery();
                         IdKerusakan.next();
-                        
+
                         //insert into detail_data_pengembalian
-                        String insertDetailPengembalian = "insert into detail_data_pengembalian values ('"+ res.getString("id_pengembalian") +"', '"+ IdBarang.getString("id_barang") +"', '"+ IdKerusakan.getString("id_kerusakan") +"')";
+                        String insertDetailPengembalian = "insert into detail_data_pengembalian values ('" + res.getString("id_pengembalian") + "', '" + IdBarang.getString("id_barang") + "', '" + IdKerusakan.getString("id_kerusakan") + "')";
                         PreparedStatement statement = conn.prepareStatement(insertDetailPengembalian);
                         statement.execute();
                     }
@@ -1044,7 +1043,7 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
                     clear();
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error tombol proses");
             System.out.println(e.getMessage());
         }

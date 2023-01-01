@@ -441,33 +441,33 @@ public class PenggunaFrame extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         try{
             if(txt_nama.getText().equals("")){
-                JOptionPane.showMessageDialog(rootPane,  "Data Nama harus diisi");
+                JOptionPane.showMessageDialog(null,  "Data Nama harus diisi");
                 txt_nama.requestFocus();
             }else if(txt_username.getText().equals("")){
-                JOptionPane.showMessageDialog(rootPane, "Data Username harus diisi");
+                JOptionPane.showMessageDialog(null, "Data Username harus diisi");
                 txt_username.requestFocus();
             }else if(txt_password.getText().equals("")){
-                JOptionPane.showMessageDialog(rootPane, "Data Password harus diisi");
+                JOptionPane.showMessageDialog(null, "Data Password harus diisi");
                 txt_password.requestFocus();
             }else if(combo_akses.getSelectedItem().equals("Pilih...")){
-                JOptionPane.showMessageDialog(rootPane, "Data Hak Akses harus diisi");
+                JOptionPane.showMessageDialog(null, "Data Hak Akses harus diisi");
             }else if(txt_pin.getText().equals("")){
-                JOptionPane.showMessageDialog(rootPane, "Data PIN harus diisi");
+                JOptionPane.showMessageDialog(null, "Data PIN harus diisi");
                 txt_pin.requestFocus();
             }else if(txt_pin.getText().length() > 6){
-                JOptionPane.showMessageDialog(rootPane, "Data PIN hanya 6 karakter");
+                JOptionPane.showMessageDialog(null, "Data PIN hanya 6 karakter");
                 txt_pin.requestFocus();
             }else{
                 String sql = "insert into pengguna values (null, '"+ txt_nama.getText() +"', '"+ txt_username.getText() +"', '"+ txt_password.getText() +"', '"+ combo_akses.getSelectedItem() +"', '"+ txt_pin.getText() +"')";
                 Connection conn = koneksi.Connect.GetConnection();
                 PreparedStatement pst = conn.prepareStatement(sql);
                 pst.execute();
-                JOptionPane.showMessageDialog(rootPane, "Data berhasil ditambahkan");
+                JOptionPane.showMessageDialog(null, "Data berhasil ditambahkan");
                 loadTable();
                 clear();
             }
         }catch(Exception e){
-            JOptionPane.showMessageDialog(rootPane, "Error");
+            JOptionPane.showMessageDialog(null, "Error tambah");
             System.out.println(e.getMessage());
         }
     }//GEN-LAST:event_btn_tambahActionPerformed
@@ -476,33 +476,33 @@ public class PenggunaFrame extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         try{
             if(txt_nama.getText().equals("")){
-                JOptionPane.showMessageDialog(rootPane, "Data Nama harus diisi");
+                JOptionPane.showMessageDialog(null, "Data Nama harus diisi");
                 txt_nama.requestFocus();
             }else if(txt_username.getText().equals("")){
-                JOptionPane.showMessageDialog(rootPane, "Data Username harus diisi");
+                JOptionPane.showMessageDialog(null, "Data Username harus diisi");
                 txt_username.requestFocus();
             }else if(txt_password.getText().equals("")){
-                JOptionPane.showMessageDialog(rootPane, "Data Password harus diisi");
+                JOptionPane.showMessageDialog(null, "Data Password harus diisi");
                 txt_password.requestFocus();
             }else if(combo_akses.getSelectedItem().equals("Pilih...")){
-                JOptionPane.showMessageDialog(rootPane, "Data Hak Akses harus diisi");
+                JOptionPane.showMessageDialog(null, "Data Hak Akses harus diisi");
             }else if(txt_pin.getText().equals("")){
-                JOptionPane.showMessageDialog(rootPane, "Data PIN harus diisi");
+                JOptionPane.showMessageDialog(null, "Data PIN harus diisi");
                 txt_pin.requestFocus();
             }else if(txt_pin.getText().length() > 6){
-                JOptionPane.showMessageDialog(rootPane, "Data PIN hanya 6 karakter");
+                JOptionPane.showMessageDialog(null, "Data PIN hanya 6 karakter");
                 txt_pin.requestFocus();
             }else{
                 String sql = "update pengguna set nama='"+ txt_nama.getText() +"', username='"+ txt_username.getText() +"', password='"+ txt_password.getText() +"', hak_akses='"+ combo_akses.getSelectedItem() +"', pin='"+ txt_pin.getText() +"' where id_pengguna='"+ tempat_id.getText() +"'";
                 Connection conn = koneksi.Connect.GetConnection();
                 PreparedStatement pst = conn.prepareStatement(sql);
                 pst.execute();
-                JOptionPane.showMessageDialog(rootPane, "Data berhasil diperbaharui");
+                JOptionPane.showMessageDialog(null, "Data berhasil diperbaharui");
                 loadTable();
                 clear();
             }
         }catch(Exception e){
-            JOptionPane.showMessageDialog(rootPane, "Error");
+            JOptionPane.showMessageDialog(null, "Error edit");
             System.out.println(e.getMessage());
         }
     }//GEN-LAST:event_btn_editActionPerformed
@@ -511,37 +511,37 @@ public class PenggunaFrame extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         try{
             if(txt_nama.getText().equals("")){
-                JOptionPane.showMessageDialog(rootPane, "Data Nama harus diisi");
+                JOptionPane.showMessageDialog(null, "Data Nama harus diisi");
                 txt_nama.requestFocus();
             }else if(txt_username.getText().equals("")){
-                JOptionPane.showMessageDialog(rootPane, "Data Username harus diisi");
+                JOptionPane.showMessageDialog(null, "Data Username harus diisi");
                 txt_username.requestFocus();
             }else if(txt_password.getText().equals("")){
-                JOptionPane.showMessageDialog(rootPane, "Data Password harus diisi");
+                JOptionPane.showMessageDialog(null, "Data Password harus diisi");
                 txt_password.requestFocus();
             }else if(combo_akses.getSelectedItem().equals("Pilih...")){
-                JOptionPane.showMessageDialog(rootPane, "Data Hak Akses harus diisi");
+                JOptionPane.showMessageDialog(null, "Data Hak Akses harus diisi");
             }else if(txt_pin.getText().equals("")){
-                JOptionPane.showMessageDialog(rootPane, "Data PIN harus diisi");
+                JOptionPane.showMessageDialog(null, "Data PIN harus diisi");
                 txt_pin.requestFocus();
             }else if(txt_pin.getText().length() > 6){
-                JOptionPane.showMessageDialog(rootPane, "Data PIN hanya 6 karakter");
+                JOptionPane.showMessageDialog(null, "Data PIN hanya 6 karakter");
                 txt_pin.requestFocus();
             }else{
                 String sql = "delete from pengguna where id_pengguna='"+ tempat_id.getText() +"'";
                 Connection conn = koneksi.Connect.GetConnection();
                 PreparedStatement pst = conn.prepareStatement(sql);
 
-                int confirmDelete = JOptionPane.showConfirmDialog(rootPane, "Yakin ingin menghapus?", "Hapus", JOptionPane.YES_NO_OPTION);
+                int confirmDelete = JOptionPane.showConfirmDialog(null, "Yakin ingin menghapus?", "Hapus", JOptionPane.YES_NO_OPTION);
                 if(confirmDelete == JOptionPane.YES_OPTION){
                     pst.execute();
-                    JOptionPane.showMessageDialog(rootPane, "Data berhasil dihapus");
+                    JOptionPane.showMessageDialog(null, "Data berhasil dihapus");
                 }
                 loadTable();
                 clear();
             }
         }catch(Exception e){
-            JOptionPane.showMessageDialog(rootPane, "Error");
+            JOptionPane.showMessageDialog(null, "Error hapus");
             System.out.println(e.getMessage());
         }
     }//GEN-LAST:event_btn_hapusActionPerformed

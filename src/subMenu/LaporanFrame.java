@@ -8,6 +8,8 @@ package subMenu;
 import com.mysql.cj.jdbc.Driver;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.sql.*;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
@@ -15,6 +17,7 @@ import java.util.HashMap;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -59,6 +62,34 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
         int tahunNow = Integer.parseInt(sdf.format(today));
         pilihTahun.setEndYear(tahunNow);
 
+        cekInputanStringOnly(txt_cari);
+
+        cekTxtCari();
+    }
+
+    private void cekInputanStringOnly(JTextField textfield) {
+        textfield.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent ke) {
+                String value = textfield.getText();
+                if (ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9') {
+                    textfield.setEditable(false);
+                } else if (ke.getKeyCode() == 8 || ke.getKeyCode() == 49) {
+                    textfield.setEditable(true);
+                } else {
+                    textfield.setEditable(true);
+                }
+            }
+        });
+    }
+
+    public void cekTxtCari() {
+        if (tbl_laporan.getColumnCount() == 5) {
+            txt_cari.setEditable(false);
+            txt_cari.setEnabled(false);
+        } else {
+            txt_cari.setEditable(true);
+            txt_cari.setEnabled(true);
+        }
     }
 
     public void loadTable() {
@@ -382,10 +413,11 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
         } else {
             msg_tblKosong.setForeground(new Color(242, 242, 242));
         }
-        
+
         label_akses.setText(combo_filterAkses.getSelectedItem().toString());
         label_bulan.setText(String.valueOf(bulan));
         label_tahun.setText(String.valueOf(pilihTahun.getYear()));
+        cekTxtCari();
     }//GEN-LAST:event_btn_submitActionPerformed
 
     private void tbl_laporanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_laporanMouseClicked
@@ -412,38 +444,67 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_tbl_laporanMouseClicked
 
     private void txt_cariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cariKeyReleased
-        DefaultTableModel dtm = new DefaultTableModel();
-        dtm.addColumn("id_sewaan");
-        dtm.addColumn("id_laporan");
-        dtm.addColumn("tanggal_input");
-        dtm.addColumn("total");
-        tbl_laporan.setModel(dtm);
-
+        String cari = txt_cari.getText();
         try {
-            Statement statement = (Statement) Connect.GetConnection().createStatement();
-            ResultSet res = statement.executeQuery("select * from laporan where id_sewaan like '%" + tbl_laporan + "%'");
 
+            DefaultTableModel model = new DefaultTableModel();
+            model.addColumn("Id Sewaan");
+            model.addColumn("Nama Penyewa");
+            model.addColumn("Nomor Identitas");
+            model.addColumn("Deposit");
+            model.addColumn("Total Barang");
+            model.addColumn("Total Biaya");
+            model.addColumn("Tanggal Pinjam");
+            model.addColumn("Tanggal Kembali");
+            model.addColumn("Tanggal Transaksi");
+
+            int no = 1;
+            Connection conn = koneksi.Connect.GetConnection();
+            String sql = "SELECT data_sewaan.id_sewaan, data_sewaan.nama_penyewa, nomor_identitas, deposit, "
+                    + "COUNT(id_barang) AS total_barang, total, tgl_pinjam, tgl_kembali, tgl_transaksi "
+                    + "FROM data_sewaan JOIN detail_data_sewaan ON data_sewaan.id_sewaan = detail_data_sewaan.id_sewaan "
+                    + "JOIN pengguna ON pengguna.id_pengguna = data_sewaan.id_pengguna "
+                    + "WHERE hak_akses = '" + label_akses.getText() + "' && MONTH(tgl_transaksi) = " + label_bulan.getText() + " && YEAR(tgl_transaksi) = " + label_tahun.getText() + " && data_sewaan.nama_penyewa LIKE '%" + cari + "%'"
+                    + "GROUP BY id_sewaan";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            ResultSet res = pst.executeQuery();
             while (res.next()) {
-                dtm.addRow(new Object[]{
-                    res.getString("id_sewaan"),
-                    res.getString("id_laporan"),
-                    res.getString("tanggal_input"),
-                    res.getString("total"),});
-                tbl_laporan.setModel(dtm);
-
+                model.addRow(new Object[]{
+                    no++,
+                    res.getString(1),
+                    res.getString(2),
+                    res.getString(3),
+                    res.getString(4),
+                    res.getString(5),
+                    res.getString(6),
+                    res.getString(7),
+                    res.getString(8),
+                    res.getString(9)
+                });
             }
+            tbl_laporan.setModel(model);
+            tbl_laporan.setRowHeight(30);
         } catch (Exception e) {
-            System.out.println(e);
+            JOptionPane.showMessageDialog(null, "Error cari");
+            System.out.println(e.getMessage());
         }
     }//GEN-LAST:event_txt_cariKeyReleased
 
     private void btn_refreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_refreshActionPerformed
         // TODO add your handling code here:
+        //set max year
+        long waktu = System.currentTimeMillis();
+        Date today = new Date(waktu);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+        int tahunNow = Integer.parseInt(sdf.format(today));
+        pilihTahun.setEndYear(tahunNow);
+
         combo_filterBulan.setSelectedIndex(0);
         combo_filterAkses.setSelectedIndex(0);
-        pilihTahun.setYear(2022);
+        pilihTahun.setYear(tahunNow);
         msg_tblKosong.setForeground(new Color(242, 242, 242));
         loadTable();
+        cekTxtCari();
     }//GEN-LAST:event_btn_refreshActionPerformed
 
     private void btn_cetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cetakActionPerformed
@@ -452,8 +513,8 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
         } else if (tbl_laporan.getColumnCount() == 5) {
             String bulan = label_bulan.getText();
             String tahun = label_tahun.getText();
-            
-            try{
+
+            try {
                 Connection conn = koneksi.Connect.GetConnection();
                 Statement stm = conn.createStatement();
 
@@ -464,15 +525,15 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
                 JasperReport jasper = JasperCompileManager.compileReport(report);
                 JasperPrint jasperP = JasperFillManager.fillReport(jasper, hash, conn);
                 JasperViewer.viewReport(jasperP, false);
-            }catch(Exception e){
+            } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Error iReport");
             }
-        }else if(tbl_laporan.getColumnCount() == 9){
+        } else if (tbl_laporan.getColumnCount() == 9) {
             String bulan = label_bulan.getText();
             String tahun = label_tahun.getText();
             String akses = label_akses.getText();
-            
-            try{
+
+            try {
                 Connection conn = koneksi.Connect.GetConnection();
                 Statement stm = conn.createStatement();
 
@@ -484,7 +545,7 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
                 JasperReport jasper = JasperCompileManager.compileReport(report);
                 JasperPrint jasperP = JasperFillManager.fillReport(jasper, hash, conn);
                 JasperViewer.viewReport(jasperP, false);
-            }catch(Exception e){
+            } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Error iReport");
             }
         }

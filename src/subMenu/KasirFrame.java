@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
 import javax.swing.JFormattedTextField;
 import javax.swing.JTable;
@@ -29,6 +30,11 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import koneksi.Connect;
 import mainMenu.Login;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -57,6 +63,7 @@ public class KasirFrame extends javax.swing.JInternalFrame {
         cekInputanIntegerOnly(txt_deposit);
         cekInputanIntegerOnly(txt_bayar);
         cekInputanIntegerOnly(txt_bayar);
+        cekInputanIntegerOnly(txt_hp);
     }
 
     public void ambilId(String idpengguna) {
@@ -105,7 +112,7 @@ public class KasirFrame extends javax.swing.JInternalFrame {
             }
             combo_jumlah.disable();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(rootPane, "Error");
+            JOptionPane.showMessageDialog(null, "Error add combo barang");
             System.out.println(e.getMessage());
         }
     }
@@ -135,7 +142,7 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                 }
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(rootPane, "Error");
+            JOptionPane.showMessageDialog(null, "Error add combo jumlah");
             System.out.println(e.getMessage());
         }
     }
@@ -166,7 +173,7 @@ public class KasirFrame extends javax.swing.JInternalFrame {
         txt_bayar.setEnabled(false);
         txt_kembalian.setText("");
         txt_hp.setText("");
-        label_blmCukup_depo.setForeground(new Color(242,242,242));
+        label_blmCukup_depo.setForeground(new Color(242, 242, 242));
     }
 
     private void loadTable() {
@@ -220,6 +227,13 @@ public class KasirFrame extends javax.swing.JInternalFrame {
         }
     }
 
+//    public static String formatRibuan(int val) {
+//        return String.format("%,d", val).replace(',', '.');
+//    }
+//
+//    public static String reFormatRibuan(String val) {
+//        return val.replaceAll("\\.", "");
+//    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -597,10 +611,10 @@ public class KasirFrame extends javax.swing.JInternalFrame {
             } else if (label_blmCukup.getForeground() == Color.red) {
                 JOptionPane.showMessageDialog(null, "Silahkan cek pembayaran kembali");
                 txt_bayar.requestFocus();
-            } else if(label_blmCukup_depo.getForeground() == Color.red){
+            } else if (label_blmCukup_depo.getForeground() == Color.red) {
                 JOptionPane.showMessageDialog(null, "Silahkan cek deposit kembali");
                 txt_deposit.requestFocus();
-            }else{
+            } else {
                 String identitas = null;
                 if (combo_identitas.getSelectedIndex() == 0) {
                     identitas = "";
@@ -661,10 +675,29 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                 statemen.execute();
 
                 JOptionPane.showMessageDialog(null, "Transaksi Behasil");
+
+                //confirm print
+                int confirmPrint = JOptionPane.showConfirmDialog(null, "Apakah ingin mencetak struk ?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                if (confirmPrint == JOptionPane.YES_OPTION) {
+                    try {
+                        String idSewaan = hasilId.getString("id_sewaan");
+                        
+                        String report = ("C:\\Users\\perlengkapan\\Documents\\KULIAH\\Project Tugas Akhir\\Awan-adventure-FIX\\src\\subMenu\\nota\\notaSewaan.jrxml");
+                        HashMap hash = new HashMap();
+                        hash.put("id_sewaan", idSewaan);
+                        JasperReport jasper = JasperCompileManager.compileReport(report);
+                        JasperPrint jasperP = JasperFillManager.fillReport(jasper, hash, conn);
+                        JasperViewer.viewReport(jasperP, false);
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(null, "Error iReport");
+                        System.out.println(e.getMessage());
+                    }
+                }
+
                 clear();
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(rootPane, "Error");
+            JOptionPane.showMessageDialog(null, "Error proses transaksi");
             System.out.println(e);
         }
     }//GEN-LAST:event_btn_prosesActionPerformed
@@ -700,7 +733,7 @@ public class KasirFrame extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
 
         if (tgl_pinjam.getDate() == null || tgl_kembali.getDate() == null) {
-            JOptionPane.showMessageDialog(rootPane, "Silahkan pilih tanggal pinjam dan tanggal kembali terlebih dahulu");
+            JOptionPane.showMessageDialog(null, "Silahkan pilih tanggal pinjam dan tanggal kembali terlebih dahulu");
         } else {
             try {
                 //cek data pada table
@@ -712,7 +745,7 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                 boolean isian = isiTable.contains(combo_barang.getSelectedItem().toString());
 
                 //query cari jarakHari
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 String tanggalPinjamString = sdf.format(tgl_pinjam.getDate());
                 String tanggalKembaliString = sdf.format(tgl_kembali.getDate());
                 LocalDate tanggalPinjam = LocalDate.parse(tanggalPinjamString);
@@ -720,11 +753,11 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                 Period jarak = Period.between(tanggalPinjam, tanggalKembali);
 
                 if (combo_barang.getSelectedItem().equals("Pilih Barang...")) {
-                    JOptionPane.showMessageDialog(rootPane, "Silahkan pilih barang terlebih dahulu");
+                    JOptionPane.showMessageDialog(null, "Silahkan pilih barang terlebih dahulu");
                 } else if (combo_jumlah.getSelectedItem().equals("0")) {
-                    JOptionPane.showMessageDialog(rootPane, "Silahkan pilih jumlah barang terlebih dahulu");
+                    JOptionPane.showMessageDialog(null, "Silahkan pilih jumlah barang terlebih dahulu");
                 } else if (jarak.getDays() < 1) {
-                    JOptionPane.showMessageDialog(rootPane, "Silahkan cek kembali tanggal peminjaman dan pengembalian");
+                    JOptionPane.showMessageDialog(null, "Silahkan cek kembali tanggal peminjaman dan pengembalian");
                 } else {
 
                     //ambil data barang
@@ -746,7 +779,6 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                                 int totalSebelumnya = 0;
                                 int totalFix = totalSebelumnya + hasil;
                                 String hasilString = String.valueOf(totalFix);
-
                                 txt_total.setText(hasilString);
 
                                 //query tambah data ke jTable
@@ -831,7 +863,7 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                     txt_bayar.setEnabled(true);
                 }
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(rootPane, "Error");
+                JOptionPane.showMessageDialog(null, "Error tambah");
                 System.out.println(e.getMessage());
             }
         }
@@ -841,11 +873,11 @@ public class KasirFrame extends javax.swing.JInternalFrame {
     private void btn_editBarangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_editBarangActionPerformed
         // TODO add your handling code here:
         if (tgl_pinjam.getDate() == null && tgl_kembali.getDate() == null) {
-            JOptionPane.showMessageDialog(rootPane, "Silahkan pilih tanggal pinjam dan tanggal kembali terlebih dahulu");
+            JOptionPane.showMessageDialog(null, "Silahkan pilih tanggal pinjam dan tanggal kembali terlebih dahulu");
         } else if (combo_jumlah.getSelectedIndex() == 0) {
             JOptionPane.showMessageDialog(null, "Silahkan pilih jumlah barang terlebih dahulu");
         } else {
-            int confirmEdit = JOptionPane.showConfirmDialog(rootPane, "Yakin ingin mengubah data ini?", "Edit", JOptionPane.YES_NO_OPTION);
+            int confirmEdit = JOptionPane.showConfirmDialog(null, "Yakin ingin mengubah data ini?", "Edit", JOptionPane.YES_NO_OPTION);
             if (confirmEdit == JOptionPane.YES_OPTION) {
                 try {
                     int i = tbl_barang.getSelectedRow();
@@ -982,7 +1014,7 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                     btn_clearSelection.setEnabled(false);
 //                    }
                 } catch (Exception e) {
-                    JOptionPane.showMessageDialog(rootPane, "Error");
+                    JOptionPane.showMessageDialog(null, "Error edit barang");
                     System.out.println(e.getMessage());
                 }
             }
@@ -991,7 +1023,7 @@ public class KasirFrame extends javax.swing.JInternalFrame {
 
     private void btn_hapusBarangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusBarangActionPerformed
         // TODO add your handling code here:
-        int confirmDelete = JOptionPane.showConfirmDialog(rootPane, "Yakin ingin dihapus ?", "Hapus", JOptionPane.YES_NO_OPTION);
+        int confirmDelete = JOptionPane.showConfirmDialog(null, "Yakin ingin dihapus ?", "Hapus", JOptionPane.YES_NO_OPTION);
         if (confirmDelete == JOptionPane.YES_OPTION) {
             int i = tbl_barang.getSelectedRow();
 
@@ -1034,7 +1066,7 @@ public class KasirFrame extends javax.swing.JInternalFrame {
 
     private void btn_clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clearActionPerformed
         // TODO add your handling code here:
-        int clear = JOptionPane.showConfirmDialog(rootPane, "Yakin ingin membersihkan seluruh isian ? (termasuk pada table pilihan barang)", "Clear", JOptionPane.YES_NO_OPTION);
+        int clear = JOptionPane.showConfirmDialog(null, "Yakin ingin membersihkan seluruh isian ? (termasuk pada table pilihan barang)", "Clear", JOptionPane.YES_NO_OPTION);
         if (clear == JOptionPane.YES_OPTION) {
             clear();
             tanggalHariIni();
@@ -1076,13 +1108,14 @@ public class KasirFrame extends javax.swing.JInternalFrame {
 
     private void txt_depositKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_depositKeyReleased
         // TODO add your handling code here:
-        int isianDeposit = Integer.parseInt(txt_deposit.getText());
-        if(isianDeposit > 100000){
+        int isianDepo = Integer.parseInt(txt_deposit.getText());
+
+        if (isianDepo > 100000) {
             label_blmCukup_depo.setForeground(Color.red);
-        }else if(isianDeposit < 50000){
+        } else if (isianDepo < 50000) {
             label_blmCukup_depo.setForeground(Color.red);
-        }else{
-            label_blmCukup_depo.setForeground(new Color(242,242,242));
+        } else {
+            label_blmCukup_depo.setForeground(new Color(242, 242, 242));
         }
     }//GEN-LAST:event_txt_depositKeyReleased
 
