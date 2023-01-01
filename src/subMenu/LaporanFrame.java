@@ -93,7 +93,15 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
     }
 
     public void loadTable() {
-        DefaultTableModel model = new DefaultTableModel();
+        DefaultTableModel model = new DefaultTableModel(){
+            boolean[] canEdit = new boolean[]{
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        };
         model.addColumn("No");
         model.addColumn("Hak Akses");
         model.addColumn("Total Transaksi");
@@ -131,7 +139,16 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
 
     public void loadTableAkses(String hak_akses, int bulan, int tahun) {
         try {
-            DefaultTableModel model = new DefaultTableModel();
+            DefaultTableModel model = new DefaultTableModel(){
+            boolean[] canEdit = new boolean[]{
+                false, false, false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        };
+            model.addColumn("No.");
             model.addColumn("Id Sewaan");
             model.addColumn("Nama Penyewa");
             model.addColumn("Nomor Identitas");
@@ -447,7 +464,16 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
         String cari = txt_cari.getText();
         try {
 
-            DefaultTableModel model = new DefaultTableModel();
+            DefaultTableModel model = new DefaultTableModel(){
+            boolean[] canEdit = new boolean[]{
+                false, false, false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        };
+            model.addColumn("No.");
             model.addColumn("Id Sewaan");
             model.addColumn("Nama Penyewa");
             model.addColumn("Nomor Identitas");

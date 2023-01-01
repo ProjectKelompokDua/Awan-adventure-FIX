@@ -24,7 +24,6 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
     /**
      * Creates new form PengembalianFrame
      */
-
     public PengembalianFrame() {
         initComponents();
 
@@ -705,11 +704,11 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
             txt_terlambat.setText("-");
             txt_total.setText(this.TotalDenda);
         } else {
-            int denda;
+            int denda = 0;
             if (txt_total.getText().equals("-")) {
                 denda = 0;
             } else {
-                denda = Integer.parseInt(txt_total.getText().toString());
+                denda = Integer.parseInt(this.TotalDenda);
             }
 
             String terlambat = (String) combo_keterlambatan.getSelectedItem();
@@ -720,10 +719,17 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
                 PreparedStatement pst = conn.prepareStatement(sqlketerlambatan);
                 ResultSet rs = pst.executeQuery();
                 if (rs.next()) {
-                    int biaya = Integer.parseInt(rs.getString("biaya_terlambat"));
-                    int total = denda + biaya;
-                    String totalFix = String.valueOf(total);
-                    txt_total.setText(totalFix);
+                    if (tbl_pengembalian.getRowCount() == 0) {
+                        int biaya = Integer.parseInt(rs.getString("biaya_terlambat"));
+                        String totalFix = String.valueOf(biaya);
+                        txt_total.setText(totalFix);
+                    } else {
+                        int biaya = Integer.parseInt(rs.getString("biaya_terlambat"));
+                        int total = denda + biaya;
+                        String totalFix = String.valueOf(total);
+                        txt_total.setText(totalFix);
+                    }
+
                 }
             } catch (Exception e) {
 
