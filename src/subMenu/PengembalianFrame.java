@@ -33,8 +33,8 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
         bif.setNorthPane(null);
 
         updateComboPenyewa();
-        updateComboKeterlambatan();
         updateComboKerusakan();
+        updateComboKeterlambatan();
         clear();
         loadTable();
 
@@ -83,6 +83,8 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
             Connection conn = koneksi.Connect.GetConnection();
             PreparedStatement pst = conn.prepareStatement(sqlTerlambat);
             ResultSet rs = pst.executeQuery();
+            combo_barangRusak.removeAllItems();
+            combo_barangRusak.addItem("Tidak terlambat");
             while (rs.next()) {
                 combo_keterlambatan.addItem("" + rs.getString("jumlah_hari") + " Hari - " + rs.getString("biaya_terlambat") + "");
             }
@@ -99,6 +101,8 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
             Connection conn = koneksi.Connect.GetConnection();
             PreparedStatement pst = conn.prepareStatement(sqlRusak);
             ResultSet rs = pst.executeQuery();
+            combo_barangRusak.removeAllItems();
+            combo_barangRusak.addItem("Tidak ada");
             while (rs.next()) {
                 combo_barangRusak.addItem("" + rs.getString("nama_barang") + "");
             }
@@ -115,6 +119,8 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
             Connection conn = koneksi.Connect.GetConnection();
             PreparedStatement pst = conn.prepareStatement(sqlRusak);
             ResultSet rs = pst.executeQuery();
+            combo_barangRusak.removeAllItems();
+            combo_barangRusak.addItem("Pilih...");
             while (rs.next()) {
                 combo_jenisKerusakan.addItem("" + rs.getString("jenis_kerusakan") + " - " + rs.getString("biaya_kerusakan") + "");
             }
@@ -135,6 +141,7 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
         combo_barangRusak.setEnabled(false);
         combo_jenisKerusakan.setEnabled(false);
         loadTable();
+        btn_tambah.setEnabled(true);
         btn_batal.setEnabled(false);
         btn_edit.setEnabled(false);
         btn_hapus.setEnabled(false);
@@ -629,14 +636,18 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
 
     private void btn_batalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_batalActionPerformed
         // TODO add your handling code here:
-        combo_penyewa.setSelectedIndex(0);
+        btn_tambah.setEnabled(true);
+        btn_edit.setEnabled(false);
+        btn_hapus.setEnabled(false);
+        btn_clear.setEnabled(true);
+        btn_batal.setEnabled(false);
         combo_keterlambatan.setSelectedIndex(0);
         combo_barangRusak.setSelectedIndex(0);
         combo_jenisKerusakan.setSelectedIndex(0);
-        combo_penyewa.setEnabled(true);
-        combo_keterlambatan.setEnabled(false);
-        combo_barangRusak.setEnabled(false);
-        combo_jenisKerusakan.setEnabled(false);
+        combo_penyewa.setEnabled(false);
+        combo_keterlambatan.setEnabled(true);
+        combo_barangRusak.setEnabled(true);
+        combo_jenisKerusakan.setEnabled(true);
         tbl_pengembalian.clearSelection();
     }//GEN-LAST:event_btn_batalActionPerformed
 

@@ -5,6 +5,7 @@
  */
 package mainMenu;
 
+import java.awt.Button;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.event.MouseListener;
@@ -17,7 +18,7 @@ import subMenu.*;
  * @author perlengkapan
  */
 public class MenuUtama extends javax.swing.JFrame {
-
+    
     Color colorHover = new Color(252, 191, 73);
     Color exitHover = new Color(248, 221, 113);
 
