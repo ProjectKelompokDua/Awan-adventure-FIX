@@ -82,7 +82,7 @@ public class PenggunaFrame extends javax.swing.JInternalFrame {
             }
         };
         tableModel.addColumn("No");
-        tableModel.addColumn("id");
+        tableModel.addColumn("Id User");
         tableModel.addColumn("Nama");
         tableModel.addColumn("Username");
         tableModel.addColumn("Password");
@@ -97,8 +97,8 @@ public class PenggunaFrame extends javax.swing.JInternalFrame {
             ResultSet rs = pst.executeQuery();
             
             while(rs.next()){
-                tableModel.addRow(new Object[] {no++, rs.getString(1), rs.getString(2),
-                                  rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6)});
+                tableModel.addRow(new Object[] {no++, rs.getString("id_pengguna"), rs.getString("nama_pengguna"),
+                                  rs.getString("username"), rs.getString("password"), rs.getString("hak_akses"), rs.getString("pin")});
             }
             tbl_pengguna.setModel(tableModel);
         }catch(Exception e){
@@ -493,7 +493,7 @@ public class PenggunaFrame extends javax.swing.JInternalFrame {
                 JOptionPane.showMessageDialog(null, "Data PIN hanya 6 karakter");
                 txt_pin.requestFocus();
             }else{
-                String sql = "update pengguna set nama='"+ txt_nama.getText() +"', username='"+ txt_username.getText() +"', password='"+ txt_password.getText() +"', hak_akses='"+ combo_akses.getSelectedItem() +"', pin='"+ txt_pin.getText() +"' where id_pengguna='"+ tempat_id.getText() +"'";
+                String sql = "update pengguna set nama_pengguna='"+ txt_nama.getText() +"', username='"+ txt_username.getText() +"', password='"+ txt_password.getText() +"', hak_akses='"+ combo_akses.getSelectedItem() +"', pin='"+ txt_pin.getText() +"' where id_pengguna='"+ tempat_id.getText() +"'";
                 Connection conn = koneksi.Connect.GetConnection();
                 PreparedStatement pst = conn.prepareStatement(sql);
                 pst.execute();
