@@ -27,58 +27,58 @@ public class PenggunaFrame extends javax.swing.JInternalFrame {
      */
     public PenggunaFrame() {
         initComponents();
-        
+
         //hilangin border 
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         BasicInternalFrameUI bif = (BasicInternalFrameUI) this.getUI();
         bif.setNorthPane(null);
-        
+
         loadTable();
         txt_pin.enable();
         btn_tambah.setEnabled(true);
-        
+
         cekInputanStringOnly(txt_nama);
         cekInputanIntegerOnly(txt_pin);
     }
-    
-    public void cekInputanIntegerOnly(JTextField textfield){
+
+    public void cekInputanIntegerOnly(JTextField textfield) {
         textfield.addKeyListener(new KeyAdapter() {
-         public void keyPressed(KeyEvent ke) {
-            String value = textfield.getText();
-            if (ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9' ) {
-               textfield.setEditable(true);
-            }else if(ke.getKeyCode() == 8){
-               textfield.setEditable(true);
-            }else {
-               textfield.setEditable(false);
+            public void keyPressed(KeyEvent ke) {
+                String value = textfield.getText();
+                if (ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9') {
+                    textfield.setEditable(true);
+                } else if (ke.getKeyCode() == 8) {
+                    textfield.setEditable(true);
+                } else {
+                    textfield.setEditable(false);
+                }
             }
-         }
-      });
+        });
     }
-    
-    public void cekInputanStringOnly(JTextField textfield){
+
+    public void cekInputanStringOnly(JTextField textfield) {
         textfield.addKeyListener(new KeyAdapter() {
-         public void keyPressed(KeyEvent ke) {
-            String value = textfield.getText();
-            if (ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9' ) {
-               textfield.setEditable(false);
-            }else if(ke.getKeyCode() == 8){
-               textfield.setEditable(true);
-            }else {
-               textfield.setEditable(true);
+            public void keyPressed(KeyEvent ke) {
+                String value = textfield.getText();
+                if (ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9') {
+                    textfield.setEditable(false);
+                } else if (ke.getKeyCode() == 8) {
+                    textfield.setEditable(true);
+                } else {
+                    textfield.setEditable(true);
+                }
             }
-         }
-      });
+        });
     }
-    
-    private void loadTable(){
-        DefaultTableModel tableModel = new DefaultTableModel(){
-            boolean[] canEdit = new boolean [] {
+
+    private void loadTable() {
+        DefaultTableModel tableModel = new DefaultTableModel() {
+            boolean[] canEdit = new boolean[]{
                 false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         };
         tableModel.addColumn("No");
@@ -88,25 +88,25 @@ public class PenggunaFrame extends javax.swing.JInternalFrame {
         tableModel.addColumn("Password");
         tableModel.addColumn("Hak Akses");
         tableModel.addColumn("PIN");
-        
-        try{
+
+        try {
             int no = 1;
             String sql = "select * from pengguna";
             Connection connect = koneksi.Connect.GetConnection();
             PreparedStatement pst = connect.prepareStatement(sql);
             ResultSet rs = pst.executeQuery();
-            
-            while(rs.next()){
-                tableModel.addRow(new Object[] {no++, rs.getString("id_pengguna"), rs.getString("nama_pengguna"),
-                                  rs.getString("username"), rs.getString("password"), rs.getString("hak_akses"), rs.getString("pin")});
+
+            while (rs.next()) {
+                tableModel.addRow(new Object[]{no++, rs.getString("id_pengguna"), rs.getString("nama_pengguna"),
+                    rs.getString("username"), rs.getString("password"), rs.getString("hak_akses"), rs.getString("pin")});
             }
             tbl_pengguna.setModel(tableModel);
-        }catch(Exception e){
-            
+        } catch (Exception e) {
+
         }
     }
-    
-    private void clear(){
+
+    private void clear() {
         txt_nama.setText(null);
         txt_username.setText(null);
         txt_password.setText(null);
@@ -398,17 +398,17 @@ public class PenggunaFrame extends javax.swing.JInternalFrame {
         String cari = txt_cariPengguna.getText();
         int no = 1;
 
-        DefaultTableModel dtm = new DefaultTableModel(){
-            boolean[] canEdit = new boolean [] {
+        DefaultTableModel dtm = new DefaultTableModel() {
+            boolean[] canEdit = new boolean[]{
                 false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         };
         dtm.addColumn("No");
-        dtm.addColumn("id");
+        dtm.addColumn("Id User");
         dtm.addColumn("Nama");
         dtm.addColumn("Username");
         dtm.addColumn("Password");
@@ -417,14 +417,14 @@ public class PenggunaFrame extends javax.swing.JInternalFrame {
         tbl_pengguna.setModel(dtm);
 
         try {
-            Statement statement = (Statement)Connect.GetConnection().createStatement();
-            ResultSet res = statement.executeQuery("select * from pengguna where nama like '%"+cari+"%' or username like '%"+cari+"%'");
+            Statement statement = (Statement) Connect.GetConnection().createStatement();
+            ResultSet res = statement.executeQuery("select * from pengguna where nama_pengguna like '%" + cari + "%' or username like '%" + cari + "%'");
 
-            while(res.next()){
+            while (res.next()) {
                 dtm.addRow(new Object[]{
                     no++,
                     res.getString("id_pengguna"),
-                    res.getString("nama"),
+                    res.getString("nama_pengguna"),
                     res.getString("username"),
                     res.getString("password"),
                     res.getString("hak_akses"),
@@ -439,34 +439,38 @@ public class PenggunaFrame extends javax.swing.JInternalFrame {
 
     private void btn_tambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_tambahActionPerformed
         // TODO add your handling code here:
-        try{
-            if(txt_nama.getText().equals("")){
-                JOptionPane.showMessageDialog(null,  "Data Nama harus diisi");
+        try {
+            if (txt_nama.getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "Data Nama harus diisi");
                 txt_nama.requestFocus();
-            }else if(txt_username.getText().equals("")){
+            } else if (txt_username.getText().equals("")) {
                 JOptionPane.showMessageDialog(null, "Data Username harus diisi");
                 txt_username.requestFocus();
-            }else if(txt_password.getText().equals("")){
+            } else if (txt_password.getText().equals("")) {
                 JOptionPane.showMessageDialog(null, "Data Password harus diisi");
                 txt_password.requestFocus();
-            }else if(combo_akses.getSelectedItem().equals("Pilih...")){
+            } else if (combo_akses.getSelectedItem().equals("Pilih...")) {
                 JOptionPane.showMessageDialog(null, "Data Hak Akses harus diisi");
-            }else if(txt_pin.getText().equals("")){
+            } else if (txt_pin.getText().equals("")) {
                 JOptionPane.showMessageDialog(null, "Data PIN harus diisi");
                 txt_pin.requestFocus();
-            }else if(txt_pin.getText().length() > 6){
+            } else if (txt_pin.getText().length() > 6) {
                 JOptionPane.showMessageDialog(null, "Data PIN hanya 6 karakter");
                 txt_pin.requestFocus();
-            }else{
-                String sql = "insert into pengguna values (null, '"+ txt_nama.getText() +"', '"+ txt_username.getText() +"', '"+ txt_password.getText() +"', '"+ combo_akses.getSelectedItem() +"', '"+ txt_pin.getText() +"')";
-                Connection conn = koneksi.Connect.GetConnection();
-                PreparedStatement pst = conn.prepareStatement(sql);
-                pst.execute();
-                JOptionPane.showMessageDialog(null, "Data berhasil ditambahkan");
-                loadTable();
-                clear();
+            } else {
+                int confirm = JOptionPane.showConfirmDialog(null, "Apakah yakin ingin menambahkan data?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    String sql = "insert into pengguna values (null, '" + txt_nama.getText() + "', '" + txt_username.getText() + "', '" + txt_password.getText() + "', '" + combo_akses.getSelectedItem() + "', '" + txt_pin.getText() + "')";
+                    Connection conn = koneksi.Connect.GetConnection();
+                    PreparedStatement pst = conn.prepareStatement(sql);
+                    pst.execute();
+                    JOptionPane.showMessageDialog(null, "Data berhasil ditambahkan");
+                    loadTable();
+                    clear();
+                }
+
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error tambah");
             System.out.println(e.getMessage());
         }
@@ -474,34 +478,38 @@ public class PenggunaFrame extends javax.swing.JInternalFrame {
 
     private void btn_editActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_editActionPerformed
         // TODO add your handling code here:
-        try{
-            if(txt_nama.getText().equals("")){
+        try {
+            if (txt_nama.getText().equals("")) {
                 JOptionPane.showMessageDialog(null, "Data Nama harus diisi");
                 txt_nama.requestFocus();
-            }else if(txt_username.getText().equals("")){
+            } else if (txt_username.getText().equals("")) {
                 JOptionPane.showMessageDialog(null, "Data Username harus diisi");
                 txt_username.requestFocus();
-            }else if(txt_password.getText().equals("")){
+            } else if (txt_password.getText().equals("")) {
                 JOptionPane.showMessageDialog(null, "Data Password harus diisi");
                 txt_password.requestFocus();
-            }else if(combo_akses.getSelectedItem().equals("Pilih...")){
+            } else if (combo_akses.getSelectedItem().equals("Pilih...")) {
                 JOptionPane.showMessageDialog(null, "Data Hak Akses harus diisi");
-            }else if(txt_pin.getText().equals("")){
+            } else if (txt_pin.getText().equals("")) {
                 JOptionPane.showMessageDialog(null, "Data PIN harus diisi");
                 txt_pin.requestFocus();
-            }else if(txt_pin.getText().length() > 6){
+            } else if (txt_pin.getText().length() > 6) {
                 JOptionPane.showMessageDialog(null, "Data PIN hanya 6 karakter");
                 txt_pin.requestFocus();
-            }else{
-                String sql = "update pengguna set nama_pengguna='"+ txt_nama.getText() +"', username='"+ txt_username.getText() +"', password='"+ txt_password.getText() +"', hak_akses='"+ combo_akses.getSelectedItem() +"', pin='"+ txt_pin.getText() +"' where id_pengguna='"+ tempat_id.getText() +"'";
-                Connection conn = koneksi.Connect.GetConnection();
-                PreparedStatement pst = conn.prepareStatement(sql);
-                pst.execute();
-                JOptionPane.showMessageDialog(null, "Data berhasil diperbaharui");
-                loadTable();
-                clear();
+            } else {
+                int confirm = JOptionPane.showConfirmDialog(null, "Apakah yakin ingin mengubah data ini?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+
+                    String sql = "update pengguna set nama_pengguna='" + txt_nama.getText() + "', username='" + txt_username.getText() + "', password='" + txt_password.getText() + "', hak_akses='" + combo_akses.getSelectedItem() + "', pin='" + txt_pin.getText() + "' where id_pengguna='" + tempat_id.getText() + "'";
+                    Connection conn = koneksi.Connect.GetConnection();
+                    PreparedStatement pst = conn.prepareStatement(sql);
+                    pst.execute();
+                    JOptionPane.showMessageDialog(null, "Data berhasil diperbaharui");
+                    loadTable();
+                    clear();
+                }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error edit");
             System.out.println(e.getMessage());
         }
@@ -509,38 +517,21 @@ public class PenggunaFrame extends javax.swing.JInternalFrame {
 
     private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
         // TODO add your handling code here:
-        try{
-            if(txt_nama.getText().equals("")){
-                JOptionPane.showMessageDialog(null, "Data Nama harus diisi");
-                txt_nama.requestFocus();
-            }else if(txt_username.getText().equals("")){
-                JOptionPane.showMessageDialog(null, "Data Username harus diisi");
-                txt_username.requestFocus();
-            }else if(txt_password.getText().equals("")){
-                JOptionPane.showMessageDialog(null, "Data Password harus diisi");
-                txt_password.requestFocus();
-            }else if(combo_akses.getSelectedItem().equals("Pilih...")){
-                JOptionPane.showMessageDialog(null, "Data Hak Akses harus diisi");
-            }else if(txt_pin.getText().equals("")){
-                JOptionPane.showMessageDialog(null, "Data PIN harus diisi");
-                txt_pin.requestFocus();
-            }else if(txt_pin.getText().length() > 6){
-                JOptionPane.showMessageDialog(null, "Data PIN hanya 6 karakter");
-                txt_pin.requestFocus();
-            }else{
-                String sql = "delete from pengguna where id_pengguna='"+ tempat_id.getText() +"'";
-                Connection conn = koneksi.Connect.GetConnection();
-                PreparedStatement pst = conn.prepareStatement(sql);
+        try {
 
-                int confirmDelete = JOptionPane.showConfirmDialog(null, "Yakin ingin menghapus?", "Hapus", JOptionPane.YES_NO_OPTION);
-                if(confirmDelete == JOptionPane.YES_OPTION){
-                    pst.execute();
-                    JOptionPane.showMessageDialog(null, "Data berhasil dihapus");
-                }
+            String sql = "delete from pengguna where id_pengguna='" + tempat_id.getText() + "'";
+            Connection conn = koneksi.Connect.GetConnection();
+            PreparedStatement pst = conn.prepareStatement(sql);
+
+            int confirmDelete = JOptionPane.showConfirmDialog(null, "Yakin ingin menghapus data ini?", "Confirmation", JOptionPane.YES_NO_OPTION);
+            if (confirmDelete == JOptionPane.YES_OPTION) {
+                pst.execute();
+                JOptionPane.showMessageDialog(null, "Data berhasil dihapus");
                 loadTable();
                 clear();
             }
-        }catch(Exception e){
+
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error hapus");
             System.out.println(e.getMessage());
         }
@@ -548,7 +539,11 @@ public class PenggunaFrame extends javax.swing.JInternalFrame {
 
     private void btn_clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clearActionPerformed
         // TODO add your handling code here:
-        clear();
+        int confirmClear = JOptionPane.showConfirmDialog(null, "Yakin ingin menghapus data ini?", "Confirmation", JOptionPane.YES_NO_OPTION);
+        if (confirmClear == JOptionPane.YES_OPTION) {
+            clear();
+        }
+
     }//GEN-LAST:event_btn_clearActionPerformed
 
 

@@ -27,68 +27,60 @@ public class BarangFrame extends javax.swing.JInternalFrame {
      */
     public BarangFrame() {
         initComponents();
-        
+
         //hilangin border 
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         BasicInternalFrameUI bif = (BasicInternalFrameUI) this.getUI();
         bif.setNorthPane(null);
-        
+
         load_table();
-        kosong();
-        
+        clear();
+
         //cek masukan
         cekInputanIntegerOnly(txt_harga1);
         cekInputanIntegerOnly(txt_harga2);
         cekInputanIntegerOnly(txt_stok);
-    }
-    
-    public void cekInputanIntegerOnly(JTextField textfield){
-        textfield.addKeyListener(new KeyAdapter() {
-         public void keyPressed(KeyEvent ke) {
-            String value = textfield.getText();
-            if (ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9' ) {
-               textfield.setEditable(true);
-            }else if(ke.getKeyCode() == 8){
-               textfield.setEditable(true);
-            }else {
-               textfield.setEditable(false);
-            }
-         }
-      });
-    }
-    
-    public void cekInputanStringOnly(JTextField textfield){
-        textfield.addKeyListener(new KeyAdapter() {
-         public void keyPressed(KeyEvent ke) {
-            String value = textfield.getText();
-            if (ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9' ) {
-               textfield.setEditable(false);
-            }else if(ke.getKeyCode() == 8){
-               textfield.setEditable(true);
-            }else {
-               textfield.setEditable(true);
-            }
-         }
-      });
-    }
-    
-    private void bersih(){
-        txt_cari.setText("");
-        txt_stok.setText("");
-        txt_harga1.setText("");
-        txt_harga2.setText("");
-        Terang.setText("");
+
     }
 
-   
-    private void load_table(){
-        DefaultTableModel model = new DefaultTableModel(){
-            boolean[] canEdit = new boolean [] {
+    public void cekInputanIntegerOnly(JTextField textfield) {
+        textfield.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent ke) {
+                String value = textfield.getText();
+                if (ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9') {
+                    textfield.setEditable(true);
+                } else if (ke.getKeyCode() == 8) {
+                    textfield.setEditable(true);
+                } else {
+                    textfield.setEditable(false);
+                }
+            }
+        });
+    }
+
+    public void cekInputanStringOnly(JTextField textfield) {
+        textfield.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent ke) {
+                String value = textfield.getText();
+                if (ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9') {
+                    textfield.setEditable(false);
+                } else if (ke.getKeyCode() == 8) {
+                    textfield.setEditable(true);
+                } else {
+                    textfield.setEditable(true);
+                }
+            }
+        });
+    }
+
+    private void load_table() {
+        DefaultTableModel model = new DefaultTableModel() {
+            boolean[] canEdit = new boolean[]{
                 false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         };
         model.addColumn("No");
@@ -96,33 +88,38 @@ public class BarangFrame extends javax.swing.JInternalFrame {
         model.addColumn("Nama Barang");
         model.addColumn("Stok");
         model.addColumn("Harga 1 Hari");
-        model.addColumn("Harga < 2 Hari");
+        model.addColumn("Harga > 2 Hari");
         model.addColumn("Keterangan");
-            
-         try{
+
+        try {
             int no = 1;
             String sql = "SELECT * FROM data_barang ORDER BY id_barang desc";
-            java.sql.Connection conn=(Connection)Connect.GetConnection();
+            java.sql.Connection conn = (Connection) Connect.GetConnection();
             java.sql.Statement pst = conn.createStatement();
             java.sql.ResultSet res = pst.executeQuery(sql);
-            while(res.next()){
-                model.addRow(new Object[]{no++,res.getString("id_barang"),res.getString("nama_barang"),res.getString("stok")
-                ,res.getString("harga_hari"),res.getString("harga_2hari"),res.getString("keterangan")});
+            while (res.next()) {
+                model.addRow(new Object[]{no++, res.getString("id_barang"), res.getString("nama_barang"), res.getString("stok"),
+                    res.getString("harga_hari"), res.getString("harga_2hari"), res.getString("keterangan")});
             }
             table_barang.setModel(model);
-            
-        }catch(Exception e) {
+
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error load table");
             System.out.println(e.getMessage());
         }
-  
+
     }
-    private void kosong(){
+
+    private void clear() {
         txt_namaBarang.setText(null);
         txt_stok.setText(null);
         txt_harga1.setText(null);
         txt_harga2.setText(null);
-        Terang.setText(null);
+        txt_keterangan.setText(null);
+        combo_filter.setSelectedIndex(0);
+        btn_tambah.setEnabled(true);
+        btn_edit.setEnabled(false);
+        btn_hapus.setEnabled(false);
     }
 
     /**
@@ -134,7 +131,7 @@ public class BarangFrame extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        cmbfilter = new javax.swing.JComboBox<>();
+        combo_filter = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -151,30 +148,31 @@ public class BarangFrame extends javax.swing.JInternalFrame {
         jPanel1 = new javax.swing.JPanel();
         btn_tambah = new javax.swing.JButton();
         btn_edit = new javax.swing.JButton();
+        btn_clear = new javax.swing.JButton();
         btn_hapus = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        Terang = new javax.swing.JTextArea();
+        txt_keterangan = new javax.swing.JTextArea();
         bg = new javax.swing.JLabel();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        cmbfilter.setFont(new java.awt.Font("Outfit", 0, 13)); // NOI18N
-        cmbfilter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Urutkan Dari--", "Data Paling Baru", "Data Paling lama", "Stok Paling Sedikit", "Stok Paling Banyak" }));
-        cmbfilter.setBorder(null);
-        cmbfilter.setName(""); // NOI18N
-        cmbfilter.addActionListener(new java.awt.event.ActionListener() {
+        combo_filter.setFont(new java.awt.Font("Outfit", 0, 13)); // NOI18N
+        combo_filter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Urutkan Dari--", "Data Paling Baru", "Data Paling lama", "Stok Paling Sedikit", "Stok Paling Banyak" }));
+        combo_filter.setBorder(null);
+        combo_filter.setName(""); // NOI18N
+        combo_filter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbfilterActionPerformed(evt);
+                combo_filterActionPerformed(evt);
             }
         });
-        getContentPane().add(cmbfilter, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 290, 160, 30));
+        getContentPane().add(combo_filter, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 290, 160, 30));
 
         jLabel6.setFont(new java.awt.Font("Outfit", 0, 15)); // NOI18N
         jLabel6.setText("Keterangan");
         getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 220, -1, 30));
 
         jLabel5.setFont(new java.awt.Font("Outfit", 0, 15)); // NOI18N
-        jLabel5.setText("Harga < 2 hari");
+        jLabel5.setText("Harga > 2 hari");
         getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 170, -1, 30));
 
         jLabel4.setFont(new java.awt.Font("Outfit", 0, 15)); // NOI18N
@@ -248,48 +246,64 @@ public class BarangFrame extends javax.swing.JInternalFrame {
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Proses"));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        btn_tambah.setBackground(new java.awt.Color(252, 191, 74));
+        btn_tambah.setBackground(new java.awt.Color(92, 184, 92));
         btn_tambah.setFont(new java.awt.Font("Outfit", 0, 15)); // NOI18N
         btn_tambah.setForeground(new java.awt.Color(255, 255, 255));
         btn_tambah.setText("Tambah");
         btn_tambah.setBorder(null);
+        btn_tambah.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btn_tambah.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_tambahActionPerformed(evt);
             }
         });
-        jPanel1.add(btn_tambah, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 100, 40));
+        jPanel1.add(btn_tambah, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 120, 40));
 
-        btn_edit.setBackground(new java.awt.Color(252, 191, 74));
+        btn_edit.setBackground(new java.awt.Color(23, 162, 184));
         btn_edit.setFont(new java.awt.Font("Outfit", 0, 15)); // NOI18N
         btn_edit.setForeground(new java.awt.Color(255, 255, 255));
         btn_edit.setText("Edit");
         btn_edit.setBorder(null);
+        btn_edit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btn_edit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_editActionPerformed(evt);
             }
         });
-        jPanel1.add(btn_edit, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 30, 100, 40));
+        jPanel1.add(btn_edit, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 30, 130, 40));
 
-        btn_hapus.setBackground(new java.awt.Color(252, 191, 74));
+        btn_clear.setBackground(new java.awt.Color(108, 117, 125));
+        btn_clear.setFont(new java.awt.Font("Outfit", 0, 15)); // NOI18N
+        btn_clear.setForeground(new java.awt.Color(255, 255, 255));
+        btn_clear.setText("Bersihkan");
+        btn_clear.setBorder(null);
+        btn_clear.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_clear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_clearActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btn_clear, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 120, 40));
+
+        btn_hapus.setBackground(new java.awt.Color(220, 53, 69));
         btn_hapus.setFont(new java.awt.Font("Outfit", 0, 15)); // NOI18N
         btn_hapus.setForeground(new java.awt.Color(255, 255, 255));
         btn_hapus.setText("Hapus");
         btn_hapus.setBorder(null);
+        btn_hapus.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btn_hapus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_hapusActionPerformed(evt);
             }
         });
-        jPanel1.add(btn_hapus, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 30, 100, 40));
+        jPanel1.add(btn_hapus, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 30, 120, 40));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 20, 370, 90));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 20, 410, 130));
 
-        Terang.setColumns(20);
-        Terang.setFont(new java.awt.Font("Outfit", 0, 12)); // NOI18N
-        Terang.setRows(5);
-        jScrollPane1.setViewportView(Terang);
+        txt_keterangan.setColumns(20);
+        txt_keterangan.setFont(new java.awt.Font("Outfit", 0, 12)); // NOI18N
+        txt_keterangan.setRows(5);
+        jScrollPane1.setViewportView(txt_keterangan);
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 220, 310, 100));
 
@@ -299,38 +313,34 @@ public class BarangFrame extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cmbfilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbfilterActionPerformed
-        try{
-            int filter = cmbfilter.getSelectedIndex();
+    private void combo_filterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_combo_filterActionPerformed
+        try {
+            int filter = combo_filter.getSelectedIndex();
             Connection conn = koneksi.Connect.GetConnection();
 
             Statement stm = (Statement) conn.createStatement();
             String msql;
 
-            if (filter == 1){
+            if (filter == 1) {
                 msql = "SELECT * FROM data_barang GROUP BY id_barang ORDER BY id_barang DESC";
-            }
-            else if (filter == 2){
+            } else if (filter == 2) {
                 msql = "SELECT * FROM data_barang GROUP BY id_barang ORDER BY id_barang ASC";
-            }
-            else if (filter == 3){
+            } else if (filter == 3) {
                 msql = "SELECT * FROM data_barang GROUP BY id_barang ORDER BY stok ASC";
-            }
-            else if (filter == 4){
+            } else if (filter == 4) {
                 msql = "SELECT * FROM data_barang GROUP BY id_barang ORDER BY stok DESC";
-            }
-            else{
+            } else {
                 msql = "SELECT * FROM data_barang GROUP BY id_barang ORDER BY id_barang DESC";
             }
 
             ResultSet res = stm.executeQuery(msql);
-            DefaultTableModel dtm = new DefaultTableModel(){
-                boolean[] canEdit = new boolean [] {
+            DefaultTableModel dtm = new DefaultTableModel() {
+                boolean[] canEdit = new boolean[]{
                     false, false, false, false, false, false, false
                 };
 
                 public boolean isCellEditable(int rowIndex, int columnIndex) {
-                    return canEdit [columnIndex];
+                    return canEdit[columnIndex];
                 }
             };
             dtm.addColumn("No.");
@@ -338,12 +348,14 @@ public class BarangFrame extends javax.swing.JInternalFrame {
             dtm.addColumn("Nama Barang");
             dtm.addColumn("Stok");
             dtm.addColumn("harga 1 hari");
-            dtm.addColumn("harga < 2 hari");
+            dtm.addColumn("harga > 2 hari");
             dtm.addColumn("keterangan");
             table_barang.setModel(dtm);
 
-            while(res.next()){
+            int no = 1;
+            while (res.next()) {
                 dtm.addRow(new Object[]{
+                    no++,
                     res.getString("id_barang"),
                     res.getString("nama_barang"),
                     res.getString("stok"),
@@ -354,22 +366,22 @@ public class BarangFrame extends javax.swing.JInternalFrame {
                 table_barang.setModel(dtm);
 
             }
-        }catch(Exception e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error filter");
             System.out.println(e.getMessage());
         }
 
-    }//GEN-LAST:event_cmbfilterActionPerformed
+    }//GEN-LAST:event_combo_filterActionPerformed
 
     private void txt_cariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cariKeyReleased
 
-        DefaultTableModel dtm = new DefaultTableModel(){
-            boolean[] canEdit = new boolean [] {
+        DefaultTableModel dtm = new DefaultTableModel() {
+            boolean[] canEdit = new boolean[]{
                 false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         };
         dtm.addColumn("No.");
@@ -377,16 +389,18 @@ public class BarangFrame extends javax.swing.JInternalFrame {
         dtm.addColumn("Nama Barang");
         dtm.addColumn("Stok");
         dtm.addColumn("harga 1 hari");
-        dtm.addColumn("harga < 2 hari");
+        dtm.addColumn("harga > 2 hari");
         dtm.addColumn("keterangan");
         table_barang.setModel(dtm);
 
+        int no = 1;
         try {
-            Statement statement = (Statement)Connect.GetConnection().createStatement();
-            ResultSet res = statement.executeQuery("select * from data_barang where nama_barang like '%"+txt_cari.getText()+"%'");
+            Statement statement = (Statement) Connect.GetConnection().createStatement();
+            ResultSet res = statement.executeQuery("select * from data_barang where nama_barang like '%" + txt_cari.getText() + "%'");
 
-            while(res.next()){
+            while (res.next()) {
                 dtm.addRow(new Object[]{
+                    no++,
                     res.getString("id_barang"),
                     res.getString("nama_barang"),
                     res.getString("stok"),
@@ -397,7 +411,7 @@ public class BarangFrame extends javax.swing.JInternalFrame {
                 table_barang.setModel(dtm);
 
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error cari barang");
             System.out.println(e.getMessage());
         }
@@ -418,71 +432,104 @@ public class BarangFrame extends javax.swing.JInternalFrame {
         txt_stok.setText(field3);
         txt_harga1.setText(field4);
         txt_harga2.setText(field5);
-        Terang.setText(field6);
+        txt_keterangan.setText(field6);
 
-        try{
-            String sql = "SELECT * FROM data_barang WHERE nama_barang ='"+field2+"'";
+        try {
+            String sql = "SELECT * FROM data_barang WHERE nama_barang ='" + field2 + "'";
             Connection conn = koneksi.Connect.GetConnection();
             PreparedStatement pst = conn.prepareStatement(sql);
             ResultSet rs = pst.executeQuery();
             rs.next();
             id_barang.setText(rs.getString("id_barang"));
-        } catch(Exception e){
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error klik table");
             System.out.println(e.getMessage());
         }
+
+        btn_tambah.setEnabled(false);
+        btn_edit.setEnabled(true);
+        btn_hapus.setEnabled(true);
     }//GEN-LAST:event_table_barangMouseClicked
 
     private void btn_tambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_tambahActionPerformed
-        try{
-            String sql = "INSERT INTO data_barang VALUES (null,'"+txt_namaBarang.getText()+"','"
-            +txt_stok.getText()+"','"+txt_harga1.getText()+"','"+txt_harga2.getText()+"','"
-            +Terang.getText()+"')";
-            java.sql.Connection conn=(Connection)Connect.GetConnection();
-            java.sql.PreparedStatement pst=conn.prepareStatement(sql);
-            pst.execute();
-            JOptionPane.showMessageDialog(null, "Data Berhasil Disimpan");
+        try {
+            if (txt_namaBarang.getText().equals("")) {
+                JOptionPane.showMessageDialog(rootPane, "Data nama harus diisi");
+                txt_namaBarang.requestFocus();
+            } else if (txt_stok.getText().equals("")) {
+                JOptionPane.showMessageDialog(rootPane, "Data stok harus diisi");
+                txt_stok.requestFocus();
+            } else if (txt_harga1.getText().equals("")) {
+                JOptionPane.showMessageDialog(rootPane, "Data harga 1 hari harus diisi");
+                txt_harga1.requestFocus();
+            } else if (txt_harga2.getText().equals("")) {
+                JOptionPane.showMessageDialog(rootPane, "Data harga > 2 hari harus diisi");
+                txt_harga2.requestFocus();
+            } else if (txt_keterangan.getText().equals("")) {
+                int confirm = JOptionPane.showConfirmDialog(null, "Apakah yakin ingin menambahkan data tanpa keterangan?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    String sql = "INSERT INTO data_barang VALUES (null,'" + txt_namaBarang.getText() + "','"
+                            + txt_stok.getText() + "','" + txt_harga1.getText() + "','" + txt_harga2.getText() + "','"
+                            + txt_keterangan.getText() + "')";
+                    java.sql.Connection conn = (Connection) Connect.GetConnection();
+                    java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+                    pst.execute();
+                    JOptionPane.showMessageDialog(null, "Data Berhasil Disimpan");
+                }
+            } else {
+                int confirm = JOptionPane.showConfirmDialog(null, "Apakah yakin ingin menambahkan data", "Confirmation", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    String sql = "INSERT INTO data_barang VALUES (null,'" + txt_namaBarang.getText() + "','"
+                            + txt_stok.getText() + "','" + txt_harga1.getText() + "','" + txt_harga2.getText() + "','"
+                            + txt_keterangan.getText() + "')";
+                    java.sql.Connection conn = (Connection) Connect.GetConnection();
+                    java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+                    pst.execute();
+                    JOptionPane.showMessageDialog(null, "Data Berhasil Disimpan");
+                }
+            }
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error tambah barang");
             System.out.println(e.getMessage());
         }
         load_table();
-        kosong();
+        clear();
     }//GEN-LAST:event_btn_tambahActionPerformed
 
     private void btn_editActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_editActionPerformed
-        try{
-            if(txt_namaBarang.getText().equals("")){
-                JOptionPane.showMessageDialog(rootPane, "Data Nama harus diisi");
+        try {
+            if (txt_namaBarang.getText().equals("")) {
+                JOptionPane.showMessageDialog(rootPane, "Data nama harus diisi");
                 txt_namaBarang.requestFocus();
-            }else if(txt_stok.getText().equals("")){
-                JOptionPane.showMessageDialog(rootPane, "Data Stok harus diisi");
+            } else if (txt_stok.getText().equals("")) {
+                JOptionPane.showMessageDialog(rootPane, "Data stok harus diisi");
                 txt_stok.requestFocus();
-            }else if(txt_harga1.getText().equals("")){
-                JOptionPane.showMessageDialog(rootPane, "Data Harga 1 hari harus diisi");
+            } else if (txt_harga1.getText().equals("")) {
+                JOptionPane.showMessageDialog(rootPane, "Data harga 1 hari harus diisi");
                 txt_harga1.requestFocus();
-            }else if(txt_harga2.getText().equals("")){
-                JOptionPane.showMessageDialog(rootPane, "Data Alamat harus diisi");
+            } else if (txt_harga2.getText().equals("")) {
+                JOptionPane.showMessageDialog(rootPane, "Data harga > 2 hari harus diisi");
                 txt_harga2.requestFocus();
-            }else if(Terang.getText().equals("")){
-                JOptionPane.showMessageDialog(rootPane, "Data Password harus diisi");
-            }else{
-                String insertdata = "update data_barang set nama_barang='"+ txt_namaBarang.getText()
-                +"',stok='"+ txt_stok.getText() +"', harga_hari='"+ txt_harga1.getText()
-                +"', harga_2hari='"+ txt_harga2.getText() +"', keterangan='"+ Terang.getText()
-                +"' where id_barang='"+id_barang.getText()+"'";
+            } else {
+                int confirmEdit = JOptionPane.showConfirmDialog(null, "Yakin ingin mengubah data ini?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                if (confirmEdit == JOptionPane.YES_OPTION) {
+                    String insertdata = "update data_barang set nama_barang='" + txt_namaBarang.getText()
+                            + "',stok='" + txt_stok.getText() + "', harga_hari='" + txt_harga1.getText()
+                            + "', harga_2hari='" + txt_harga2.getText() + "', keterangan='" + txt_keterangan.getText()
+                            + "' where id_barang='" + id_barang.getText() + "'";
 
-                Connection connect = koneksi.Connect.GetConnection();
-                PreparedStatement ps = connect.prepareStatement(insertdata);
-                ps.executeUpdate();
+                    Connection connect = koneksi.Connect.GetConnection();
+                    PreparedStatement ps = connect.prepareStatement(insertdata);
+                    ps.executeUpdate();
 
-                load_table();
-                kosong();
+                    load_table();
+                    clear();
 
-                JOptionPane.showMessageDialog(null, "Data Barang berhasil diperbarui");
+                    JOptionPane.showMessageDialog(null, "Data Barang berhasil diperbarui");
+                }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error edit barang");
             System.out.println(e.getMessage());
         }
@@ -490,31 +537,42 @@ public class BarangFrame extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btn_editActionPerformed
 
     private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
-        try{
-            String sql = "DELETE FROM data_barang Where id_barang ='"+id_barang.getText()+"'";
-            java.sql.Connection conn=(Connection)Connect.GetConnection();
-            java.sql.PreparedStatement pst=conn.prepareStatement(sql);
-            int confirmDelete = JOptionPane.showConfirmDialog(null, "Ingin menghapus data? ?", "Hapus Data", JOptionPane.YES_NO_OPTION);
-            if (confirmDelete == JOptionPane.YES_OPTION) {
-                pst.execute();
-                JOptionPane.showMessageDialog(null, "Data Berhasil Dihapus");
-                kosong();
-                load_table();
+        int confirm = JOptionPane.showConfirmDialog(null, "Apakah yakin ingin mengahapus data ini?", "Confirmation", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            try {
+                String sql = "DELETE FROM data_barang Where id_barang ='" + id_barang.getText() + "'";
+                java.sql.Connection conn = (Connection) Connect.GetConnection();
+                java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+                int confirmDelete = JOptionPane.showConfirmDialog(null, "Ingin menghapus data? ?", "Hapus Data", JOptionPane.YES_NO_OPTION);
+                if (confirmDelete == JOptionPane.YES_OPTION) {
+                    pst.execute();
+                    JOptionPane.showMessageDialog(null, "Data Berhasil Dihapus");
+                    clear();
+                    load_table();
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Error hapus barang");
+                System.out.println(e.getMessage());
             }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error hapus barang");
-            System.out.println(e.getMessage());
         }
     }//GEN-LAST:event_btn_hapusActionPerformed
 
+    private void btn_clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clearActionPerformed
+        // TODO add your handling code here:
+        int confirm = JOptionPane.showConfirmDialog(null, "Yakin ingin membersihkan seluruh isian ?", "Confirmation", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            clear();
+        }
+    }//GEN-LAST:event_btn_clearActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea Terang;
     private javax.swing.JLabel bg;
+    private javax.swing.JButton btn_clear;
     private javax.swing.JButton btn_edit;
     private javax.swing.JButton btn_hapus;
     private javax.swing.JButton btn_tambah;
-    private javax.swing.JComboBox<String> cmbfilter;
+    private javax.swing.JComboBox<String> combo_filter;
     private javax.swing.JLabel id_barang;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -528,6 +586,7 @@ public class BarangFrame extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txt_cari;
     private javax.swing.JTextField txt_harga1;
     private javax.swing.JTextField txt_harga2;
+    private javax.swing.JTextArea txt_keterangan;
     private javax.swing.JTextField txt_namaBarang;
     private javax.swing.JTextField txt_stok;
     // End of variables declaration//GEN-END:variables
