@@ -6,8 +6,12 @@
 package subMenu;
 
 import java.awt.Color;
+import java.util.List;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -19,6 +23,8 @@ import javax.swing.table.TableModel;
  */
 public class PengembalianFrame extends javax.swing.JInternalFrame {
 
+    ArrayList jenisKerusakan = new ArrayList();
+    String TotalJenisKerusakan = "0";
     String TotalDenda = "0";
 
     /**
@@ -33,7 +39,6 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
         bif.setNorthPane(null);
 
         updateComboPenyewa();
-        updateComboKerusakan();
         updateComboKeterlambatan();
         clear();
         loadTable();
@@ -47,7 +52,7 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
     public void loadTable() {
         DefaultTableModel dtm = new DefaultTableModel() {
             boolean[] canEdit = new boolean[]{
-                false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -57,7 +62,9 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
 
         dtm.addColumn("No");
         dtm.addColumn("Barang Rusak");
+        dtm.addColumn("Jumlah");
         dtm.addColumn("Jenis Kerusakan");
+        dtm.addColumn("Sub Total Denda");
         tbl_pengembalian.setModel(dtm);
     }
 
@@ -113,20 +120,39 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
         }
     }
 
-    public void updateComboKerusakan() {
+    public void updateComboJumlah() {
         try {
-            String sqlRusak = "select * from kerusakan";
-            Connection conn = koneksi.Connect.GetConnection();
-            PreparedStatement pst = conn.prepareStatement(sqlRusak);
-            ResultSet rs = pst.executeQuery();
-            combo_barangRusak.removeAllItems();
-            combo_barangRusak.addItem("Pilih...");
-            while (rs.next()) {
-                combo_jenisKerusakan.addItem("" + rs.getString("jenis_kerusakan") + " - " + rs.getString("biaya_kerusakan") + "");
+            String namaBarang;
+            if (combo_barangRusak.getSelectedIndex() == 0) {
+                namaBarang = "";
+            } else {
+                namaBarang = combo_barangRusak.getSelectedItem().toString();
             }
 
+            Connection conn = koneksi.Connect.GetConnection();
+
+            //ambil jumlah
+            String ambilJumlah = "SELECT id_sewaan, data_barang.id_barang, nama_barang,jumlah FROM detail_data_sewaan "
+                    + "JOIN data_barang ON detail_data_sewaan.id_barang = data_barang.id_barang "
+                    + "WHERE nama_barang = '" + namaBarang + "'";
+            PreparedStatement ps = conn.prepareStatement(ambilJumlah);
+            ResultSet res = ps.executeQuery();
+            res.next();
+
+            //combo jumlah
+            String sqlJumlah = "select * from detail_data_sewaan where id_sewaan = '" + txt_idSewaan.getText() + "' && id_barang = '" + res.getString("id_barang") + "'";
+            PreparedStatement pst = conn.prepareStatement(sqlJumlah);
+            ResultSet rs = pst.executeQuery();
+            combo_jumlah.removeAllItems();
+            combo_jumlah.addItem("Pilih...");
+            if (rs.next()) {
+                int jumlah = Integer.parseInt(rs.getString("jumlah").toString());
+                for (int i = 1; i <= jumlah; i++) {
+                    combo_jumlah.addItem(Integer.toString(i));
+                }
+            }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error combo kerusakan");
+//            JOptionPane.showMessageDialog(null, "Error combo jumlah");
             System.out.println(e.getMessage());
         }
     }
@@ -135,11 +161,9 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
         combo_penyewa.setSelectedIndex(0);
         combo_keterlambatan.setSelectedIndex(0);
         combo_barangRusak.setSelectedIndex(0);
-        combo_jenisKerusakan.setSelectedIndex(0);
         combo_penyewa.setEnabled(true);
         combo_keterlambatan.setEnabled(false);
         combo_barangRusak.setEnabled(false);
-        combo_jenisKerusakan.setEnabled(false);
         loadTable();
         btn_tambah.setEnabled(true);
         btn_batal.setEnabled(false);
@@ -158,6 +182,19 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
         txt_alamat.setText("-");
         txt_identitas.setText("-");
         txt_deposit.setText("-");
+        combo_jumlah.setEnabled(false);
+        combo_jumlah.setSelectedIndex(0);
+        chckBox_patah.setSelected(false);
+        chckBox_sobek.setSelected(false);
+        chckBox_resleting.setSelected(false);
+        chckBox_hilang.setSelected(false);
+        chckBox_hilang.setEnabled(false);
+        chckBox_patah.setEnabled(false);
+        chckBox_resleting.setEnabled(false);
+        chckBox_sobek.setEnabled(false);
+        txt_subDenda.setText("-");
+        this.jenisKerusakan.clear();
+        this.TotalJenisKerusakan = "0";
     }
 
 //    public void cekTable() {
@@ -185,10 +222,11 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
 
         jLabel6 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
+        jLabel20 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        combo_jenisKerusakan = new javax.swing.JComboBox<>();
+        combo_jumlah = new javax.swing.JComboBox<>();
         combo_penyewa = new javax.swing.JComboBox<>();
         combo_keterlambatan = new javax.swing.JComboBox<>();
         combo_barangRusak = new javax.swing.JComboBox<>();
@@ -231,20 +269,29 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
         jLabel19 = new javax.swing.JLabel();
         txt_terlambat = new javax.swing.JLabel();
         btn_proses = new javax.swing.JButton();
+        chckBox_resleting = new javax.swing.JCheckBox();
+        chckBox_patah = new javax.swing.JCheckBox();
+        chckBox_hilang = new javax.swing.JCheckBox();
+        chckBox_sobek = new javax.swing.JCheckBox();
+        jLabel21 = new javax.swing.JLabel();
+        txt_subDenda = new javax.swing.JLabel();
         bg = new javax.swing.JLabel();
         id_pengguna = new javax.swing.JLabel();
-        id_jenisKerusakan = new javax.swing.JLabel();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 51, 51));
         jLabel6.setText("Rusak & Terlambat");
-        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 330, -1, -1));
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 470, -1, -1));
 
         jLabel8.setFont(new java.awt.Font("Outfit", 0, 18)); // NOI18N
         jLabel8.setText("Keterlambatan");
         getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, -1, 30));
+
+        jLabel20.setFont(new java.awt.Font("Outfit", 0, 18)); // NOI18N
+        jLabel20.setText("Jumlah");
+        getContentPane().add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, -1, 30));
 
         jLabel9.setFont(new java.awt.Font("Outfit", 0, 18)); // NOI18N
         jLabel9.setText("Barang Rusak");
@@ -252,20 +299,15 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
 
         jLabel11.setFont(new java.awt.Font("Outfit", 0, 18)); // NOI18N
         jLabel11.setText("Jenis Kerusakan");
-        getContentPane().add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, -1, 30));
+        getContentPane().add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, -1, 30));
 
         jLabel12.setFont(new java.awt.Font("Outfit", 0, 16)); // NOI18N
         jLabel12.setText("Total Denda    : Rp");
-        getContentPane().add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 310, -1, -1));
+        getContentPane().add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 450, -1, -1));
 
-        combo_jenisKerusakan.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
-        combo_jenisKerusakan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pilih..." }));
-        combo_jenisKerusakan.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                combo_jenisKerusakanActionPerformed(evt);
-            }
-        });
-        getContentPane().add(combo_jenisKerusakan, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 210, 210, 30));
+        combo_jumlah.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
+        combo_jumlah.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pilih..." }));
+        getContentPane().add(combo_jumlah, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 210, 210, 30));
 
         combo_penyewa.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
         combo_penyewa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pilih..." }));
@@ -313,7 +355,7 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(tbl_pengembalian);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 280, 290, 220));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 280, 560, 130));
 
         jPanel4.setBackground(new java.awt.Color(242, 242, 242));
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Proses"));
@@ -335,6 +377,7 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
         btn_edit.setForeground(new java.awt.Color(255, 255, 255));
         btn_edit.setText("Edit");
         btn_edit.setBorder(null);
+        btn_edit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btn_edit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_editActionPerformed(evt);
@@ -346,6 +389,7 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
         btn_hapus.setForeground(new java.awt.Color(255, 255, 255));
         btn_hapus.setText("Hapus");
         btn_hapus.setBorder(null);
+        btn_hapus.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btn_hapus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_hapusActionPerformed(evt);
@@ -410,14 +454,14 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
                 .addGap(14, 14, 14))
         );
 
-        getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, 360, 110));
+        getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 380, 360, 110));
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
         getContentPane().add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, -10, 20, 560));
 
         jLabel17.setFont(new java.awt.Font("Outfit", 0, 16)); // NOI18N
         jLabel17.setText("Bayar                   : Rp");
-        getContentPane().add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 350, -1, -1));
+        getContentPane().add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 420, -1, -1));
 
         txt_bayar.setBackground(new java.awt.Color(255, 255, 255));
         txt_bayar.setFont(new java.awt.Font("Outfit", 0, 18)); // NOI18N
@@ -428,23 +472,23 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
                 txt_bayarKeyReleased(evt);
             }
         });
-        getContentPane().add(txt_bayar, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 350, 120, 20));
+        getContentPane().add(txt_bayar, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 420, 120, 20));
 
         txt_total.setFont(new java.awt.Font("Outfit", 0, 18)); // NOI18N
         txt_total.setText("-");
-        getContentPane().add(txt_total, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 310, 120, 20));
+        getContentPane().add(txt_total, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 450, 120, 20));
 
         jLabel14.setFont(new java.awt.Font("Outfit", 0, 16)); // NOI18N
         jLabel14.setText("Kembalian       : Rp");
-        getContentPane().add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 400, -1, -1));
+        getContentPane().add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 470, -1, -1));
 
         txt_kembalian.setFont(new java.awt.Font("Outfit", 0, 18)); // NOI18N
-        getContentPane().add(txt_kembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 400, 120, 20));
+        getContentPane().add(txt_kembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 470, 120, 20));
 
         label_blmCukup.setFont(new java.awt.Font("Outfit Light", 0, 12)); // NOI18N
         label_blmCukup.setForeground(new java.awt.Color(242, 242, 242));
         label_blmCukup.setText("Uang tidak cukup");
-        getContentPane().add(label_blmCukup, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 370, 120, 20));
+        getContentPane().add(label_blmCukup, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 440, 120, 20));
 
         jLabel1.setFont(new java.awt.Font("Outfit Medium", 0, 16)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
@@ -550,11 +594,11 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
 
         jLabel19.setFont(new java.awt.Font("Outfit", 0, 16)); // NOI18N
         jLabel19.setText("Terlambat        : ");
-        getContentPane().add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 280, -1, -1));
+        getContentPane().add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 420, -1, -1));
 
         txt_terlambat.setFont(new java.awt.Font("Outfit", 0, 16)); // NOI18N
         txt_terlambat.setText("-");
-        getContentPane().add(txt_terlambat, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 280, 150, 21));
+        getContentPane().add(txt_terlambat, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 420, 150, 21));
 
         btn_proses.setBackground(new java.awt.Color(252, 191, 73));
         btn_proses.setFont(new java.awt.Font("Outfit", 0, 16)); // NOI18N
@@ -567,6 +611,54 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
         });
         getContentPane().add(btn_proses, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 500, 100, 40));
 
+        chckBox_resleting.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
+        chckBox_resleting.setForeground(new java.awt.Color(0, 0, 0));
+        chckBox_resleting.setText("Resleting rusak");
+        chckBox_resleting.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chckBox_resletingActionPerformed(evt);
+            }
+        });
+        getContentPane().add(chckBox_resleting, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 270, 130, 30));
+
+        chckBox_patah.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
+        chckBox_patah.setForeground(new java.awt.Color(0, 0, 0));
+        chckBox_patah.setText("Patah");
+        chckBox_patah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chckBox_patahActionPerformed(evt);
+            }
+        });
+        getContentPane().add(chckBox_patah, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 310, 70, 30));
+
+        chckBox_hilang.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
+        chckBox_hilang.setForeground(new java.awt.Color(0, 0, 0));
+        chckBox_hilang.setText("Hilang");
+        chckBox_hilang.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chckBox_hilangActionPerformed(evt);
+            }
+        });
+        getContentPane().add(chckBox_hilang, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 310, -1, 30));
+
+        chckBox_sobek.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
+        chckBox_sobek.setForeground(new java.awt.Color(0, 0, 0));
+        chckBox_sobek.setText("Sobek");
+        chckBox_sobek.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chckBox_sobekActionPerformed(evt);
+            }
+        });
+        getContentPane().add(chckBox_sobek, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 270, 70, 30));
+
+        jLabel21.setForeground(new java.awt.Color(255, 0, 0));
+        jLabel21.setText("sub denda : Rp");
+        getContentPane().add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 346, -1, 20));
+
+        txt_subDenda.setForeground(new java.awt.Color(255, 0, 0));
+        txt_subDenda.setText("00000000000");
+        getContentPane().add(txt_subDenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 346, 120, 20));
+
         bg.setFont(new java.awt.Font("Outfit", 0, 16)); // NOI18N
         bg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/images/background.png"))); // NOI18N
         getContentPane().add(bg, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
@@ -574,30 +666,24 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
         id_pengguna.setText("jLabel20");
         getContentPane().add(id_pengguna, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 490, -1, -1));
 
-        id_jenisKerusakan.setText("jLabel20");
-        getContentPane().add(id_jenisKerusakan, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 180, -1, -1));
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_editActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_editActionPerformed
         //get selected row
         int i = tbl_pengembalian.getSelectedRow();
-        String field1 = tbl_pengembalian.getValueAt(i, 0).toString();
         String field2 = tbl_pengembalian.getValueAt(i, 1).toString();
         String field3 = tbl_pengembalian.getValueAt(i, 2).toString();
-        String hasilSubstring = field3.substring(field3.length() - 5);
-        int biayaRusak = Integer.parseInt(hasilSubstring);
+        String field5 = tbl_pengembalian.getValueAt(i, 4).toString();
+        int biayaRusak = Integer.parseInt(field5);
 
         //delete row selected
-        if (combo_jenisKerusakan.getSelectedIndex() == 0) {
+        if (chckBox_hilang.isSelected() == false && chckBox_patah.isSelected() == false && chckBox_resleting.isSelected() == false && chckBox_sobek.isSelected() == false) {
             JOptionPane.showMessageDialog(null, "Silahkan pilih jenis kerusakan terlebih dahulu");
         } else {
             int confirmEdit = JOptionPane.showConfirmDialog(null, "Yakin ingin mengubah dengan data ini?", "Confirmation", JOptionPane.YES_NO_OPTION);
             if (confirmEdit == JOptionPane.YES_OPTION) {
-                String comboKerusakan = combo_jenisKerusakan.getSelectedItem().toString();
-                String substringJenisKerusakan = comboKerusakan.substring(comboKerusakan.length() - 5);
-                int jenisKerusakan = Integer.parseInt(substringJenisKerusakan);
+                int jenisKerusakan = Integer.parseInt(txt_subDenda.getText());
 
                 //update biaya
                 int totalTerbaru = Integer.parseInt(txt_total.getText());
@@ -608,16 +694,29 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
 
                 DefaultTableModel dtm = (DefaultTableModel) tbl_pengembalian.getModel();
                 dtm.removeRow(i);
+                int no = tbl_pengembalian.getRowCount() + 1;
+                String rusak = String.join(", ", this.jenisKerusakan);
                 dtm.addRow(new Object[]{
-                    field1,
+                    no++,
                     field2,
-                    combo_jenisKerusakan.getSelectedItem()
+                    field3,
+                    rusak,
+                    txt_subDenda.getText()
                 });
 
                 combo_barangRusak.setSelectedIndex(0);
                 combo_barangRusak.setEnabled(true);
-                combo_jenisKerusakan.setSelectedIndex(0);
-                combo_jenisKerusakan.setEnabled(false);
+                combo_jumlah.setEnabled(false);
+                combo_jumlah.setSelectedIndex(0);
+                chckBox_patah.setSelected(false);
+                chckBox_sobek.setSelected(false);
+                chckBox_resleting.setSelected(false);
+                chckBox_hilang.setSelected(false);
+                chckBox_hilang.setEnabled(false);
+                chckBox_patah.setEnabled(false);
+                chckBox_resleting.setEnabled(false);
+                chckBox_sobek.setEnabled(false);
+                txt_subDenda.setText("-");
                 btn_tambah.setEnabled(true);
                 btn_edit.setEnabled(false);
                 btn_hapus.setEnabled(false);
@@ -643,11 +742,19 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
         btn_batal.setEnabled(false);
         combo_keterlambatan.setSelectedIndex(0);
         combo_barangRusak.setSelectedIndex(0);
-        combo_jenisKerusakan.setSelectedIndex(0);
         combo_penyewa.setEnabled(false);
         combo_keterlambatan.setEnabled(true);
         combo_barangRusak.setEnabled(true);
-        combo_jenisKerusakan.setEnabled(true);
+        combo_jumlah.setEnabled(false);
+        combo_jumlah.setSelectedIndex(0);
+        chckBox_patah.setSelected(false);
+        chckBox_sobek.setSelected(false);
+        chckBox_resleting.setSelected(false);
+        chckBox_hilang.setSelected(false);
+        chckBox_hilang.setEnabled(false);
+        chckBox_patah.setEnabled(false);
+        chckBox_resleting.setEnabled(false);
+        chckBox_sobek.setEnabled(false);
         tbl_pengembalian.clearSelection();
     }//GEN-LAST:event_btn_batalActionPerformed
 
@@ -656,10 +763,16 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
         if (combo_penyewa.getSelectedIndex() == 0) {
             combo_keterlambatan.setEnabled(false);
             combo_barangRusak.setEnabled(false);
-            combo_jenisKerusakan.setEnabled(false);
             combo_keterlambatan.setSelectedIndex(0);
             combo_barangRusak.setSelectedIndex(0);
-            combo_jenisKerusakan.setSelectedIndex(0);
+            chckBox_patah.setSelected(false);
+            chckBox_sobek.setSelected(false);
+            chckBox_resleting.setSelected(false);
+            chckBox_hilang.setSelected(false);
+            chckBox_hilang.setEnabled(false);
+            chckBox_patah.setEnabled(false);
+            chckBox_resleting.setEnabled(false);
+            chckBox_sobek.setEnabled(false);
         } else {
             String comboPenyewa = combo_penyewa.getSelectedItem().toString();
             String idPenyewa = comboPenyewa.substring(0, 7);
@@ -694,17 +807,41 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
             combo_penyewa.setEnabled(false);
             combo_keterlambatan.setEnabled(true);
             combo_barangRusak.setEnabled(true);
-            combo_jenisKerusakan.setEnabled(false);
+            chckBox_patah.setSelected(false);
+            chckBox_sobek.setSelected(false);
+            chckBox_resleting.setSelected(false);
+            chckBox_hilang.setSelected(false);
+            chckBox_hilang.setEnabled(false);
+            chckBox_patah.setEnabled(false);
+            chckBox_resleting.setEnabled(false);
+            chckBox_sobek.setEnabled(false);
+
         }
     }//GEN-LAST:event_combo_penyewaActionPerformed
 
     private void combo_barangRusakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_combo_barangRusakActionPerformed
         // TODO add your handling code here:
         if (combo_barangRusak.getSelectedIndex() == 0) {
-            combo_jenisKerusakan.setSelectedIndex(0);
-            combo_jenisKerusakan.setEnabled(false);
+            chckBox_patah.setSelected(false);
+            chckBox_sobek.setSelected(false);
+            chckBox_resleting.setSelected(false);
+            chckBox_hilang.setSelected(false);
+            chckBox_hilang.setEnabled(false);
+            chckBox_patah.setEnabled(false);
+            chckBox_resleting.setEnabled(false);
+            chckBox_sobek.setEnabled(false);
+            combo_jumlah.setEnabled(false);
         } else {
-            combo_jenisKerusakan.setEnabled(true);
+            updateComboJumlah();
+            combo_jumlah.setEnabled(true);
+            chckBox_patah.setSelected(false);
+            chckBox_sobek.setSelected(false);
+            chckBox_resleting.setSelected(false);
+            chckBox_hilang.setSelected(false);
+            chckBox_hilang.setEnabled(true);
+            chckBox_patah.setEnabled(true);
+            chckBox_resleting.setEnabled(true);
+            chckBox_sobek.setEnabled(true);
         }
     }//GEN-LAST:event_combo_barangRusakActionPerformed
 
@@ -757,32 +894,41 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
         ArrayList kerusakan = new ArrayList();
         for (int i = 0; i < jumlahRow; i++) {
             namaBarang.add(tbl_pengembalian.getModel().getValueAt(i, 1));
-            kerusakan.add(tbl_pengembalian.getModel().getValueAt(i, 2));
         }
 
         //cek apakah data pada combo barangrusak sama dengan data yang ada pada table
         boolean isianNama = namaBarang.contains(combo_barangRusak.getSelectedItem().toString());
-        boolean isianKerusakan = kerusakan.contains(combo_jenisKerusakan.getSelectedItem().toString());
+
+        int subDenda = Integer.parseInt(txt_subDenda.getText());
+        int jumlahRusak = Integer.parseInt(combo_jumlah.getSelectedItem().toString());
+        int subTotalDenda = subDenda * jumlahRusak;
 
         if (combo_penyewa.getSelectedIndex() == 0) {
             JOptionPane.showMessageDialog(null, "Silahkan pilih penyewa terlebih dahulu");
         } else if (combo_barangRusak.getSelectedIndex() == 0) {
             JOptionPane.showMessageDialog(null, "Data barang belum dipilih");
-        } else if (combo_jenisKerusakan.getSelectedIndex() == 0) {
+        } else if (combo_jumlah.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(null, "Silahkan pilih jumlah barang terlebih dahulu");
+        } else if (chckBox_hilang.isSelected() == false && chckBox_patah.isSelected() == false && chckBox_resleting.isSelected() == false && chckBox_sobek.isSelected() == false) {
             JOptionPane.showMessageDialog(null, "Silahkan pilih jenis kerusakan terlebih dahulu");
-        } else if (isianNama == true && isianKerusakan == false) {
-            int confirmKerusakan = JOptionPane.showConfirmDialog(null, "Yakin ingin menambahkan jenis kerusakan yang beda untuk barang yang sama?", "Confirmation", JOptionPane.YES_NO_OPTION);
-            if (confirmKerusakan == JOptionPane.YES_OPTION) {
-                String barang = combo_barangRusak.getSelectedItem().toString();
-                String rusak = combo_jenisKerusakan.getSelectedItem().toString();
+        } else if (isianNama == true) {
+            JOptionPane.showMessageDialog(null, "Data barang yang rusak sudah ada pada table");
+        } else {
+            String barang = combo_barangRusak.getSelectedItem().toString();
+            String jumlah = combo_jumlah.getSelectedItem().toString();
+            String rusak = String.join(", ", this.jenisKerusakan);
 
+            int confirm = JOptionPane.showConfirmDialog(null, "Yakin ingin menambahkan data kerusakan ?", "Confirmation", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
                 int no = 1;
 
                 DefaultTableModel dtm = (DefaultTableModel) tbl_pengembalian.getModel();
                 dtm.addRow(new Object[]{
                     no++,
                     barang,
-                    rusak
+                    jumlah,
+                    rusak,
+                    subTotalDenda
                 });
 
                 //ambil total gettext
@@ -794,85 +940,31 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
                 }
 
                 //add biaya denda kerusakan
-                int idKerusakan = Integer.parseInt(id_jenisKerusakan.getText().toString());
+                int biayaKerusakan = subTotalDenda;
+                //convert Global totaldenda ke int
+                int TotalDenda = Integer.parseInt(this.TotalDenda);
+                int HitungTotalDenda = TotalDenda + biayaKerusakan;
+                this.TotalDenda = String.valueOf(HitungTotalDenda);
 
-                try {
-                    String ambilBiaya = "select * from kerusakan where id_kerusakan = " + idKerusakan + "";
-                    Connection conn = koneksi.Connect.GetConnection();
-                    PreparedStatement pst = conn.prepareStatement(ambilBiaya);
-                    ResultSet rs = pst.executeQuery();
-                    if (rs.next()) {
-                        int biayaKerusakan = Integer.parseInt(rs.getString("biaya_kerusakan"));
-                        //convert Global totaldenda ke int
-                        int TotalDenda = Integer.parseInt(this.TotalDenda);
-                        int HitungTotalDenda = TotalDenda + biayaKerusakan;
-                        this.TotalDenda = String.valueOf(HitungTotalDenda);
-
-                        int hasilAkhir = totalDenda + biayaKerusakan;
-                        String hasilAkhirFix = String.valueOf(hasilAkhir);
-                        txt_total.setText(hasilAkhirFix);
-                        System.out.println(hasilAkhirFix);
-                    }
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(null, "Error ambil data kerusakan / keterlambatan");
-
-                }
+                int hasilAkhir = totalDenda + biayaKerusakan;
+                String hasilAkhirFix = String.valueOf(hasilAkhir);
+                txt_total.setText(hasilAkhirFix);
+                
                 combo_barangRusak.setSelectedIndex(0);
-                combo_jenisKerusakan.setSelectedIndex(0);
-                combo_jenisKerusakan.setEnabled(false);
-            }
-
-        } else if (isianNama == true && isianKerusakan == true) {
-            JOptionPane.showMessageDialog(null, "Data barang sudah ada pada table");
-        } else {
-            String barang = combo_barangRusak.getSelectedItem().toString();
-            String rusak = combo_jenisKerusakan.getSelectedItem().toString();
-
-            int confirm = JOptionPane.showConfirmDialog(null, "Yakin ingin menammbahkan ?", "Confirmation", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
-                int no = 1;
-
-                DefaultTableModel dtm = (DefaultTableModel) tbl_pengembalian.getModel();
-                dtm.addRow(new Object[]{
-                    no++,
-                    barang,
-                    rusak
-                });
-
-                //ambil total gettext
-                int totalDenda;
-                if (txt_total.getText().equals("-")) {
-                    totalDenda = 0;
-                } else {
-                    totalDenda = Integer.parseInt(txt_total.getText().toString());
-                }
-
-                //add biaya denda kerusakanz
-                int idKerusakan = Integer.parseInt(id_jenisKerusakan.getText().toString());
-
-                try {
-                    String ambilBiaya = "select * from kerusakan where id_kerusakan = " + idKerusakan + "";
-                    Connection conn = koneksi.Connect.GetConnection();
-                    PreparedStatement pst = conn.prepareStatement(ambilBiaya);
-                    ResultSet rs = pst.executeQuery();
-                    if (rs.next()) {
-                        int biayaKerusakan = Integer.parseInt(rs.getString("biaya_kerusakan"));
-                        //convert Global totaldenda ke int
-                        int TotalDenda = Integer.parseInt(this.TotalDenda);
-                        int HitungTotalDenda = TotalDenda + biayaKerusakan;
-                        this.TotalDenda = String.valueOf(HitungTotalDenda);
-
-                        int hasilAkhir = totalDenda + biayaKerusakan;
-                        String hasilAkhirFix = String.valueOf(hasilAkhir);
-                        txt_total.setText(hasilAkhirFix);
-                    }
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(null, "Error ambil data kerusakan / keterlambatan");
-                    System.out.println(e.getMessage());
-                }
-                combo_barangRusak.setSelectedIndex(0);
-                combo_jenisKerusakan.setSelectedIndex(0);
-                combo_jenisKerusakan.setEnabled(false);
+                combo_jumlah.setSelectedIndex(0);
+                combo_jumlah.setEnabled(false);
+                chckBox_patah.setSelected(false);
+                chckBox_sobek.setSelected(false);
+                chckBox_resleting.setSelected(false);
+                chckBox_hilang.setSelected(false);
+                chckBox_hilang.setEnabled(false);
+                chckBox_patah.setEnabled(false);
+                chckBox_resleting.setEnabled(false);
+                chckBox_sobek.setEnabled(false);
+                txt_subDenda.setText("-");
+                this.jenisKerusakan.clear();
+                this.TotalJenisKerusakan = "0";
+                label_blmCukup.setForeground(Color.red);
             }
         }
     }//GEN-LAST:event_btn_tambahActionPerformed
@@ -904,34 +996,101 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_txt_bayarKeyReleased
 
-    private void combo_jenisKerusakanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_combo_jenisKerusakanActionPerformed
-        // TODO add your handling code here:
-        String jenisKerusakan = combo_jenisKerusakan.getSelectedItem().toString();
-        String biaya = jenisKerusakan.substring(jenisKerusakan.length() - 5);
-
-        try {
-            String sqlKerusakan = "select * from kerusakan where biaya_kerusakan = " + biaya + "";
-            Connection conn = koneksi.Connect.GetConnection();
-            PreparedStatement pst = conn.prepareStatement(sqlKerusakan);
-            ResultSet res = pst.executeQuery();
-            if (res.next()) {
-                id_jenisKerusakan.setText(res.getString("id_kerusakan"));
-            }
-        } catch (Exception e) {
-
-        }
-    }//GEN-LAST:event_combo_jenisKerusakanActionPerformed
-
     private void tbl_pengembalianMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_pengembalianMouseClicked
         // TODO add your handling code here:
+        this.TotalJenisKerusakan = "0";
+        this.jenisKerusakan.clear();
+        
         int i = tbl_pengembalian.getSelectedRow();
         TableModel tbl = tbl_pengembalian.getModel();
 
         String field2 = tbl.getValueAt(i, 1).toString();
         String field3 = tbl.getValueAt(i, 2).toString();
+        String field4 = tbl.getValueAt(i, 3).toString();
 
         combo_barangRusak.setSelectedItem(field2);
-        combo_jenisKerusakan.setSelectedItem(field3);
+        combo_jumlah.setSelectedItem(field3);
+        List<String> itemsJenisKerusakan = Stream.of(field4.split(",")).map(String::trim).collect(Collectors.toList());
+        for (int j = 0; j < itemsJenisKerusakan.size(); j++) {
+            String isian = itemsJenisKerusakan.get(j);
+            if (isian.equals("Hilang")) {
+                chckBox_hilang.setSelected(true);
+                this.jenisKerusakan.add(chckBox_hilang.getText());
+                try {
+                    Connection conn = koneksi.Connect.GetConnection();
+                    String sql = "select * from kerusakan where jenis_kerusakan = '" + chckBox_hilang.getText() + "'";
+                    PreparedStatement pst = conn.prepareStatement(sql);
+                    ResultSet rs = pst.executeQuery();
+                    if (rs.next()) {
+                        int biayaTerbaru = Integer.parseInt(this.TotalJenisKerusakan);
+                        int biayaDb = Integer.parseInt(rs.getString("biaya_kerusakan"));
+                        biayaTerbaru = biayaTerbaru + biayaDb;
+                        String biaya = String.valueOf(biayaTerbaru);
+                        this.TotalJenisKerusakan = biaya;
+                        txt_subDenda.setText(this.TotalJenisKerusakan);
+                    }
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+            } else if (isian.equals("Patah")) {
+                chckBox_patah.setSelected(true);
+                this.jenisKerusakan.add(chckBox_patah.getText());
+                try {
+                    Connection conn = koneksi.Connect.GetConnection();
+                    String sql = "select * from kerusakan where jenis_kerusakan = '" + chckBox_patah.getText() + "'";
+                    PreparedStatement pst = conn.prepareStatement(sql);
+                    ResultSet rs = pst.executeQuery();
+                    if (rs.next()) {
+                        int biayaTerbaru = Integer.parseInt(this.TotalJenisKerusakan);
+                        int biayaDb = Integer.parseInt(rs.getString("biaya_kerusakan"));
+                        biayaTerbaru = biayaTerbaru + biayaDb;
+                        String biaya = String.valueOf(biayaTerbaru);
+                        this.TotalJenisKerusakan = biaya;
+                        txt_subDenda.setText(this.TotalJenisKerusakan);
+                    }
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+            } else if (isian.equals("Resleting rusak")) {
+                chckBox_resleting.setSelected(true);
+                this.jenisKerusakan.add(chckBox_resleting.getText());
+                try {
+                    Connection conn = koneksi.Connect.GetConnection();
+                    String sql = "select * from kerusakan where jenis_kerusakan = '" + chckBox_resleting.getText() + "'";
+                    PreparedStatement pst = conn.prepareStatement(sql);
+                    ResultSet rs = pst.executeQuery();
+                    if (rs.next()) {
+                        int biayaTerbaru = Integer.parseInt(this.TotalJenisKerusakan);
+                        int biayaDb = Integer.parseInt(rs.getString("biaya_kerusakan"));
+                        biayaTerbaru = biayaTerbaru + biayaDb;
+                        String biaya = String.valueOf(biayaTerbaru);
+                        this.TotalJenisKerusakan = biaya;
+                        txt_subDenda.setText(this.TotalJenisKerusakan);
+                    }
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+            } else {
+                chckBox_sobek.setSelected(true);
+                this.jenisKerusakan.add(chckBox_sobek.getText());
+                try {
+                    Connection conn = koneksi.Connect.GetConnection();
+                    String sql = "select * from kerusakan where jenis_kerusakan = '" + chckBox_sobek.getText() + "'";
+                    PreparedStatement pst = conn.prepareStatement(sql);
+                    ResultSet rs = pst.executeQuery();
+                    if (rs.next()) {
+                        int biayaTerbaru = Integer.parseInt(this.TotalJenisKerusakan);
+                        int biayaDb = Integer.parseInt(rs.getString("biaya_kerusakan"));
+                        biayaTerbaru = biayaTerbaru + biayaDb;
+                        String biaya = String.valueOf(biayaTerbaru);
+                        this.TotalJenisKerusakan = biaya;
+                        txt_subDenda.setText(this.TotalJenisKerusakan);
+                    }
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+            }
+        }
 
         combo_barangRusak.setEnabled(false);
         btn_tambah.setEnabled(false);
@@ -943,16 +1102,12 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
     private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
         // TODO add your handling code here:
         int i = tbl_pengembalian.getSelectedRow();
-        String field1 = tbl_pengembalian.getValueAt(i, 0).toString();
         String field2 = tbl_pengembalian.getValueAt(i, 1).toString();
         String field3 = tbl_pengembalian.getValueAt(i, 2).toString();
-        String hasilSubstring = field3.substring(field3.length() - 5);
-        int biayaRusak = Integer.parseInt(hasilSubstring);
+        String field5 = tbl_pengembalian.getValueAt(i, 4).toString();
+        int biayaRusak = Integer.parseInt(field5);
 
         //delete row selected
-        if (combo_jenisKerusakan.getSelectedIndex() == 0) {
-            JOptionPane.showMessageDialog(null, "Silahkan pilih jenis kerusakan terlebih dahulu");
-        } else {
             int confirmEdit = JOptionPane.showConfirmDialog(null, "Yakin ingin menghapus data ini?", "Confirmation", JOptionPane.YES_NO_OPTION);
             if (confirmEdit == JOptionPane.YES_OPTION) {
 
@@ -967,14 +1122,20 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
 
                 combo_barangRusak.setSelectedIndex(0);
                 combo_barangRusak.setEnabled(true);
-                combo_jenisKerusakan.setSelectedIndex(0);
-                combo_jenisKerusakan.setEnabled(false);
+                chckBox_patah.setSelected(false);
+                chckBox_sobek.setSelected(false);
+                chckBox_resleting.setSelected(false);
+                chckBox_hilang.setSelected(false);
+                chckBox_hilang.setEnabled(false);
+                chckBox_patah.setEnabled(false);
+                chckBox_resleting.setEnabled(false);
+                chckBox_sobek.setEnabled(false);
+                txt_subDenda.setText("-");
                 btn_tambah.setEnabled(true);
                 btn_edit.setEnabled(false);
                 btn_hapus.setEnabled(false);
                 btn_batal.setEnabled(false);
             }
-        }
     }//GEN-LAST:event_btn_hapusActionPerformed
 
     private void btn_prosesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_prosesActionPerformed
@@ -982,7 +1143,10 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
         try {
             if (combo_penyewa.getSelectedIndex() == 0) {
                 JOptionPane.showMessageDialog(null, "Data penyewa harus diisi");
-            } else if (combo_keterlambatan.getSelectedIndex() == 0 && tbl_pengembalian.getModel().getRowCount() == 0) {
+            } else if(label_blmCukup.getForeground().equals(Color.red)){
+                JOptionPane.showMessageDialog(null, "Silahkan cek kembali pembayaran");
+                txt_bayar.requestFocus();
+            }else if (combo_keterlambatan.getSelectedIndex() == 0 && tbl_pengembalian.getModel().getRowCount() == 0) {
                 int confirmProses = JOptionPane.showConfirmDialog(null, "Yakin tidak ada keterlambatan dan barang dalam keadaan yang baik ?", "Confirmation", JOptionPane.YES_NO_OPTION);
                 if (confirmProses == JOptionPane.YES_OPTION) {
                     //insert into data_pengembalian
@@ -1036,9 +1200,10 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
 
                     for (int i = 0; i < rowCount; i++) {
                         String namaBarang = tbl_pengembalian.getValueAt(i, 1).toString();
-                        String DatajenisKerusakan = tbl_pengembalian.getValueAt(i, 2).toString();
-                        String jenisKerusakan = DatajenisKerusakan.substring(DatajenisKerusakan.length() - 5);
-
+                        int jumlahKerusakan = Integer.parseInt(tbl_pengembalian.getValueAt(i, 2).toString());
+                        String jenisKerusakan = tbl_pengembalian.getValueAt(i, 3).toString();
+                        int subTotal = Integer.parseInt(tbl_pengembalian.getValueAt(i, 4).toString());
+                        
                         //get id_barang
                         String sqlIdBarang = "select * from data_barang where nama_barang = '" + namaBarang + "'";
                         PreparedStatement statemenBarang = conn.prepareStatement(sqlIdBarang);
@@ -1046,13 +1211,13 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
                         IdBarang.next();
 
                         //get id_kerusakan
-                        String sqlIdKerusakan = "select * from kerusakan where biaya_kerusakan = '" + jenisKerusakan + "'";
+                        String sqlIdKerusakan = "select * from kerusakan where jenis_kerusakan = '" + jenisKerusakan + "'";
                         PreparedStatement statemenKerusakan = conn.prepareStatement(sqlIdKerusakan);
                         ResultSet IdKerusakan = statemenKerusakan.executeQuery();
                         IdKerusakan.next();
 
                         //insert into detail_data_pengembalian
-                        String insertDetailPengembalian = "insert into detail_data_pengembalian values ('" + res.getString("id_pengembalian") + "', '" + IdBarang.getString("id_barang") + "', '" + IdKerusakan.getString("id_kerusakan") + "')";
+                        String insertDetailPengembalian = "insert into detail_data_pengembalian values ('" + res.getString("id_pengembalian") + "', '" + IdBarang.getString("id_barang") + "', '" + IdKerusakan.getString("id_kerusakan") + "', '"+ jumlahKerusakan +"', '"+ subTotal +"')";
                         PreparedStatement statement = conn.prepareStatement(insertDetailPengembalian);
                         statement.execute();
                     }
@@ -1066,6 +1231,170 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btn_prosesActionPerformed
 
+    private void chckBox_sobekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chckBox_sobekActionPerformed
+        // TODO add your handling code here:
+        if (chckBox_sobek.isSelected()) {
+            this.jenisKerusakan.add(chckBox_sobek.getText());
+            try {
+                Connection conn = koneksi.Connect.GetConnection();
+                String sql = "select * from kerusakan where jenis_kerusakan = '" + chckBox_sobek.getText() + "'";
+                PreparedStatement pst = conn.prepareStatement(sql);
+                ResultSet rs = pst.executeQuery();
+                if (rs.next()) {
+                    int biayaTerbaru = Integer.parseInt(this.TotalJenisKerusakan);
+                    int biayaDb = Integer.parseInt(rs.getString("biaya_kerusakan"));
+                    biayaTerbaru = biayaTerbaru + biayaDb;
+                    String biaya = String.valueOf(biayaTerbaru);
+                    this.TotalJenisKerusakan = biaya;
+                    txt_subDenda.setText(this.TotalJenisKerusakan);
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        } else {
+            this.jenisKerusakan.remove(chckBox_sobek.getText());
+            try {
+                Connection conn = koneksi.Connect.GetConnection();
+                String sql = "select * from kerusakan where jenis_kerusakan = '" + chckBox_sobek.getText() + "'";
+                PreparedStatement pst = conn.prepareStatement(sql);
+                ResultSet rs = pst.executeQuery();
+                if (rs.next()) {
+                    int biayaTerbaru = Integer.parseInt(this.TotalJenisKerusakan);
+                    int biayaDb = Integer.parseInt(rs.getString("biaya_kerusakan"));
+                    biayaTerbaru = biayaTerbaru - biayaDb;
+                    String biaya = String.valueOf(biayaTerbaru);
+                    this.TotalJenisKerusakan = biaya;
+                    txt_subDenda.setText(this.TotalJenisKerusakan);
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+    }//GEN-LAST:event_chckBox_sobekActionPerformed
+
+    private void chckBox_resletingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chckBox_resletingActionPerformed
+        // TODO add your handling code here:
+        if (chckBox_resleting.isSelected()) {
+            this.jenisKerusakan.add(chckBox_resleting.getText());
+            try {
+                Connection conn = koneksi.Connect.GetConnection();
+                String sql = "select * from kerusakan where jenis_kerusakan = '" + chckBox_resleting.getText() + "'";
+                PreparedStatement pst = conn.prepareStatement(sql);
+                ResultSet rs = pst.executeQuery();
+                if (rs.next()) {
+                    int biayaTerbaru = Integer.parseInt(this.TotalJenisKerusakan);
+                    int biayaDb = Integer.parseInt(rs.getString("biaya_kerusakan"));
+                    biayaTerbaru = biayaTerbaru + biayaDb;
+                    String biaya = String.valueOf(biayaTerbaru);
+                    this.TotalJenisKerusakan = biaya;
+                    txt_subDenda.setText(this.TotalJenisKerusakan);
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        } else {
+            this.jenisKerusakan.remove(chckBox_resleting.getText());
+            try {
+                Connection conn = koneksi.Connect.GetConnection();
+                String sql = "select * from kerusakan where jenis_kerusakan = '" + chckBox_resleting.getText() + "'";
+                PreparedStatement pst = conn.prepareStatement(sql);
+                ResultSet rs = pst.executeQuery();
+                if (rs.next()) {
+                    int biayaTerbaru = Integer.parseInt(this.TotalJenisKerusakan);
+                    int biayaDb = Integer.parseInt(rs.getString("biaya_kerusakan"));
+                    biayaTerbaru = biayaTerbaru - biayaDb;
+                    String biaya = String.valueOf(biayaTerbaru);
+                    this.TotalJenisKerusakan = biaya;
+                    txt_subDenda.setText(this.TotalJenisKerusakan);
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+    }//GEN-LAST:event_chckBox_resletingActionPerformed
+
+    private void chckBox_patahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chckBox_patahActionPerformed
+        // TODO add your handling code here:
+        if (chckBox_patah.isSelected()) {
+            this.jenisKerusakan.add(chckBox_patah.getText());
+            try {
+                Connection conn = koneksi.Connect.GetConnection();
+                String sql = "select * from kerusakan where jenis_kerusakan = '" + chckBox_patah.getText() + "'";
+                PreparedStatement pst = conn.prepareStatement(sql);
+                ResultSet rs = pst.executeQuery();
+                if (rs.next()) {
+                    int biayaTerbaru = Integer.parseInt(this.TotalJenisKerusakan);
+                    int biayaDb = Integer.parseInt(rs.getString("biaya_kerusakan"));
+                    biayaTerbaru = biayaTerbaru + biayaDb;
+                    String biaya = String.valueOf(biayaTerbaru);
+                    this.TotalJenisKerusakan = biaya;
+                    txt_subDenda.setText(this.TotalJenisKerusakan);
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        } else {
+            this.jenisKerusakan.remove(chckBox_patah.getText());
+            try {
+                Connection conn = koneksi.Connect.GetConnection();
+                String sql = "select * from kerusakan where jenis_kerusakan = '" + chckBox_patah.getText() + "'";
+                PreparedStatement pst = conn.prepareStatement(sql);
+                ResultSet rs = pst.executeQuery();
+                if (rs.next()) {
+                    int biayaTerbaru = Integer.parseInt(this.TotalJenisKerusakan);
+                    int biayaDb = Integer.parseInt(rs.getString("biaya_kerusakan"));
+                    biayaTerbaru = biayaTerbaru - biayaDb;
+                    String biaya = String.valueOf(biayaTerbaru);
+                    this.TotalJenisKerusakan = biaya;
+                    txt_subDenda.setText(this.TotalJenisKerusakan);
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+    }//GEN-LAST:event_chckBox_patahActionPerformed
+
+    private void chckBox_hilangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chckBox_hilangActionPerformed
+        // TODO add your handling code here:
+        if (chckBox_hilang.isSelected()) {
+            this.jenisKerusakan.add(chckBox_hilang.getText());
+            try {
+                Connection conn = koneksi.Connect.GetConnection();
+                String sql = "select * from kerusakan where jenis_kerusakan = '" + chckBox_hilang.getText() + "'";
+                PreparedStatement pst = conn.prepareStatement(sql);
+                ResultSet rs = pst.executeQuery();
+                if (rs.next()) {
+                    int biayaTerbaru = Integer.parseInt(this.TotalJenisKerusakan);
+                    int biayaDb = Integer.parseInt(rs.getString("biaya_kerusakan"));
+                    biayaTerbaru = biayaTerbaru + biayaDb;
+                    String biaya = String.valueOf(biayaTerbaru);
+                    this.TotalJenisKerusakan = biaya;
+                    txt_subDenda.setText(this.TotalJenisKerusakan);
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        } else {
+            this.jenisKerusakan.remove(chckBox_hilang.getText());
+            try {
+                Connection conn = koneksi.Connect.GetConnection();
+                String sql = "select * from kerusakan where jenis_kerusakan = '" + chckBox_hilang.getText() + "'";
+                PreparedStatement pst = conn.prepareStatement(sql);
+                ResultSet rs = pst.executeQuery();
+                if (rs.next()) {
+                    int biayaTerbaru = Integer.parseInt(this.TotalJenisKerusakan);
+                    int biayaDb = Integer.parseInt(rs.getString("biaya_kerusakan"));
+                    biayaTerbaru = biayaTerbaru - biayaDb;
+                    String biaya = String.valueOf(biayaTerbaru);
+                    this.TotalJenisKerusakan = biaya;
+                    txt_subDenda.setText(this.TotalJenisKerusakan);
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+    }//GEN-LAST:event_chckBox_hilangActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel bg;
@@ -1075,11 +1404,14 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
     private javax.swing.JButton btn_hapus;
     private javax.swing.JButton btn_proses;
     private javax.swing.JButton btn_tambah;
+    private javax.swing.JCheckBox chckBox_hilang;
+    private javax.swing.JCheckBox chckBox_patah;
+    private javax.swing.JCheckBox chckBox_resleting;
+    private javax.swing.JCheckBox chckBox_sobek;
     private javax.swing.JComboBox<String> combo_barangRusak;
-    private javax.swing.JComboBox<String> combo_jenisKerusakan;
+    private javax.swing.JComboBox<String> combo_jumlah;
     private javax.swing.JComboBox<String> combo_keterlambatan;
     private javax.swing.JComboBox<String> combo_penyewa;
-    private javax.swing.JLabel id_jenisKerusakan;
     private javax.swing.JLabel id_pengguna;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1093,6 +1425,8 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1116,6 +1450,7 @@ public class PengembalianFrame extends javax.swing.JInternalFrame {
     private javax.swing.JLabel txt_kembalian;
     private javax.swing.JLabel txt_nama;
     private javax.swing.JLabel txt_pinjam;
+    private javax.swing.JLabel txt_subDenda;
     private javax.swing.JLabel txt_terlambat;
     private javax.swing.JLabel txt_total;
     private javax.swing.JLabel txt_transaksi;
