@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JFormattedTextField;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -64,6 +65,11 @@ public class KasirFrame extends javax.swing.JInternalFrame {
         cekInputanIntegerOnly(txt_bayar);
         cekInputanIntegerOnly(txt_bayar);
         cekInputanIntegerOnly(txt_hp);
+    }
+
+    public static long getDifferenceDays(Date d1, Date d2) {
+        long diff = d2.getTime() - d1.getTime();
+        return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
     }
 
     public void ambilId(String idpengguna) {
@@ -630,7 +636,7 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                 }
 
                 Connection conn = koneksi.Connect.GetConnection();
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 int rowCount = tbl_barang.getModel().getRowCount();
 
                 //input data_sewaan
@@ -681,8 +687,8 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                 if (confirmPrint == JOptionPane.YES_OPTION) {
                     try {
                         String idSewaan = hasilId.getString("id_sewaan");
-                        
-                        String report = ("C:\\Users\\perlengkapan\\Documents\\KULIAH\\Project Tugas Akhir\\Awan-adventure-FIX\\src\\subMenu\\nota\\notaSewaan.jrxml");
+
+                        String report = ("C:\\Users\\dzikr\\OneDrive\\Documents\\GitHub\\berapa kali fix ini\\Awan-adventure-FIX\\src\\subMenu\\nota\\notaSewaan.jrxml");
                         HashMap hash = new HashMap();
                         hash.put("id_sewaan", idSewaan);
                         JasperReport jasper = JasperCompileManager.compileReport(report);
@@ -751,11 +757,12 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                 LocalDate tanggalPinjam = LocalDate.parse(tanggalPinjamString);
                 LocalDate tanggalKembali = LocalDate.parse(tanggalKembaliString);
                 Period jarak = Period.between(tanggalPinjam, tanggalKembali);
+                System.out.println(jarak.getMonths());
 
                 if (combo_barang.getSelectedItem().equals("Pilih Barang...")) {
                     JOptionPane.showMessageDialog(null, "Silahkan pilih barang terlebih dahulu");
-                } else if (combo_jumlah.getSelectedItem().equals("0")) {
-                    JOptionPane.showMessageDialog(null, "Silahkan pilih jumlah barang terlebih dahulu");
+                } else if (combo_jumlah.getSelectedIndex() == 0) {
+                    JOptionPane.showMessageDialog(null, "Stok barang yang anda pilih sudah habis");
                 } else if (jarak.getDays() < 1) {
                     JOptionPane.showMessageDialog(null, "Silahkan cek kembali tanggal peminjaman dan pengembalian");
                 } else {
@@ -770,7 +777,7 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                     if (isian) {
                         JOptionPane.showMessageDialog(null, "Data sudah ada pada table");
                     } else {
-                        if (jarak.getDays() > 2) {
+                        if (jarak.getDays() > 2 || jarak.getMonths() > 0 || jarak.getYears() > 0) {
                             int jumlah = Integer.parseInt(combo_jumlah.getSelectedItem().toString());
                             int harga = Integer.parseInt(res.getString("harga_2hari"));
                             int hasil = jumlah * harga;
@@ -888,7 +895,7 @@ public class KasirFrame extends javax.swing.JInternalFrame {
                     int fieldharga3Hari = Integer.parseInt(tbl_barang.getValueAt(i, 4).toString()) * jumlahbeli;
 
                     //query cari jarakHari
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     String tanggalPinjamString = sdf.format(tgl_pinjam.getDate());
                     String tanggalKembaliString = sdf.format(tgl_kembali.getDate());
                     LocalDate tanggalPinjam = LocalDate.parse(tanggalPinjamString);
@@ -1033,7 +1040,7 @@ public class KasirFrame extends javax.swing.JInternalFrame {
             int fieldharga3Hari = Integer.parseInt(tbl_barang.getValueAt(i, 4).toString()) * jumlahbeli;
 
             //query cari jarakHari
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String tanggalPinjamString = sdf.format(tgl_pinjam.getDate());
             String tanggalKembaliString = sdf.format(tgl_kembali.getDate());
             LocalDate tanggalPinjam = LocalDate.parse(tanggalPinjamString);

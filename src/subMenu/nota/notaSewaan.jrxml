@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="600" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a14b8895-4fdf-4d14-9101-6f361aa4c448">
 	<property name="ireport.zoom" value="1.3310000000000015"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="192"/>
+	<property name="ireport.y" value="0"/>
 	<style name="table">
 		<box>
 			<topPen lineWidth="1.0" lineColor="#000000"/>
@@ -112,7 +112,7 @@ WHERE data_sewaan.id_sewaan = $P{id_sewaan}]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="36" isBold="true" isStrikeThrough="false"/>
 				</textElement>
-				<text><![CDATA[Awan Adventure]]></text>
+				<text><![CDATA[Nota Awan Adventure]]></text>
 			</staticText>
 			<textField pattern="dd MMMMM yyyy">
 				<reportElement uuid="8d2334fc-508b-4935-a392-f0b85c68a3ec" x="468" y="-10" width="100" height="20"/>

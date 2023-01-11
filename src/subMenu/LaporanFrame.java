@@ -212,34 +212,29 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
         txt_cari = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         msg_tblKosong = new javax.swing.JLabel();
+        label_bulan = new javax.swing.JLabel();
+        label_tahun = new javax.swing.JLabel();
+        label_akses = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         btn_submit = new javax.swing.JButton();
         btn_refresh = new javax.swing.JButton();
         btn_cetak = new javax.swing.JButton();
         bg = new javax.swing.JLabel();
-        label_bulan = new javax.swing.JLabel();
-        label_tahun = new javax.swing.JLabel();
-        label_akses = new javax.swing.JLabel();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel1.setBackground(new java.awt.Color(242, 242, 242));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Urut Berdasarkan"));
-        jPanel1.setForeground(new java.awt.Color(0, 0, 0));
 
         combo_filterBulan.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
         combo_filterBulan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember" }));
 
         jLabel1.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("Bulan");
 
         jLabel2.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
         jLabel2.setText("Tahun");
 
         jLabel3.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(0, 0, 0));
         jLabel3.setText("Hak Akses");
 
         combo_filterAkses.setFont(new java.awt.Font("Outfit", 0, 14)); // NOI18N
@@ -332,7 +327,15 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
         msg_tblKosong.setText("Data yang anda cari kosong / tidak ada");
         getContentPane().add(msg_tblKosong, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 270, 230, 20));
 
-        jPanel2.setBackground(new java.awt.Color(242, 242, 242));
+        label_bulan.setText("jLabel4");
+        getContentPane().add(label_bulan, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 280, -1, -1));
+
+        label_tahun.setText("jLabel6");
+        getContentPane().add(label_tahun, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 280, -1, -1));
+
+        label_akses.setText("jLabel7");
+        getContentPane().add(label_akses, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 280, -1, -1));
+
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Proses"));
 
         btn_submit.setBackground(new java.awt.Color(66, 139, 202));
@@ -402,15 +405,6 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
 
         bg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/images/background.png"))); // NOI18N
         getContentPane().add(bg, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
-
-        label_bulan.setText("jLabel4");
-        getContentPane().add(label_bulan, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 280, -1, -1));
-
-        label_tahun.setText("jLabel6");
-        getContentPane().add(label_tahun, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 280, -1, -1));
-
-        label_akses.setText("jLabel7");
-        getContentPane().add(label_akses, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 280, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -544,7 +538,7 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
                 Connection conn = koneksi.Connect.GetConnection();
                 Statement stm = conn.createStatement();
 
-                String report = ("C:\\Users\\perlengkapan\\Documents\\KULIAH\\Project Tugas Akhir\\Awan-adventure-FIX\\src\\subMenu\\nota\\notaLaporan.jrxml");
+                String report = ("C:\\Users\\dzikr\\OneDrive\\Documents\\GitHub\\berapa kali fix ini\\Awan-adventure-FIX\\src\\subMenu\\nota\\notaLaporan.jrxml");
                 HashMap hash = new HashMap();
                 hash.put("bulan", bulan);
                 hash.put("tahun", tahun);
@@ -553,8 +547,9 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
                 JasperViewer.viewReport(jasperP, false);
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Error iReport");
+                System.out.println(e);
             }
-        } else if (tbl_laporan.getColumnCount() == 9) {
+        } else if (tbl_laporan.getColumnCount() == 10) {
             String bulan = label_bulan.getText();
             String tahun = label_tahun.getText();
             String akses = label_akses.getText();
@@ -563,7 +558,7 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
                 Connection conn = koneksi.Connect.GetConnection();
                 Statement stm = conn.createStatement();
 
-                String report = ("C:\\Users\\perlengkapan\\Documents\\KULIAH\\Project Tugas Akhir\\Awan-adventure-FIX\\src\\subMenu\\nota\\notaLaporanAkses.jrxml");
+                String report = ("C:\\Users\\dzikr\\OneDrive\\Documents\\GitHub\\berapa kali fix ini\\Awan-adventure-FIX\\src\\subMenu\\nota\\notaLaporanAkses.jrxml");
                 HashMap hash = new HashMap();
                 hash.put("bulan", bulan);
                 hash.put("tahun", tahun);
@@ -573,6 +568,7 @@ public class LaporanFrame extends javax.swing.JInternalFrame {
                 JasperViewer.viewReport(jasperP, false);
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Error iReport");
+                System.out.println(e);
             }
         }
     }//GEN-LAST:event_btn_cetakActionPerformed

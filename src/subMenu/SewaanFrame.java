@@ -275,7 +275,7 @@ public class SewaanFrame extends javax.swing.JInternalFrame {
                 Connection conn = koneksi.Connect.GetConnection();
                 Statement stm = conn.createStatement();
 
-                String report = ("C:\\Users\\perlengkapan\\Documents\\KULIAH\\Project Tugas Akhir\\Awan-adventure-FIX\\src\\subMenu\\nota\\notaSewaan.jrxml");
+                String report = ("C:\\Users\\dzikr\\OneDrive\\Documents\\GitHub\\berapa kali fix ini\\Awan-adventure-FIX\\src\\subMenu\\nota\\notaSewaan.jrxml");
                 HashMap hash = new HashMap();
                 hash.put("id_sewaan", idSewaan);
                 JasperReport jasper = JasperCompileManager.compileReport(report);

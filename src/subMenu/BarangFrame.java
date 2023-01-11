@@ -543,7 +543,7 @@ public class BarangFrame extends javax.swing.JInternalFrame {
                 String sql = "DELETE FROM data_barang Where id_barang ='" + id_barang.getText() + "'";
                 java.sql.Connection conn = (Connection) Connect.GetConnection();
                 java.sql.PreparedStatement pst = conn.prepareStatement(sql);
-                int confirmDelete = JOptionPane.showConfirmDialog(null, "Ingin menghapus data? ?", "Hapus Data", JOptionPane.YES_NO_OPTION);
+                int confirmDelete = JOptionPane.showConfirmDialog(null, "Ingin menghapus data?", "Hapus Data", JOptionPane.YES_NO_OPTION);
                 if (confirmDelete == JOptionPane.YES_OPTION) {
                     pst.execute();
                     JOptionPane.showMessageDialog(null, "Data Berhasil Dihapus");

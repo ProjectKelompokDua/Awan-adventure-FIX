@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="600" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ef8d138c-167e-4357-9fcd-630b756b8b6c">
 	<property name="ireport.zoom" value="1.6105100000000008"/>
-	<property name="ireport.x" value="282"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="table">
 		<box>
@@ -53,15 +53,20 @@ GROUP BY hak_akses]]>
 			<staticText>
 				<reportElement uuid="f2731b9f-d907-4aa4-aa25-1c7affac4367" x="0" y="0" width="555" height="89"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="36" isBold="true"/>
+					<font size="24" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Laporan Awan Adventure]]></text>
+				<text><![CDATA[Laporan Pendapatan Awan Adventure]]></text>
 			</staticText>
 			<textField pattern="dd MMMMM yyyy">
 				<reportElement uuid="e03a96f0-8e3c-4ff9-92a5-2ccc9c728aea" x="468" y="-10" width="100" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement uuid="0bd484a4-5ca6-4702-97a8-9762551de8f5" x="63" y="59" width="203" height="20"/>
+				<textElement/>
+				<text><![CDATA[Berdasarkan pendapatan per-bulan]]></text>
+			</staticText>
 		</band>
 	</title>
 	<pageHeader>

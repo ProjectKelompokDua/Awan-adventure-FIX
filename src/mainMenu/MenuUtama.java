@@ -113,7 +113,6 @@ public class MenuUtama extends javax.swing.JFrame {
 
         btn_beranda.setBackground(new java.awt.Color(248, 221, 113));
         btn_beranda.setFont(new java.awt.Font("Outfit", 0, 15)); // NOI18N
-        btn_beranda.setForeground(new java.awt.Color(0, 0, 0));
         btn_beranda.setText("Beranda");
         btn_beranda.setBorder(null);
         btn_beranda.setBorderPainted(false);
@@ -141,7 +140,6 @@ public class MenuUtama extends javax.swing.JFrame {
 
         btn_kasir.setBackground(new java.awt.Color(248, 221, 113));
         btn_kasir.setFont(new java.awt.Font("Outfit", 0, 15)); // NOI18N
-        btn_kasir.setForeground(new java.awt.Color(0, 0, 0));
         btn_kasir.setText("Kasir");
         btn_kasir.setBorder(null);
         btn_kasir.setBorderPainted(false);
@@ -169,7 +167,6 @@ public class MenuUtama extends javax.swing.JFrame {
 
         btn_sewaan.setBackground(new java.awt.Color(248, 221, 113));
         btn_sewaan.setFont(new java.awt.Font("Outfit", 0, 15)); // NOI18N
-        btn_sewaan.setForeground(new java.awt.Color(0, 0, 0));
         btn_sewaan.setText("Data Sewaan");
         btn_sewaan.setBorder(null);
         btn_sewaan.setBorderPainted(false);
@@ -197,7 +194,6 @@ public class MenuUtama extends javax.swing.JFrame {
 
         btn_barang.setBackground(new java.awt.Color(248, 221, 113));
         btn_barang.setFont(new java.awt.Font("Outfit", 0, 15)); // NOI18N
-        btn_barang.setForeground(new java.awt.Color(0, 0, 0));
         btn_barang.setText("Data Barang");
         btn_barang.setBorder(null);
         btn_barang.setBorderPainted(false);
@@ -225,7 +221,6 @@ public class MenuUtama extends javax.swing.JFrame {
 
         btn_pengembalian.setBackground(new java.awt.Color(248, 221, 113));
         btn_pengembalian.setFont(new java.awt.Font("Outfit", 0, 15)); // NOI18N
-        btn_pengembalian.setForeground(new java.awt.Color(0, 0, 0));
         btn_pengembalian.setText("Pengembalian");
         btn_pengembalian.setBorder(null);
         btn_pengembalian.setBorderPainted(false);
@@ -253,7 +248,6 @@ public class MenuUtama extends javax.swing.JFrame {
 
         btn_pengguna.setBackground(new java.awt.Color(248, 221, 113));
         btn_pengguna.setFont(new java.awt.Font("Outfit", 0, 15)); // NOI18N
-        btn_pengguna.setForeground(new java.awt.Color(0, 0, 0));
         btn_pengguna.setText("Pengguna");
         btn_pengguna.setBorder(null);
         btn_pengguna.setBorderPainted(false);
@@ -281,7 +275,6 @@ public class MenuUtama extends javax.swing.JFrame {
 
         btn_laporan.setBackground(new java.awt.Color(248, 221, 113));
         btn_laporan.setFont(new java.awt.Font("Outfit", 0, 15)); // NOI18N
-        btn_laporan.setForeground(new java.awt.Color(0, 0, 0));
         btn_laporan.setText("Laporan");
         btn_laporan.setBorder(null);
         btn_laporan.setBorderPainted(false);
@@ -335,7 +328,6 @@ public class MenuUtama extends javax.swing.JFrame {
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icon/logoMenu.png"))); // NOI18N
 
         jLabel2.setFont(new java.awt.Font("Outfit Medium", 0, 18)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Awan Adventure");
 
@@ -372,7 +364,6 @@ public class MenuUtama extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         infoMenu.setFont(new java.awt.Font("Outfit", 1, 36)); // NOI18N
-        infoMenu.setForeground(new java.awt.Color(0, 0, 0));
         infoMenu.setText("Menu");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -417,7 +408,6 @@ public class MenuUtama extends javax.swing.JFrame {
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 0, -1, 80));
 
         txt_akses.setFont(new java.awt.Font("Outfit", 1, 18)); // NOI18N
-        txt_akses.setForeground(new java.awt.Color(0, 0, 0));
         txt_akses.setText("Akun");
         getContentPane().add(txt_akses, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 20, 60, 30));
 
